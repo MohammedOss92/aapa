@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="short_height">100dp</dimen> <!-- ارتفاع العناصر القصيرة -->
+    <dimen name="long_height">150dp</dimen> <!-- ارتفاع العناصر الطويلة -->
+
+</resources>

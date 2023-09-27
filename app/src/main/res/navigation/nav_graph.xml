@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/SecondFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.sarrawi.img.FirstFragment"
+        tools:layout="@layout/fragment_first"/>
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="com.sarrawi.img.SecondFragment"
+        tools:layout="@layout/fragment_second">
+        <action
+            android:id="@+id/action_SecondFragment_to_thirdFragment"
+            app:destination="@id/thirdFragment" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/thirdFragment"
+        android:name="com.sarrawi.img.ThirdFragment"
+        tools:layout="@layout/fragment_third">
+
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+
+        <action
+            android:id="@+id/action_to_FourFragment"
+            app:destination="@id/fourFragment" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fourFragment"
+        android:name="com.sarrawi.img.FourFragment"
+        tools:layout="@layout/fragment_four">
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+        <argument
+            android:name="currentItemId"
+            app:argType="integer" />
+
+
+    </fragment>
+
+
+</navigation>
