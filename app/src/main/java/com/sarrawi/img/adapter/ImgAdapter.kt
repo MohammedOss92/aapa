@@ -85,7 +85,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
     override fun getItemCount(): Int {
         return img_list.size
     }
-
+//a
     fun updateInternetStatus(isConnected: Boolean) {
         isInternetConnected = isConnected
         notifyDataSetChanged()
