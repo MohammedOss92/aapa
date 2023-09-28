@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,11 +20,19 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
     inner class ViewHolder(val binding:ImgDesignBinding):RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener {
-                //اذا كانت null سيتم استخدام 0؟
-                onItemClick?.invoke(img_list[layoutPosition].id?:0 ,layoutPosition ?:0)
+            if(isInternetConnected) {
+                binding.root.setOnClickListener {
+                    //اذا كانت null سيتم استخدام 0؟
+                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
+                }
             }
-        }
+            else{
+                    binding.root.setOnClickListener{Toast.makeText(con,"ghghg",Toast.LENGTH_SHORT).show()}
+
+                }
+            }
+
+
 
         fun bind(position: Int, isInternetConnected: Boolean) {
             if (isInternetConnected) {

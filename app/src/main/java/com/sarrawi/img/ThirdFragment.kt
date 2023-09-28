@@ -157,14 +157,28 @@ class ThirdFragment : Fragment() {
         binding.lyNoInternet.visibility = View.GONE
     }
 
+//    fun adapterOnClick(){
+//
+//        imgAdapter.onItemClick = {id, currentItemId ->
+//             // currentItemId for current item selected
+//            //id not use
+//            val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id,currentItemId)
+//            findNavController().navigate(directions,)
+//        }
+//    }
+
     fun adapterOnClick(){
-        imgAdapter.onItemClick = {id, currentItemId ->
-             // currentItemId for current item selected
-            //id not use
-            val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id,currentItemId)
-            findNavController().navigate(directions,)
+        imgAdapter.onItemClick = { id, currentItemId ->
+            if (isInternetConnected) {
+                // القم بتنفيذ الإجراء فقط إذا كان هناك اتصال بالإنترنت
+                val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+                findNavController().navigate(directions)
+            } else {
+                // إذا كان الاتصال بالإنترنت معطلًا، لا تفعيل النقر (onclick)
+            }
         }
     }
+
 
 
 }

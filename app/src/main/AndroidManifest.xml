@@ -20,7 +20,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label=" "
+            android:label="صور"
             android:theme="@style/Theme.MyImage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
