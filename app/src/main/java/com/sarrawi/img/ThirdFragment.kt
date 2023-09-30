@@ -130,7 +130,7 @@ class ThirdFragment : Fragment() {
                 imgAdapter.img_list = imgs
                 if (binding.rvImgCont.adapter == null) {
 
-                    binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
+                    binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
                     binding.rvImgCont.adapter = imgAdapter
                     imgAdapter.notifyDataSetChanged()
 

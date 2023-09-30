@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:src="@mipmap/ic_launcher"
             android:scaleType="fitXY"
-            android:padding="7dp"
+
             />
 
 

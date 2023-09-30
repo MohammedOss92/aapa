@@ -1,9 +1,6 @@
 package com.sarrawi.img
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
@@ -13,7 +10,11 @@ import com.sarrawi.img.db.viewModel.Imgs_ViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory
 import kotlinx.coroutines.launch
 import android.util.Log
+import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.*
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentFourBinding
@@ -46,9 +47,8 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
         ): View? {
 
         _binding = FragmentFourBinding.inflate(inflater, container, false)
-
-        return binding.root
-
+            setHasOptionsMenu(true)
+            return binding.root
         }
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +62,8 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
          //
-
+            setHasOptionsMenu(true)
+            menu_item()
             // Live Connected
             imgsViewmodel.isConnected.observe(requireActivity()) {
                     isConnected ->
@@ -70,6 +71,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                 if (isConnected) {
                   setUpViewPager()
                  binding.lyNoInternet.visibility = View.GONE
+                    
                   }
                 else {
                      binding.progressBar.visibility = View.GONE
@@ -117,14 +119,66 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                 // No data
              }
 
-        }
+        }}
+
+            override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+                inflater.inflate(R.menu.menu_fragment_four, menu)
+            }
+
+            override fun onOptionsItemSelected(item: MenuItem): Boolean {
+                return when (item.itemId) {
+//                    R.id.action_option1 -> {
+//                        // اتخاذ إجراء عند اختيار Option 1
+//                        true
+//                    }
+//                    R.id.action_option2 -> {
+//                        // اتخاذ إجراء عند اختيار Option 2
+//                        true
+//                    }
+                    else -> super.onOptionsItemSelected(item)
+                }
+            }
+
+
+
+    private fun menu_item() {
+        // The usage of an interface lets you inject your own implementation
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                // menuInflater.inflate(R.menu.menu_zeker, menu) // هنا لا داعي لتكرار هذا السطر
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+                when (menuItem.itemId) {
+                    R.id.aa -> {
+
+                        return true
+                    }
+//                    R.id.action_share -> {
+//                        val zekr = zeker_list[view_pager2?.currentItem ?: 0]
+//                        // Perform the share action using ShareText class
+//                        ShareText.shareText(
+//                            requireContext(),
+//                            "Share via",
+//                            "Zekr Header",
+//                            zekr.Description ?: ""
+//                        )
+//                        return true
+//                    }
+                    // ... (قائمة من المزيد من العناصر)
+                }
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-
-
-
-
 }
+
+
 
 
 
