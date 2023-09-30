@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.databinding.RowImagesBinding
+
 import com.sarrawi.img.model.ImgsModel
 
 class ViewPagerAdapter(val con: Context):
@@ -21,13 +21,16 @@ class ViewPagerAdapter(val con: Context):
     private var isToolbarVisible = true
 
 
-    inner class ViewHolder(val
-      binding:RowImagesBinding):RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding:RowImagesBinding):RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
                 onItemClick?.invoke(img_list[layoutPosition].id?:0)
             }
+
+            binding.ss.setOnClickListener {  }
+            binding.s.setOnClickListener {  }
+
         }
 
 
@@ -37,6 +40,8 @@ class ViewPagerAdapter(val con: Context):
             Glide.with(con)
                 .load(current_imgModel.image_url)
                 .into(binding.imageView)
+
+
 
 
         }
@@ -105,31 +110,31 @@ class ViewPagerAdapter(val con: Context):
 //        }
         var isSystemUIVisible = true // تعيينها إلى true في البداية
 
-        holder.binding.imageView.setOnClickListener {
-            isSystemUIVisible = !isSystemUIVisible // قم بتبديل حالة الظهور للنظام
-
-            if (isSystemUIVisible) {
-                // إذا تم إظهار النظام، قم بإظهار شريط العنوان وشريط الملاحة
-                (con as AppCompatActivity).window.decorView.systemUiVisibility = (
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                or View.SYSTEM_UI_FLAG_VISIBLE // إظهار النظام
-                        )
-                (con as AppCompatActivity).supportActionBar?.show()
-            } else {
-                // إذا تم إخفاء النظام، قم بإخفاء شريط العنوان وشريط الملاحة
-                (con as AppCompatActivity).window.decorView.systemUiVisibility = (
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        )
-                (con as AppCompatActivity).supportActionBar?.hide()
-            }
-        }
+//        holder.binding.imageView.setOnClickListener {
+//            isSystemUIVisible = !isSystemUIVisible // قم بتبديل حالة الظهور للنظام
+//
+//            if (isSystemUIVisible) {
+//                // إذا تم إظهار النظام، قم بإظهار شريط العنوان وشريط الملاحة
+//                (con as AppCompatActivity).window.decorView.systemUiVisibility = (
+//                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                                or View.SYSTEM_UI_FLAG_VISIBLE // إظهار النظام
+//                        )
+//                (con as AppCompatActivity).supportActionBar?.show()
+//            } else {
+//                // إذا تم إخفاء النظام، قم بإخفاء شريط العنوان وشريط الملاحة
+//                (con as AppCompatActivity).window.decorView.systemUiVisibility = (
+//                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                                or View.SYSTEM_UI_FLAG_FULLSCREEN
+//                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                        )
+//                (con as AppCompatActivity).supportActionBar?.hide()
+//            }
+//        }
 
         holder.bind(position)
     }

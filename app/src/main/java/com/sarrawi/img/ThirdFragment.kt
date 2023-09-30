@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.adapter.ImgAdapter
-import com.sarrawi.img.databinding.FragmentThirdBinding
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.Imgs_ViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory
@@ -20,6 +19,8 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.sarrawi.img.databinding.FragmentThirdBinding
 
 class ThirdFragment : Fragment() {
 
@@ -169,12 +170,19 @@ class ThirdFragment : Fragment() {
 
     fun adapterOnClick(){
         imgAdapter.onItemClick = { id, currentItemId ->
-            if (isInternetConnected) {
+            if (imgsViewmodel.isConnected.value==true) {
                 // القم بتنفيذ الإجراء فقط إذا كان هناك اتصال بالإنترنت
                 val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
                 findNavController().navigate(directions)
             } else {
                 // إذا كان الاتصال بالإنترنت معطلًا، لا تفعيل النقر (onclick)
+                // إذا كان الاتصال بالإنترنت معطلًا، قم بعرض رسالة Toast لتنبيه المستخدم
+                val snackbar = Snackbar.make(
+                    requireView(), // يجب أن يكون View المرتبط بالشاشة الحالية
+                    "لا يوجد اتصال بالإنترنت",
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.show()
             }
         }
     }
