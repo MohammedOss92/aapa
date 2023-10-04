@@ -17,74 +17,67 @@ import com.sarrawi.img.db.viewModel.ViewModelFactory
 import kotlinx.coroutines.launch
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.databinding.FragmentThirdBinding
 
 class ThirdFragment : Fragment() {
 
-
-
     private lateinit var _binding: FragmentThirdBinding
-
     private val binding get() = _binding
-
     private val retrofitService = ApiService.provideRetrofitInstance()
-
-    private val mainRepository by lazy {  ImgRepository(retrofitService) }
-
-    private val imgsViewmodel: Imgs_ViewModel by viewModels {
-        ViewModelFactory(requireContext(),mainRepository)
+    private val mainRepository by lazy { ImgRepository(retrofitService) }
+    private val imgsViewModel: Imgs_ViewModel by viewModels {
+        ViewModelFactory(requireContext(), mainRepository)
     }
-
-    private var isInternetConnected: Boolean = true
-
-    private val imgAdapter by lazy {
-        ImgAdapter(requireActivity())
-    }
-
+    private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
     private var ID_Type_id = -1
-
+    private var recyclerViewState: Parcelable? = null
+    private var customScrollState = CustomScrollState()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentThirdBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ID_Type_id = ThirdFragmentArgs.fromBundle(requireArguments()).id
-
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // حفظ حالة التمرير
+        recyclerViewState = binding.rvImgCont.layoutManager?.onSaveInstanceState()
+        outState.putParcelable("recycler_state", recyclerViewState)
+    }
+
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Live Connected Check
-//        imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
-//            if (isConnected){
-//                setUpRv()
-//                adapterOnClick()
-//                 binding.lyNoInternet.visibility = View.GONE
-//
-//            }
-//            else {
-//                binding.progressBar.visibility = View.GONE
-//                binding.lyNoInternet.visibility = View.VISIBLE
-//
-//             }
-//
-//
-//        }
 
-        // في الـ ThirdFragment
-        imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
+        savedInstanceState?.let { bundle ->
+            // استعادة حالة التمرير
+            recyclerViewState = bundle.getParcelable("recycler_state")
+        }
+
+        val layoutManager = binding.rvImgCont.layoutManager
+        if (layoutManager is GridLayoutManager) {
+            layoutManager.scrollToPosition(customScrollState.scrollPosition)
+        }
+
+        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
             if (isConnected) {
                 setUpRv()
                 adapterOnClick()
@@ -97,88 +90,66 @@ class ThirdFragment : Fragment() {
             }
         }
 
-        imgsViewmodel.checkNetworkConnection(requireContext())
+        imgsViewModel.checkNetworkConnection(requireContext())
 
-        imgsViewmodel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        imgsViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
-                binding.progressBar.visibility = View.VISIBLE // عرض ProgressBar إذا كان التحميل قيد التقدم
+                binding.progressBar.visibility = View.VISIBLE
             } else {
-                binding.progressBar.visibility = View.GONE // إخفاء ProgressBar إذا انتهى التحميل
+                binding.progressBar.visibility = View.GONE
             }
         }
-
-
-
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
     }
 
-
-
-
-
-    private fun setUpRv() = imgsViewmodel.viewModelScope.launch {
-        imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(requireActivity())
-        { imgs ->
-            imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-
-            if (imgs != null) {
-                // print data
-                imgAdapter.img_list = imgs
-                if (binding.rvImgCont.adapter == null) {
-
-                    binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
-                    binding.rvImgCont.adapter = imgAdapter
-                    imgAdapter.notifyDataSetChanged()
-
-                } else {
-                    imgAdapter.notifyDataSetChanged()
-                }
-            }
-
-            else {
-                // imgs هي قائمة فارغة أو null، يمكنك اتخاذ الإجراء المناسب هنا
-            }
-
-            val handler = Handler(Looper.getMainLooper()) // تعريف handler هنا
-
-            handler.postDelayed({
-                hideprogressdialog()
-            }, 5000)
+    override fun onPause() {
+        super.onPause()
+        val layoutManager = binding.rvImgCont.layoutManager
+        if (layoutManager is LinearLayoutManager) {
+            customScrollState.scrollPosition = layoutManager.findFirstVisibleItemPosition()
         }
     }
 
+    private fun setUpRv() = lifecycleScope.launch {
+        imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
+            imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
-    fun hideprogressdialog() {
-        binding.progressBar.visibility = View.GONE
-        binding.lyNoInternet.visibility = View.GONE
+            imgAdapter.img_list = imgs
+
+            if (binding.rvImgCont.adapter == null) {
+                binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
+                binding.rvImgCont.adapter = imgAdapter
+            } else {
+                imgAdapter.notifyDataSetChanged()
+            }
+
+            imgAdapter.onItemClick = { _, currentItemId ->
+                if (imgsViewModel.isConnected.value == true) {
+                    val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+                    findNavController().navigate(directions)
+                } else {
+                    val snackbar = Snackbar.make(
+                        requireView(),
+                        "لا يوجد اتصال بالإنترنت",
+                        Snackbar.LENGTH_SHORT
+                    )
+                    snackbar.show()
+                }
+            }
+        }
     }
 
-//    fun adapterOnClick(){
-//
-//        imgAdapter.onItemClick = {id, currentItemId ->
-//             // currentItemId for current item selected
-//            //id not use
-//            val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id,currentItemId)
-//            findNavController().navigate(directions,)
-//        }
-//    }
-
-    fun adapterOnClick(){
-        imgAdapter.onItemClick = { id, currentItemId ->
-            if (imgsViewmodel.isConnected.value==true) {
-                // القم بتنفيذ الإجراء فقط إذا كان هناك اتصال بالإنترنت
+    private fun adapterOnClick() {
+        imgAdapter.onItemClick = { _, currentItemId ->
+            if (imgsViewModel.isConnected.value == true) {
                 val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
                 findNavController().navigate(directions)
             } else {
-                // إذا كان الاتصال بالإنترنت معطلًا، لا تفعيل النقر (onclick)
-                // إذا كان الاتصال بالإنترنت معطلًا، قم بعرض رسالة Toast لتنبيه المستخدم
                 val snackbar = Snackbar.make(
-                    requireView(), // يجب أن يكون View المرتبط بالشاشة الحالية
+                    requireView(),
                     "لا يوجد اتصال بالإنترنت",
                     Snackbar.LENGTH_SHORT
                 )
@@ -186,7 +157,4 @@ class ThirdFragment : Fragment() {
             }
         }
     }
-
-
-
 }
