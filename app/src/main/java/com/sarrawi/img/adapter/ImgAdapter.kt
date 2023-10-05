@@ -103,7 +103,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
         img_list = newData
         notifyDataSetChanged()
     }
-
+//
     /*val currentImgModel = yourImgList[position]
 
     // تحديد خيارات العرض للصورة المصغرة (مثل الحجم ومؤثرات أخرى)
