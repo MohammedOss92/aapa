@@ -103,4 +103,19 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
         img_list = newData
         notifyDataSetChanged()
     }
+
+    /*val currentImgModel = yourImgList[position]
+
+    // تحديد خيارات العرض للصورة المصغرة (مثل الحجم ومؤثرات أخرى)
+    val requestOptions = RequestOptions()
+        .placeholder(R.drawable.placeholder_image) // الصورة المؤقتة لحالة التحميل
+        .error(R.drawable.error_image) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
+        .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
+
+    // استخدام Glide لتحميل وعرض الصورة المصغرة
+    Glide.with(holder.itemView.context)
+        .load(currentImgModel.thumbnailUrl) // استخدام رابط الصورة المصغرة
+        .apply(requestOptions)
+        .transition(DrawableTransitionOptions.withCrossFade()) // تأثير انتقال بسيط عند تحميل الصورة
+        .into(holder.imgView) // اسم ImageView الذي سيتم عرض الصورة فيه في كل عنصر بالـ RecyclerView*/
 }
