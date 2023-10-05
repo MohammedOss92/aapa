@@ -74,7 +74,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                     
                   }
                 else {
-                     binding.progressBar.visibility = View.GONE
+//                     binding.progressBar.visibility = View.GONE
                     binding.lyNoInternet.visibility = View.VISIBLE
 
                  }
@@ -92,13 +92,13 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
            //  }
 
 
-            imgsViewmodel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-                if (isLoading) {
-                    binding.progressBar.visibility = View.VISIBLE // عرض ProgressBar إذا كان التحميل قيد التقدم
-                } else {
-                    binding.progressBar.visibility = View.GONE // إخفاء ProgressBar إذا انتهى التحميل
-                }
-            }
+//            imgsViewmodel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+//                if (isLoading) {
+//                    binding.progressBar.visibility = View.VISIBLE // عرض ProgressBar إذا كان التحميل قيد التقدم
+//                } else {
+//                    binding.progressBar.visibility = View.GONE // إخفاء ProgressBar إذا انتهى التحميل
+//                }
+//            }
 
 
         }
