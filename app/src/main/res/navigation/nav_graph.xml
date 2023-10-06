@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/SecondFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/FirstFragment"
@@ -54,7 +54,14 @@
 
 
     </fragment>
-
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.sarrawi.img.SplashScreenFragment"
+        tools:layout="@layout/fragment_splash_screen">
+        <action
+            android:id="@+id/action_splashScreenFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
 
 
 </navigation>

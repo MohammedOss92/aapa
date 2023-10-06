@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = ""
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.FirstFragment,R.id.thirdFragment,R.id.fourFragment,R.id.SecondFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.splashScreenFragment,R.id.FirstFragment,R.id.thirdFragment,R.id.fourFragment,R.id.SecondFragment))
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
