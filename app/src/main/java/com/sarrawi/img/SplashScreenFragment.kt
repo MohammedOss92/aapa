@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.sarrawi.img.databinding.ContentMainBinding.inflate
@@ -35,6 +37,10 @@ class SplashScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+//        var rotate_z = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_z)
+//        binding.imageView2.startAnimation(rotate_z)
 
         Handler(Looper.myLooper()!!).postDelayed({
 //            val direction = SplashFragmentDirections.actionSplashFragmentToFirsFragment()
