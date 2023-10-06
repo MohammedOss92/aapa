@@ -19,11 +19,13 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.databinding.FragmentThirdBinding
+import com.sarrawi.img.db.viewModel.SharedViewModel
 
 class ThirdFragment : Fragment() {
 
@@ -38,6 +40,7 @@ class ThirdFragment : Fragment() {
     private var ID_Type_id = -1
     private var recyclerViewState: Parcelable? = null
     private var customScrollState = CustomScrollState()
+    private val sharedViewModel by activityViewModels<SharedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +68,9 @@ class ThirdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sharedViewModel.imgsLiveData.observe(viewLifecycleOwner) { imgs ->
+            // هنا يمكنك استخدام البيانات imgs التي تم الحصول عليها من FragOne
+        }
 
         savedInstanceState?.let { bundle ->
             // استعادة حالة التمرير

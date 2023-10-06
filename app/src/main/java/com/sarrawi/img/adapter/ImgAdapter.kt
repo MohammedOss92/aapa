@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
 
@@ -37,8 +40,14 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
         fun bind(position: Int, isInternetConnected: Boolean) {
             if (isInternetConnected) {
                 val current_imgModel = img_list[position]
+                val requestOptions = RequestOptions()
+                    .placeholder(R.drawable.nonet) // الصورة المؤقتة لحالة التحميل
+                    .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
+                    .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
                 Glide.with(con)
                     .load(current_imgModel.image_url)
+                    .apply(requestOptions)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .circleCrop()
                     .into(binding.imgadapterImgViewContent)
                 binding.lyNoInternet.visibility = View.GONE
@@ -48,6 +57,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 binding.lyNoInternet.visibility = View.VISIBLE
             }
         }
+
 
 //
 //        fun bind(position: Int) {
