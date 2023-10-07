@@ -40,7 +40,6 @@ class ThirdFragment : Fragment() {
     private var ID_Type_id = -1
     private var recyclerViewState: Parcelable? = null
     private var customScrollState = CustomScrollState()
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,9 +67,7 @@ class ThirdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel.imgsLiveData.observe(viewLifecycleOwner) { imgs ->
-            // هنا يمكنك استخدام البيانات imgs التي تم الحصول عليها من FragOne
-        }
+
 
         savedInstanceState?.let { bundle ->
             // استعادة حالة التمرير
@@ -154,35 +151,71 @@ class ThirdFragment : Fragment() {
 //        }
 //    }
 
-    private fun setUpRv() = lifecycleScope.launch {
-        imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
-            imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+//    private fun setUpRv() = lifecycleScope.launch {
+//        imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
+//            imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+//
+//            if (imgs.isEmpty()) {
+//                // إذا كانت القائمة فارغة، قم بتحميل البيانات من الخادم مرة أخرى
+//                imgsViewModel.getAllImgsViewModel(ID_Type_id)
+//            } else {
+//                // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+//                imgAdapter.img_list = imgs
+//                if (binding.rvImgCont.adapter == null) {
+//                    binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
+//                    binding.rvImgCont.adapter = imgAdapter
+//                } else {
+//                    imgAdapter.notifyDataSetChanged()
+//                }
+//            }
+//
+//            imgAdapter.onItemClick = { _, currentItemId ->
+//                if (imgsViewModel.isConnected.value == true) {
+//                    val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+//                    findNavController().navigate(directions)
+//                } else {
+//                    val snackbar = Snackbar.make(
+//                        requireView(),
+//                        "لا يوجد اتصال بالإنترنت",
+//                        Snackbar.LENGTH_SHORT
+//                    )
+//                    snackbar.show()
+//                }
+//            }
+//        }
+//    }
+    private fun setUpRv() {
+        if (isAdded) {
+            imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
+                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
+                imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
-            if (imgs.isEmpty()) {
-                // إذا كانت القائمة فارغة، قم بتحميل البيانات من الخادم مرة أخرى
-                imgsViewModel.getAllImgsViewModel(ID_Type_id)
-            } else {
-                // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-                imgAdapter.img_list = imgs
-                if (binding.rvImgCont.adapter == null) {
-                    binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
-                    binding.rvImgCont.adapter = imgAdapter
+                if (imgs.isEmpty()) {
+                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+                    imgsViewModel.getAllImgsViewModel(ID_Type_id)
                 } else {
-                    imgAdapter.notifyDataSetChanged()
+                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+                    imgAdapter.img_list = imgs
+                    if (binding.rvImgCont.adapter == null) {
+                        binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
+                        binding.rvImgCont.adapter = imgAdapter
+                    } else {
+                        imgAdapter.notifyDataSetChanged()
+                    }
                 }
-            }
 
-            imgAdapter.onItemClick = { _, currentItemId ->
-                if (imgsViewModel.isConnected.value == true) {
-                    val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
-                    findNavController().navigate(directions)
-                } else {
-                    val snackbar = Snackbar.make(
-                        requireView(),
-                        "لا يوجد اتصال بالإنترنت",
-                        Snackbar.LENGTH_SHORT
-                    )
-                    snackbar.show()
+                imgAdapter.onItemClick = { _, currentItemId ->
+                    if (imgsViewModel.isConnected.value == true) {
+                        val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+                        findNavController().navigate(directions)
+                    } else {
+                        val snackbar = Snackbar.make(
+                            requireView(),
+                            "لا يوجد اتصال بالإنترنت",
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackbar.show()
+                    }
                 }
             }
         }

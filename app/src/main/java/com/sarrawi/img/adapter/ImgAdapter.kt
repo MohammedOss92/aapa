@@ -39,15 +39,30 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
 
         fun bind(position: Int, isInternetConnected: Boolean) {
             if (isInternetConnected) {
+//                val current_imgModel = img_list[position]
+//                val requestOptions = RequestOptions()
+//                    .placeholder(R.drawable.nonet) // الصورة المؤقتة لحالة التحميل
+//                    .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
+//                    .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
+//                Glide.with(con)
+//                    .load(current_imgModel.image_url)
+//                    .apply(requestOptions)
+//                    .transition(DrawableTransitionOptions.withCrossFade())
+//                    .circleCrop()
+//                    .into(binding.imgadapterImgViewContent)
+//                binding.lyNoInternet.visibility = View.GONE
+//            } else {
+//                // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
+//                binding.imgadapterImgViewContent.visibility = View.GONE
+//                binding.lyNoInternet.visibility = View.VISIBLE
+//            }
                 val current_imgModel = img_list[position]
                 val requestOptions = RequestOptions()
-                    .placeholder(R.drawable.nonet) // الصورة المؤقتة لحالة التحميل
+                    .placeholder(R.drawable.ic_baseline_autorenew_24) // الصورة المؤقتة لحالة التحميل
                     .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
-                    .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
-                    .transition(DrawableTransitionOptions.withCrossFade())
                     .circleCrop()
                     .into(binding.imgadapterImgViewContent)
                 binding.lyNoInternet.visibility = View.GONE

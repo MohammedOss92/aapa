@@ -3,9 +3,11 @@ package com.sarrawi.img.db
 import com.sarrawi.img.R
 import com.sarrawi.img.db.Dao.ImgType_Dao
 import com.sarrawi.img.model.Img_Types_model
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+@DelicateCoroutinesApi
 suspend fun reTypes(database: Pic_Databases?) {
         database?.let { db ->
             withContext(Dispatchers.IO) {
