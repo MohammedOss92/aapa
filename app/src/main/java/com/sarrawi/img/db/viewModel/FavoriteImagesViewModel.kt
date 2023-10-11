@@ -26,11 +26,13 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
     }
 
     fun addFavoriteImage(favoriteImage: FavoriteImage) {
+        println("Adding favorite image: $favoriteImage")
         viewModelScope.launch(Dispatchers.IO) {
             repository.addFavoriteImage(favoriteImage)
             // Update _favoriteImages after adding a new image
             val images = repository.getAllFavoriteImages()
             _favoriteImages.postValue(images)
+            println("Favorite image added successfully.")
         }
     }
 
@@ -42,6 +44,15 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
             _favoriteImages.postValue(images)
         }
     }
+
+    fun updateImages() {
+        viewModelScope.launch {
+            val images = repository.getAllFavoriteImages()
+            println("Favorite images from the database: $images")
+            _favoriteImages.postValue(images)
+        }
+    }
+
 
     // This method should be called after adding or removing images
 //    public fun updateImages() {

@@ -85,6 +85,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
             setHasOptionsMenu(true)
             menu_item()
             adapterOnClick()
+            imgsffav.updateImages()
             // Live Connected
             imgsViewmodel.isConnected.observe(requireActivity()) {
                     isConnected ->
@@ -201,38 +202,36 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
     fun adapterOnClick (){
         viewPagerAdapter.onbtnClick = {it:ImgsModel,i:Int ->
             val fav= FavoriteImage(it.id!!,it.ID_Type_id,it.new_img,it.image_url)
-//
-//            if (it.is_fav){
-//                imgsffav.addFavoriteImage(fav)
-//
-//                val snackbar = Snackbar.make(view!!,"تم الحذف",Snackbar.LENGTH_SHORT)
-//                    snackbar.show()
-//                setUpViewPager()
-//                viewPagerAdapter.notifyDataSetChanged()
-//
-//            }else{
-//                imgsffav.removeFavoriteImage(fav)
-//                val snackbar = Snackbar.make(view!!,"تم الاضافة",Snackbar.LENGTH_SHORT)
-//                snackbar.show()
-//                setUpViewPager()
-//                viewPagerAdapter.notifyDataSetChanged()
-//
-//            }
+
+            println("it.is_fav: ${it.is_fav}")
             if (it.is_fav) {
                 imgsffav.removeFavoriteImage(fav)
                 val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
                 snackbar.show()
                 setUpViewPager()
+                it.is_fav = false
+                imgsffav.updateImages()
                 viewPagerAdapter.notifyDataSetChanged()
+                println("it.is_fav: ${it.is_fav}")
             }
+
             else{
                 imgsffav.addFavoriteImage(fav)
                 val snackbar = Snackbar.make(view!!, "تم الاضافة", Snackbar.LENGTH_SHORT)
                 snackbar.show()
                 setUpViewPager()
+                it.is_fav = true
                 viewPagerAdapter.notifyDataSetChanged()
+                println("it.is_fav: ${it.is_fav}")
             }
+            // تحقق من قيمة it.is_fav
+            println("it.is_fav: ${it.is_fav}")
+            setUpViewPager()
+            imgsffav.updateImages()
+            viewPagerAdapter.notifyDataSetChanged()
+            println("it.is_fav: ${it.is_fav}")
         }
+
 
     }
 /*
