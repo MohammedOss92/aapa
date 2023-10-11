@@ -32,14 +32,14 @@ class ThirdFragment : Fragment() {
     private lateinit var _binding: FragmentThirdBinding
     private val binding get() = _binding
     private val retrofitService = ApiService.provideRetrofitInstance()
-    private val mainRepository by lazy { ImgRepository(retrofitService) }
+    private val mainRepository by lazy { ImgRepository(retrofitService,requireActivity().application) }
     private val imgsViewModel: Imgs_ViewModel by viewModels {
         ViewModelFactory(requireContext(), mainRepository)
     }
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
     private var ID_Type_id = -1
     private var recyclerViewState: Parcelable? = null
-    private var customScrollState = CustomScrollState()
+//    private var customScrollState = CustomScrollState()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,8 +57,8 @@ class ThirdFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // حفظ حالة التمرير
-        recyclerViewState = binding.rvImgCont.layoutManager?.onSaveInstanceState()
-        outState.putParcelable("recycler_state", recyclerViewState)
+//        recyclerViewState = binding.rvImgCont.layoutManager?.onSaveInstanceState()
+//        outState.putParcelable("recycler_state", recyclerViewState)
     }
 
 
@@ -69,15 +69,15 @@ class ThirdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        savedInstanceState?.let { bundle ->
-            // استعادة حالة التمرير
-            recyclerViewState = bundle.getParcelable("recycler_state")
-        }
-
-        val layoutManager = binding.rvImgCont.layoutManager
-        if (layoutManager is GridLayoutManager) {
-            layoutManager.scrollToPosition(customScrollState.scrollPosition)
-        }
+//        savedInstanceState?.let { bundle ->
+//            // استعادة حالة التمرير
+//            recyclerViewState = bundle.getParcelable("recycler_state")
+//        }
+//
+//        val layoutManager = binding.rvImgCont.layoutManager
+//        if (layoutManager is GridLayoutManager) {
+//            layoutManager.scrollToPosition(customScrollState.scrollPosition)
+//        }
 
         imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
             if (isConnected) {
@@ -109,10 +109,10 @@ class ThirdFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        val layoutManager = binding.rvImgCont.layoutManager
-        if (layoutManager is LinearLayoutManager) {
-            customScrollState.scrollPosition = layoutManager.findFirstVisibleItemPosition()
-        }
+//        val layoutManager = binding.rvImgCont.layoutManager
+//        if (layoutManager is LinearLayoutManager) {
+//            customScrollState.scrollPosition = layoutManager.findFirstVisibleItemPosition()
+//        }
     }
 
 //    private fun setUpRv() = lifecycleScope.launch {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
@@ -30,7 +31,11 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 }
             }
             else{
-                    binding.root.setOnClickListener{Toast.makeText(con,"ghghg",Toast.LENGTH_SHORT).show()}
+                    binding.root.setOnClickListener{
+//                        Toast.makeText(con,"ghghg",Toast.LENGTH_SHORT).show()
+                        val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
+                        snackbar.show()
+                    }
 
                 }
             }
@@ -68,6 +73,9 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 binding.lyNoInternet.visibility = View.GONE
             } else {
                 // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
+                Glide.with(con)
+                    .load(R.drawable.nonet) // تحميل صورة nonet.jpg
+                    .into(binding.imgadapterImgViewContent)
                 binding.imgadapterImgViewContent.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
             }

@@ -21,5 +21,14 @@ interface Favorite_Dao {
     @Delete
     suspend fun deletefav_Dao(item:FavoriteModel)
 
+    @Query("SELECT * FROM Favorite_table WHERE id = :id")
+    fun getFavoriteByID(id: Int): FavoriteModel?
+
+//    @Query("UPDATE Favorite_table SET favorite = :isFavorite WHERE id = :id")
+//    suspend fun updateFavoriteStatus(id: Int, isFavorite: Boolean)
+//
+
+
+
 
 }

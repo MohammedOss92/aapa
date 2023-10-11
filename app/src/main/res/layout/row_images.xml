@@ -31,12 +31,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_weight="1">
-                        <Button
-                            android:id="@+id/s"
+                    android:layout_weight="0.5">
+                        <ImageView
+                            android:id="@+id/imgFave"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Button 1" />
+                            android:text=""
+                            android:src="@drawable/ic_favorite"/>
 
                         <Button
                             android:id="@+id/ss"
@@ -50,5 +51,12 @@
 <!--                            android:layout_height="wrap_content"-->
 <!--                            android:text="Button 3" />-->
                 </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="0.5"/>
 
 </LinearLayout>

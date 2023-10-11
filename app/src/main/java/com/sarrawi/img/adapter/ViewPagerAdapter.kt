@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.sarrawi.img.R
 import com.sarrawi.img.databinding.RowImagesBinding
 
 import com.sarrawi.img.model.ImgsModel
@@ -17,7 +18,7 @@ class ViewPagerAdapter(val con: Context):
     RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>() {
 
     var onItemClick: ((Int) -> Unit)? = null
-
+    var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
     private var isToolbarVisible = true
 
 
@@ -28,8 +29,8 @@ class ViewPagerAdapter(val con: Context):
                 onItemClick?.invoke(img_list[layoutPosition].id?:0)
             }
 
-            binding.ss.setOnClickListener {  }
-            binding.s.setOnClickListener {  }
+
+
 
         }
 
@@ -40,9 +41,17 @@ class ViewPagerAdapter(val con: Context):
             Glide.with(con)
                 .load(current_imgModel.image_url)
                 .into(binding.imageView)
+            binding.apply {
+             if(current_imgModel.is_fav){
+                imgFave.setImageResource(R.drawable.baseline_favorite_true)
+             }else{
+                 imgFave.setImageResource(R.drawable.baseline_favorite_border_false)
+             }
 
-
-
+            }
+            binding.imgFave.setOnClickListener {
+                onbtnClick?.invoke(img_list[position],position)
+            }
 
         }
     }
