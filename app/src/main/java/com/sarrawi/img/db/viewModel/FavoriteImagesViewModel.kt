@@ -53,6 +53,21 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
         }
     }
 
+    fun getAllFavoriteImages() {
+        viewModelScope.launch {
+            val images = repository.getAllFavoriteImages()
+            println("Favorite images from the database: $images")
+            _favoriteImages.postValue(images)
+        }
+    }
+
+    fun getAllFav(): LiveData<List<FavoriteImage>> {
+
+
+
+        return repository.getAllFavorite()
+    }
+
 
     // This method should be called after adding or removing images
 //    public fun updateImages() {

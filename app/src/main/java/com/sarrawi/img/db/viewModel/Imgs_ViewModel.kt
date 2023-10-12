@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.db.repository.ImgRepository
-import com.sarrawi.img.model.FavoriteModel
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.utils.NetworkConnection
 import kotlinx.coroutines.launch
@@ -21,9 +20,7 @@ class Imgs_ViewModel(private val context: Context,  private val imgsRepo:ImgRepo
     private val _isLoading = MutableLiveData<Boolean>()
 
 
-    private var __response = MutableLiveData<List<FavoriteModel>>()
-    val responseMsgsFav: MutableLiveData<List<FavoriteModel>>
-        get() = __response
+
 
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -147,27 +144,14 @@ private val _isConnected = MutableLiveData<Boolean>()
 //    }
 
 
-    fun add_fav(fav: FavoriteModel)= viewModelScope.launch {
-        imgsRepo.add_fav(fav)
-    }
+
 
 //    // update msg_table items favorite state
 //    fun update_fav(id: Int,state:Boolean) = viewModelScope.launch {
 //        imgsRepo.update_fav(id,state)
 //    }
 
-    fun getFav(): MutableLiveData<List<FavoriteModel>> {
-        Log.e("tessst","entred22")
-        viewModelScope.launch {
-            imgsRepo.getAllFav()
-        }
-        return __response
-    }
 
-    // delete favorite item from db
-    fun delete_fav(fav: FavoriteModel)= viewModelScope.launch {
-        imgsRepo.deleteFav(fav)
-    }
 
 
 }

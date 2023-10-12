@@ -1,5 +1,6 @@
 package com.sarrawi.img.db.Dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.sarrawi.img.model.FavoriteImage
 
@@ -12,6 +13,12 @@ interface FavoriteImageDao {
     @Delete
     suspend fun deleteFavoriteImage(favoriteImage: FavoriteImage)
 
-    @Query("SELECT * FROM favorite_images")
+    @Query("SELECT * FROM favorite_images order by id desc ")
     suspend fun getAllFavoriteImages(): List<FavoriteImage>
+
+    @Query("Update favorite_images SET is_fav = :state where id =:ID")
+    suspend fun update_fav(ID:Int,state:Boolean)
+
+    @Query("SELECT * FROM favorite_images order by id desc ")
+    fun getAllFavorite(): LiveData<List<FavoriteImage>>
 }

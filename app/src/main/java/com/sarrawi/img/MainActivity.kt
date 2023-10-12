@@ -9,7 +9,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sarrawi.img.databinding.ActivityMainBinding
 import com.sarrawi.img.db.viewModel.ImgTypes_ViewModel
 
@@ -17,7 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
+    private lateinit var bottomNav : BottomNavigationView
+    private lateinit var navController: NavController
     var fragment = 1
     private val imgtypesViewmodel:ImgTypes_ViewModel by lazy {
         ViewModelProvider(this,ImgTypes_ViewModel.ImgTypesViewModelFactory(this.application))[imgtypesViewmodel::class.java]
@@ -31,11 +36,31 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = ""
+        bottomNav = findViewById(R.id.bottomNav)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.splashScreenFragment,R.id.FirstFragment,R.id.thirdFragment,R.id.fourFragment,R.id.SecondFragment))
+        navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.SecondFragment, R.id.favoriteFragmentRecy,R.id.thirdFragment,R.id.fourFragment,R.id.splashScreenFragment))
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+        bottomNav.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment || destination.id == R.id.fourFragment) {
+
+                bottomNav.visibility = View.GONE
+            } else {
+
+                bottomNav.visibility = View.VISIBLE
+            }
+
+        }
+
+
+//s
+
+//        setupActionBarWithNavController(navController,appBarConfiguration)
+
 
 
     }

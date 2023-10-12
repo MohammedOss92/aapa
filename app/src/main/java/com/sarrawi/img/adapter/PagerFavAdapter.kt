@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.RowImagesBinding
+import com.sarrawi.img.model.FavoriteImage
 
 import com.sarrawi.img.model.ImgsModel
 
-class ViewPagerAdapter(val con: Context):
-    RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>() {
+class PagerFavAdapter(val con: Context):
+    RecyclerView.Adapter<PagerFavAdapter.ViewHolder>() {
 
     var onItemClick: ((Int) -> Unit)? = null
-    var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
+    var onbtnClick: ((item:FavoriteImage,position:Int) -> Unit)? = null
     private var isToolbarVisible = true
 
 
@@ -42,11 +43,11 @@ class ViewPagerAdapter(val con: Context):
                 .load(current_imgModel.image_url)
                 .into(binding.imageView)
             binding.apply {
-             if(current_imgModel.is_fav){
-                imgFave.setImageResource(R.drawable.baseline_favorite_true)
-             }else{
-                 imgFave.setImageResource(R.drawable.baseline_favorite_border_false)
-             }
+                if(current_imgModel.is_fav){
+                    imgFave.setImageResource(R.drawable.baseline_favorite_true)
+                }else{
+                    imgFave.setImageResource(R.drawable.baseline_favorite_border_false)
+                }
 
             }
             binding.imgFave.setOnClickListener {
@@ -56,19 +57,19 @@ class ViewPagerAdapter(val con: Context):
         }
     }
 
-    private val diffCallback = object : DiffUtil.ItemCallback<ImgsModel>(){
-        override fun areItemsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
+    private val diffCallback = object : DiffUtil.ItemCallback<FavoriteImage>(){
+        override fun areItemsTheSame(oldItem: FavoriteImage, newItem: FavoriteImage): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
+        override fun areContentsTheSame(oldItem: FavoriteImage, newItem: FavoriteImage): Boolean {
             return newItem == oldItem
         }
 
     }
 
     private val differ = AsyncListDiffer(this, diffCallback)
-    var img_list: List<ImgsModel>
+    var img_list: List<FavoriteImage>
         get() = differ.currentList
         set(value) {
             differ.submitList(value)

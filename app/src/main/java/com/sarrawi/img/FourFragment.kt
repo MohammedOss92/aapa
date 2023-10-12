@@ -19,7 +19,6 @@ import com.sarrawi.img.db.Dao.Imgs_Dao
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.FavoriteImage
-import com.sarrawi.img.model.FavoriteModel
 import com.sarrawi.img.model.ImgsModel
 
 class FourFragment : Fragment() {
@@ -49,17 +48,16 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
 
 
-    private val favoriteViewModel: FavoriteViewModel by lazy {
-        ViewModelProvider(requireActivity(), ViewModelFactory_(requireActivity().application)).get(
-            FavoriteViewModel::class.java)
-    }
+
 
     private val viewPagerAdapter by lazy {
     ViewPagerAdapter(requireActivity())
         }
 
     private var ID_Type_id = -1
-    private  var currentItemId:Int=0;
+    private  var currentItemId:Int=0
+
+
 
         override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -206,28 +204,31 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
             println("it.is_fav: ${it.is_fav}")
             if (it.is_fav) {
                 imgsffav.removeFavoriteImage(fav)
+                it.is_fav = false
+                imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
                 snackbar.show()
                 setUpViewPager()
-                it.is_fav = false
-                imgsffav.updateImages()
+
                 viewPagerAdapter.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
             }
 
             else{
                 imgsffav.addFavoriteImage(fav)
+                it.is_fav = true
+                imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الاضافة", Snackbar.LENGTH_SHORT)
                 snackbar.show()
                 setUpViewPager()
-                it.is_fav = true
+
                 viewPagerAdapter.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
             }
             // تحقق من قيمة it.is_fav
             println("it.is_fav: ${it.is_fav}")
             setUpViewPager()
-            imgsffav.updateImages()
+
             viewPagerAdapter.notifyDataSetChanged()
             println("it.is_fav: ${it.is_fav}")
         }
