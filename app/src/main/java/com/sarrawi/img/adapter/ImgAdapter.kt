@@ -20,6 +20,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
     var onItemClick: ((Int, Int) -> Unit)? = null
     private var isInternetConnected: Boolean = true
 
+    var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
 
     inner class ViewHolder(val binding:ImgDesignBinding):RecyclerView.ViewHolder(binding.root) {
 
@@ -28,7 +29,20 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 binding.root.setOnClickListener {
                     //اذا كانت null سيتم استخدام 0؟
                     onItemClick?.invoke(img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
+//                    var onItemClick: ((Int, String) -> Unit)? = null
+
+//                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0, img_list[layoutPosition].image_url ?: "")
+
+//                    val position = adapterPosition
+//                    val item = img_list.getOrNull(position)
+//
+//                    item?.let {
+//                        val img_url = item.image_url
+//
+//                        onItemClick?.invoke(img_url,position)
+//                    }
                 }
+
             }
             else{
                     binding.root.setOnClickListener{
@@ -71,6 +85,15 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                     .circleCrop()
                     .into(binding.imgadapterImgViewContent)
                 binding.lyNoInternet.visibility = View.GONE
+
+                binding.apply {
+                    if(current_imgModel.is_fav){
+                        imgFave.setImageResource(R.drawable.baseline_favorite_true)
+                    }else{
+                        imgFave.setImageResource(R.drawable.baseline_favorite_border_false)
+                    }
+
+                }
             } else {
                 // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
                 Glide.with(con)
@@ -78,6 +101,11 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                     .into(binding.imgadapterImgViewContent)
                 binding.imgadapterImgViewContent.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
+            }
+
+
+            binding.imgFave.setOnClickListener {
+                onbtnClick?.invoke(img_list[position], position)
             }
         }
 

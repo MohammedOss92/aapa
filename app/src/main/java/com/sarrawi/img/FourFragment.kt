@@ -12,6 +12,10 @@ import android.widget.Toast
 import androidx.core.view.*
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentFourBinding
@@ -82,6 +86,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
          //
             setHasOptionsMenu(true)
             menu_item()
+            setUpRv()
             adapterOnClick()
             imgsffav.updateImages()
             // Live Connected
@@ -89,7 +94,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                     isConnected ->
 
                 if (isConnected) {
-                  setUpViewPager()
+//                  setUpViewPager()
                     adapterOnClick()
                  binding.lyNoInternet.visibility = View.GONE
                     
@@ -124,23 +129,49 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
         }
 
-    private fun setUpViewPager() =
-        imgsViewmodel.viewModelScope.launch {
-        imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
-             // print data
-            if (imgs != null) {
-                viewPagerAdapter.img_list=imgs
-                binding.viewpager.adapter =viewPagerAdapter
-                binding.viewpager.setCurrentItem(currentItemId,false) // set for selected item
-                viewPagerAdapter.notifyDataSetChanged()
+    private fun setUpRv() {
+        if (isAdded) {
+            imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
+                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
+                viewPagerAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+
+                if (imgs.isEmpty()) {
+                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+                    imgsViewmodel.getAllImgsViewModel(ID_Type_id)
+                } else {
+                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+                    viewPagerAdapter.img_list = imgs
+                    if (binding.rvImgCont.adapter == null) {
+                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
+                        binding.rvImgCont.adapter = viewPagerAdapter
+                    } else {
+                        viewPagerAdapter.notifyDataSetChanged()
+                    }
+                }
+
 
             }
+        }
+    }
 
-            else {
-                // No data
-             }
-
-        }}
+//    private fun setUpViewPager() =
+//        imgsViewmodel.viewModelScope.launch {
+//        imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
+//             // print data
+//            if (imgs != null) {
+//                viewPagerAdapter.img_list=imgs
+//                binding.viewpager.adapter =viewPagerAdapter
+//                binding.viewpager.setCurrentItem(currentItemId,false) // set for selected item
+//                viewPagerAdapter.notifyDataSetChanged()
+//
+//            }
+//
+//            else {
+//                // No data
+//             }
+//
+//        }
+//        }
 
             override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
                 inflater.inflate(R.menu.menu_fragment_four, menu)
@@ -203,31 +234,33 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
             println("it.is_fav: ${it.is_fav}")
             if (it.is_fav) {
-                imgsffav.removeFavoriteImage(fav)
                 it.is_fav = false
+                imgsffav.removeFavoriteImage(fav)
+
                 imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
                 snackbar.show()
-                setUpViewPager()
+//                setUpViewPager()
 
                 viewPagerAdapter.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
             }
 
             else{
-                imgsffav.addFavoriteImage(fav)
                 it.is_fav = true
+                imgsffav.addFavoriteImage(fav)
+
                 imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الاضافة", Snackbar.LENGTH_SHORT)
                 snackbar.show()
-                setUpViewPager()
+//                setUpViewPager()
 
                 viewPagerAdapter.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
             }
             // تحقق من قيمة it.is_fav
             println("it.is_fav: ${it.is_fav}")
-            setUpViewPager()
+//            setUpViewPager()
 
             viewPagerAdapter.notifyDataSetChanged()
             println("it.is_fav: ${it.is_fav}")

@@ -1,5 +1,7 @@
 package com.sarrawi.img
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.adapter.ImgAdapter
 import com.sarrawi.img.db.repository.ImgRepository
-import com.sarrawi.img.db.viewModel.Imgs_ViewModel
-import com.sarrawi.img.db.viewModel.ViewModelFactory
 import kotlinx.coroutines.launch
 import android.os.Handler
 import android.os.Looper
@@ -25,7 +25,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.databinding.FragmentThirdBinding
-import com.sarrawi.img.db.viewModel.SharedViewModel
+import com.sarrawi.img.db.repository.FavoriteImageRepository
+import com.sarrawi.img.db.viewModel.*
+import com.sarrawi.img.model.FavoriteImage
+import com.sarrawi.img.model.ImgsModel
 
 class ThirdFragment : Fragment() {
 
@@ -40,6 +43,12 @@ class ThirdFragment : Fragment() {
     private var ID_Type_id = -1
     private var recyclerViewState: Parcelable? = null
 //    private var customScrollState = CustomScrollState()
+
+    private val a by lazy {  FavoriteImageRepository(requireActivity().application) }
+    lateinit var sharedPreferences:SharedPreferences
+    private val imgsffav: FavoriteImagesViewModel by viewModels {
+        ViewModelFactory2(a)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +76,8 @@ class ThirdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        sharedPreferences= requireContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("is_fav_", true).apply()
 
 //        savedInstanceState?.let { bundle ->
 //            // استعادة حالة التمرير
@@ -197,7 +207,7 @@ class ThirdFragment : Fragment() {
                     // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
                     imgAdapter.img_list = imgs
                     if (binding.rvImgCont.adapter == null) {
-                        binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 3)
+                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
                         binding.rvImgCont.adapter = imgAdapter
                     } else {
                         imgAdapter.notifyDataSetChanged()
@@ -223,6 +233,7 @@ class ThirdFragment : Fragment() {
 
 
     private fun adapterOnClick() {
+
         imgAdapter.onItemClick = { _, currentItemId ->
             if (imgsViewModel.isConnected.value == true) {
                 val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
@@ -236,5 +247,147 @@ class ThirdFragment : Fragment() {
                 snackbar.show()
             }
         }
+
+//        imgAdapter.onbtnClick = { it: ImgsModel, i:Int ->
+//            val fav= FavoriteImage(it.id!!,it.ID_Type_id,it.new_img,it.image_url)
+//
+//            println("it.is_fav: ${it.is_fav}")
+//            if (it.is_fav) {
+//                it.is_fav = false
+//                imgsffav.removeFavoriteImage(fav)
+//
+//                imgsffav.updateImages()
+//                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+////                setUpViewPager()
+//
+//                imgAdapter.notifyDataSetChanged()
+//                println("it.is_fav: ${it.is_fav}")
+//            }
+//
+//            else{
+//                it.is_fav = true
+//                imgsffav.addFavoriteImage(fav)
+//
+//                imgsffav.updateImages()
+//                val snackbar = Snackbar.make(view!!, "تم الاضافة", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+////                setUpViewPager()
+//
+//                imgAdapter.notifyDataSetChanged()
+//                println("it.is_fav: ${it.is_fav}")
+//            }
+//            // تحقق من قيمة it.is_fav
+//            println("it.is_fav: ${it.is_fav}")
+////            setUpViewPager()
+//
+//            imgAdapter.notifyDataSetChanged()
+//            println("it.is_fav: ${it.is_fav}")
+//        }
+
+//        imgAdapter.onbtnClick = { it: ImgsModel, i:Int ->
+//            val fav = FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url)
+//
+//            // قم بالحصول على مشغل SharedPreferences
+//            val sharedPreferences = requireContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+//
+//            println("it.is_fav: ${it.is_fav}")
+//            if (it.is_fav) {
+//                sharedPreferences.edit().putBoolean("is_fav_${it.id}", false).apply()
+//
+//                it.is_fav = false
+//                imgsffav.removeFavoriteImage(fav)
+//                imgsffav.updateImages()
+//                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+//                imgAdapter.notifyDataSetChanged()
+//                println("it.is_fav: ${it.is_fav}")
+//
+//
+//            } else {
+//                sharedPreferences.edit().putBoolean("is_fav_${it.id}", true).apply()
+//                it.is_fav = true
+//                imgsffav.addFavoriteImage(fav)
+//                imgsffav.updateImages()
+//                val snackbar = Snackbar.make(view!!, "تم الاضافة", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+//                imgAdapter.notifyDataSetChanged()
+//                println("it.is_fav: ${it.is_fav}")
+//            }
+//
+//            // حفظ قيمة is_fav في SharedPreferences
+////            sharedPreferences.edit().putBoolean("is_fav_${it.id}", it.is_fav).apply()
+//
+//            // تحقق من قيمة it.is_fav
+//            println("it.is_fav: ${it.is_fav}")
+//        }
+
+//        imgAdapter.onbtnClick = { it: ImgsModel, i:Int ->
+//            // قم بالحصول على مشغل SharedPreferences
+//            val sharedPreferences = requireContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+//
+//            // استرجاع القيمة is_fav من SharedPreferences
+//            val isFav = sharedPreferences.getBoolean("is_fav_${it.id}", false)
+//
+//            // تحديث قيمة is_fav في كائن ImgsModel
+//            it.is_fav = isFav
+//
+//            if (it.is_fav) {
+//                // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
+//                sharedPreferences.edit().putBoolean("is_fav_${it.id}", false).apply()
+//                it.is_fav = false
+//                imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+//                imgsffav.updateImages()
+//                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+//            } else {
+//                // إذا لم تكن الصورة مفضلة، قم بإضافتها للمفضلة
+//                sharedPreferences.edit().putBoolean("is_fav_${it.id}", true).apply()
+//                it.is_fav = true
+//                imgsffav.addFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+//                imgsffav.updateImages()
+//                val snackbar = Snackbar.make(view!!, "تم الإضافة", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+//            }
+//
+//            // تحقق من قيمة it.is_fav
+//            println("it.is_fav: ${it.is_fav}")
+//
+//            // تحديث RecyclerView Adapter
+//            imgAdapter.notifyDataSetChanged()
+//        }
+
+        imgAdapter.onbtnClick = { it: ImgsModel, i:Int ->
+            // قم بالحصول على مشغل SharedPreferences
+             sharedPreferences = requireContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+            // استرجاع القيمة is_fav من SharedPreferences
+            val isFav = sharedPreferences.getBoolean("is_fav_${it.id}", false)
+            // تحديث قيمة is_fav في كائن ImgsModel
+            it.is_fav = isFav
+            if (it.is_fav) {
+                // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
+                sharedPreferences.edit().putBoolean("is_fav_${it.id}", false).apply()
+                it.is_fav = false
+                imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+                imgsffav.updateImages()
+                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+                snackbar.show()
+            } else {
+                // إذا لم تكن الصورة مفضلة، قم بإضافتها للمفضلة
+                sharedPreferences.edit().putBoolean("is_fav_${it.id}", true).apply()
+                it.is_fav = true
+                imgsffav.addFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+                imgsffav.updateImages()
+                val snackbar = Snackbar.make(view!!, "تم الإضافة", Snackbar.LENGTH_SHORT)
+                snackbar.show()
+            }
+            // تحقق من قيمة it.is_fav
+            println("it.is_fav: ${it.is_fav}")
+            // تحديث RecyclerView Adapter
+            imgAdapter.notifyDataSetChanged()
+        }
+
+
     }
+
 }

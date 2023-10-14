@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImgDesignBinding
+import com.sarrawi.img.databinding.ImgDesignfavBinding
 import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 
@@ -18,14 +19,18 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
 
     private var isInternetConnected: Boolean = true
     var onItemClick: ((Int, Int) -> Unit)? = null
+    var onbtnclick: ((item:FavoriteImage) -> Unit)? = null
 
 
-    inner class ViewHolder(val binding: ImgDesignBinding):RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ImgDesignfavBinding):RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
                 //اذا كانت null سيتم استخدام 0؟
                 onItemClick?.invoke(fav_img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
+            }
+            binding.imgFave.setOnClickListener {
+                onbtnclick?.invoke(fav_img_list[adapterPosition])
             }
 
         }
@@ -90,7 +95,7 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return  ViewHolder(ImgDesignBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return  ViewHolder(ImgDesignfavBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

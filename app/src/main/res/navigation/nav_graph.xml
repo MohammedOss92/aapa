@@ -65,7 +65,6 @@
     <fragment
         android:id="@+id/favoriteFragmentRecy"
         android:name="com.sarrawi.img.FavoriteFragmentRecy"
-        android:label="fragment_favorite_recy"
         tools:layout="@layout/fragment_favorite_recy" />
 
 

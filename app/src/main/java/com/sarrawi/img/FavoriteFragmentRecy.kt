@@ -20,6 +20,7 @@ import com.sarrawi.img.db.viewModel.FavoriteImagesViewModel
 import com.sarrawi.img.db.viewModel.Imgs_ViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory
 import com.sarrawi.img.db.viewModel.ViewModelFactory2
+import com.sarrawi.img.model.FavoriteImage
 
 
 class FavoriteFragmentRecy : Fragment() {
@@ -28,7 +29,11 @@ class FavoriteFragmentRecy : Fragment() {
 
     private val binding get() = _binding
 
+    private val a by lazy {  FavoriteImageRepository(requireActivity().application) }
 
+    private val imgsffav: FavoriteImagesViewModel by viewModels {
+        ViewModelFactory2(a)
+    }
     private val favAdapter by lazy { Fav_Adapter(requireActivity()) }
 
     private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
@@ -101,6 +106,14 @@ class FavoriteFragmentRecy : Fragment() {
 //                val directions = FavoriteFragmentRecyDirections.actionFavoriteFragmentRecyToFourFragment(ID, currentItemId)
 //                findNavController().navigate(directions)
 
+        }
+        favAdapter.onbtnclick = {
+            it.is_fav = false
+            imgsffav.updateImages()
+            imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+
+            val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+            snackbar.show()
         }
     }
     }
