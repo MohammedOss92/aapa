@@ -68,6 +68,11 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
         return repository.getAllFavorite()
     }
 
+    fun getFavByIDModels(ID:Int): LiveData<List<FavoriteImage>> {
+
+        return repository.getFavByIDRepo(ID)
+    }
+
 
     // This method should be called after adding or removing images
 //    public fun updateImages() {

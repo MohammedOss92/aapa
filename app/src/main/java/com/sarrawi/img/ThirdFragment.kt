@@ -45,7 +45,6 @@ class ThirdFragment : Fragment() {
 //    private var customScrollState = CustomScrollState()
 
     private val a by lazy {  FavoriteImageRepository(requireActivity().application) }
-    lateinit var sharedPreferences:SharedPreferences
     private val imgsffav: FavoriteImagesViewModel by viewModels {
         ViewModelFactory2(a)
     }
@@ -76,8 +75,7 @@ class ThirdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreferences= requireContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putBoolean("is_fav_", true).apply()
+
 
 //        savedInstanceState?.let { bundle ->
 //            // استعادة حالة التمرير
@@ -358,25 +356,20 @@ class ThirdFragment : Fragment() {
 //        }
 
         imgAdapter.onbtnClick = { it: ImgsModel, i:Int ->
-            // قم بالحصول على مشغل SharedPreferences
-             sharedPreferences = requireContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-            // استرجاع القيمة is_fav من SharedPreferences
-            val isFav = sharedPreferences.getBoolean("is_fav_${it.id}", false)
-            // تحديث قيمة is_fav في كائن ImgsModel
-            it.is_fav = isFav
+
             if (it.is_fav) {
                 // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
-                sharedPreferences.edit().putBoolean("is_fav_${it.id}", false).apply()
                 it.is_fav = false
                 imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+                imgsffav.getFavByIDModels(it.id!!)
                 imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
                 snackbar.show()
             } else {
                 // إذا لم تكن الصورة مفضلة، قم بإضافتها للمفضلة
-                sharedPreferences.edit().putBoolean("is_fav_${it.id}", true).apply()
                 it.is_fav = true
                 imgsffav.addFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+                imgsffav.getFavByIDModels(it.id!!)
                 imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الإضافة", Snackbar.LENGTH_SHORT)
                 snackbar.show()

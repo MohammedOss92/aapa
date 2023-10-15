@@ -29,4 +29,8 @@ class FavoriteImageRepository(app:Application) {
     fun getAllFavorite(): LiveData<List<FavoriteImage>> {
         return favoriteImageDao.getAllFavorite()
     }
+
+    fun getFavByIDRepo(ID:Int): LiveData<List<FavoriteImage>> {
+        return favoriteImageDao.getFavByID(ID)
+    }
 }
