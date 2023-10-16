@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_images")
 data class FavoriteImage(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     var id: Int = 0,
 
     @ColumnInfo(name = "ID_Type_id")
@@ -17,6 +18,7 @@ data class FavoriteImage(
 
     @ColumnInfo(name = "image_url")
     var image_url: String,
+
 
     var is_fav:Boolean = true
 )

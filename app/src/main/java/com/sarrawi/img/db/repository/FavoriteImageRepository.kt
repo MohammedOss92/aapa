@@ -30,7 +30,7 @@ class FavoriteImageRepository(app:Application) {
         return favoriteImageDao.getAllFavorite()
     }
 
-    fun getFavByIDRepo(ID:Int): LiveData<List<FavoriteImage>> {
-        return favoriteImageDao.getFavByID(ID)
+    fun getFavByIDRepo(id:Int): LiveData<List<FavoriteImage>> {
+        return favoriteImageDao.getFavByID(id)
     }
 }

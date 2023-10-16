@@ -361,16 +361,18 @@ class ThirdFragment : Fragment() {
                 // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
                 it.is_fav = false
                 imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
-                imgsffav.getFavByIDModels(it.id!!)
+
                 imgsffav.updateImages()
+                imgsffav.getFavByIDModels(it.id!!)
                 val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
                 snackbar.show()
             } else {
                 // إذا لم تكن الصورة مفضلة، قم بإضافتها للمفضلة
                 it.is_fav = true
                 imgsffav.addFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
-                imgsffav.getFavByIDModels(it.id!!)
+
                 imgsffav.updateImages()
+                imgsffav.getFavByIDModels(it.id!!)
                 val snackbar = Snackbar.make(view!!, "تم الإضافة", Snackbar.LENGTH_SHORT)
                 snackbar.show()
             }

@@ -15,8 +15,12 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
     private val _favoriteImages = MutableLiveData<List<FavoriteImage>>()
     val favoriteImages: LiveData<List<FavoriteImage>> = _favoriteImages
 
+    private val _favorite = MutableLiveData<List<FavoriteImage>>()
+    val favorite: LiveData<List<FavoriteImage>> = _favorite
 
-
+    private var __response = MutableLiveData<List<FavoriteImage>>()
+    val responseMsgsFav: MutableLiveData<List<FavoriteImage>>
+        get() = __response
     init {
         // Initialize _favoriteImages with data from the repository
         viewModelScope.launch(Dispatchers.IO) {
@@ -68,9 +72,9 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
         return repository.getAllFavorite()
     }
 
-    fun getFavByIDModels(ID:Int): LiveData<List<FavoriteImage>> {
+    fun getFavByIDModels(id:Int): LiveData<List<FavoriteImage>> {
 
-        return repository.getFavByIDRepo(ID)
+        return repository.getFavByIDRepo(id)
     }
 
 
