@@ -354,7 +354,7 @@ class ThirdFragment : Fragment() {
 //            // تحديث RecyclerView Adapter
 //            imgAdapter.notifyDataSetChanged()
 //        }
-
+//ss
         imgAdapter.onbtnClick = { it: ImgsModel, i:Int ->
 
             if (it.is_fav) {
