@@ -30,18 +30,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 binding.root.setOnClickListener {
                     //اذا كانت null سيتم استخدام 0؟
                     onItemClick?.invoke(img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
-//                    var onItemClick: ((Int, String) -> Unit)? = null
 
-//                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0, img_list[layoutPosition].image_url ?: "")
-
-//                    val position = adapterPosition
-//                    val item = img_list.getOrNull(position)
-//
-//                    item?.let {
-//                        val img_url = item.image_url
-//
-//                        onItemClick?.invoke(img_url,position)
-//                    }
                 }
 
             }
@@ -59,23 +48,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
 
         fun bind(position: Int, isInternetConnected: Boolean) {
             if (isInternetConnected) {
-//                val current_imgModel = img_list[position]
-//                val requestOptions = RequestOptions()
-//                    .placeholder(R.drawable.nonet) // الصورة المؤقتة لحالة التحميل
-//                    .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
-//                    .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
-//                Glide.with(con)
-//                    .load(current_imgModel.image_url)
-//                    .apply(requestOptions)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .circleCrop()
-//                    .into(binding.imgadapterImgViewContent)
-//                binding.lyNoInternet.visibility = View.GONE
-//            } else {
-//                // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
-//                binding.imgadapterImgViewContent.visibility = View.GONE
-//                binding.lyNoInternet.visibility = View.VISIBLE
-//            }
+
                 val current_imgModel = img_list[position]
                 val requestOptions = RequestOptions()
                     .placeholder(R.drawable.ic_baseline_autorenew_24) // الصورة المؤقتة لحالة التحميل
@@ -111,19 +84,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
         }
 
 
-//
-//        fun bind(position: Int) {
-//
-//            val current_imgModel = img_list[position]
-//
-//
-//            Glide.with(con)
-//                .load(current_imgModel.image_url) // تحديد URL الصورة
-//                .circleCrop()
-//                .into(binding.imgadapterImgViewContent) // تحديد ImageView كهدف لعرض الصورة
-//
-//
-//        }
+
     }
 
     private val diffCallback = object : DiffUtil.ItemCallback<ImgsModel>(){
@@ -165,19 +126,5 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
         img_list = newData
         notifyDataSetChanged()
     }
-//
-    /*val currentImgModel = yourImgList[position]
 
-    // تحديد خيارات العرض للصورة المصغرة (مثل الحجم ومؤثرات أخرى)
-    val requestOptions = RequestOptions()
-        .placeholder(R.drawable.placeholder_image) // الصورة المؤقتة لحالة التحميل
-        .error(R.drawable.error_image) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
-        .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
-
-    // استخدام Glide لتحميل وعرض الصورة المصغرة
-    Glide.with(holder.itemView.context)
-        .load(currentImgModel.thumbnailUrl) // استخدام رابط الصورة المصغرة
-        .apply(requestOptions)
-        .transition(DrawableTransitionOptions.withCrossFade()) // تأثير انتقال بسيط عند تحميل الصورة
-        .into(holder.imgView) // اسم ImageView الذي سيتم عرض الصورة فيه في كل عنصر بالـ RecyclerView*/
 }

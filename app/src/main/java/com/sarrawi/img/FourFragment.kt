@@ -111,51 +111,10 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
             imgsViewmodel.checkNetworkConnection(requireContext())
 
 
-         //   if (imgsViewmodel.isConnected){
-           //     setUpViewPager()
-
-         //   }else
-         //   {
-         //       binding.progressBar.visibility = View.GONE
-         //       binding.lyNoInternet.visibility = View.VISIBLE
-           //  }
-
-
-//            imgsViewmodel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//                if (isLoading) {
-//                    binding.progressBar.visibility = View.VISIBLE // عرض ProgressBar إذا كان التحميل قيد التقدم
-//                } else {
-//                    binding.progressBar.visibility = View.GONE // إخفاء ProgressBar إذا انتهى التحميل
-//                }
-//            }
-
 
         }
 
-//    private fun setUpRv() {
-//        if (isAdded) {
-//            imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
-//                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
-//                viewPagerAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-//
-//                if (imgs.isEmpty()) {
-//                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-//                    imgsViewmodel.getAllImgsViewModel(ID_Type_id)
-//                } else {
-//                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-//                    viewPagerAdapter.img_list = imgs
-//                    if (binding.rvImgCont.adapter == null) {
-//                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
-//                        binding.rvImgCont.adapter = viewPagerAdapter
-//                    } else {
-//                        viewPagerAdapter.notifyDataSetChanged()
-//                    }
-//                }
-//
-//
-//            }
-//        }
-//    }
+
 
     private fun setUpRv() {
         if (isAdded) {
@@ -182,7 +141,14 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                         if (binding.rvImgCont.adapter == null) {
                             binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
                             binding.rvImgCont.adapter = viewPagerAdapter
-                        } else {
+                            viewPagerAdapter.notifyDataSetChanged()}
+
+//                        if (imgs != null) {
+//                            viewPagerAdapter.img_list=imgs
+//                            binding.viewpager.adapter =viewPagerAdapter
+//                            binding.viewpager.setCurrentItem(currentItemId,false) // set for selected item
+//                            viewPagerAdapter.notifyDataSetChanged()}
+                        else {
                             viewPagerAdapter.notifyDataSetChanged()
                         }
                     }
@@ -192,24 +158,6 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
             }
         }
     }
-//    private fun setUpViewPager() =
-//        imgsViewmodel.viewModelScope.launch {
-//        imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
-//             // print data
-//            if (imgs != null) {
-//                viewPagerAdapter.img_list=imgs
-//                binding.viewpager.adapter =viewPagerAdapter
-//                binding.viewpager.setCurrentItem(currentItemId,false) // set for selected item
-//                viewPagerAdapter.notifyDataSetChanged()
-//
-//            }
-//
-//            else {
-//                // No data
-//             }
-//
-//        }
-//        }
 
             override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
                 inflater.inflate(R.menu.menu_fragment_four, menu)
@@ -248,18 +196,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
                         return true
                     }
-//                    R.id.action_share -> {
-//                        val zekr = zeker_list[view_pager2?.currentItem ?: 0]
-//                        // Perform the share action using ShareText class
-//                        ShareText.shareText(
-//                            requireContext(),
-//                            "Share via",
-//                            "Zekr Header",
-//                            zekr.Description ?: ""
-//                        )
-//                        return true
-//                    }
-                    // ... (قائمة من المزيد من العناصر)
+
                 }
                 return false
             }
@@ -306,24 +243,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
 
     }
-/*
-    if (it.is_fav!!){
-                imgsViewmodel.update_fav(it.id!!,false)
-                imgsViewmodel.delete_fav(fav)
-                val snackbar = Snackbar.make(view!!,"تم الحذف",Snackbar.LENGTH_SHORT)
-                    snackbar.show()
-                setUpViewPager()
-                viewPagerAdapter.notifyDataSetChanged()
 
-            }else{
-                imgsViewmodel.update_fav(it.id!!,true)
-                imgsViewmodel.add_fav(fav)
-                val snackbar = Snackbar.make(view!!,"تم الاضافة",Snackbar.LENGTH_SHORT)
-                snackbar.show()
-                setUpViewPager()
-                viewPagerAdapter.notifyDataSetChanged()
-
-            }*/
 }
 
 
