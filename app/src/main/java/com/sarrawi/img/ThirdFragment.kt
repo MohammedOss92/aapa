@@ -44,6 +44,11 @@ class ThirdFragment : Fragment() {
     private var recyclerViewState: Parcelable? = null
 //    private var customScrollState = CustomScrollState()
 
+    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
+    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
+        ViewModelFactory2(favoriteImageRepository)
+    }
+
     private val a by lazy {  FavoriteImageRepository(requireActivity().application) }
     private val imgsffav: FavoriteImagesViewModel by viewModels {
         ViewModelFactory2(a)
@@ -192,10 +197,46 @@ class ThirdFragment : Fragment() {
 //            }
 //        }
 //    }
+//    private fun setUpRv() {
+//        if (isAdded) {
+//            imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
+//                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
+//                imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+//
+//                if (imgs.isEmpty()) {
+//                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+//                    imgsViewModel.getAllImgsViewModel(ID_Type_id)
+//                } else {
+//                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+//                    imgAdapter.img_list = imgs
+//                    if (binding.rvImgCont.adapter == null) {
+//                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
+//                        binding.rvImgCont.adapter = imgAdapter
+//                    } else {
+//                        imgAdapter.notifyDataSetChanged()
+//                    }
+//                }
+//
+//                imgAdapter.onItemClick = { _, currentItemId ->
+//                    if (imgsViewModel.isConnected.value == true) {
+//                        val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+//                        findNavController().navigate(directions)
+//                    } else {
+//                        val snackbar = Snackbar.make(
+//                            requireView(),
+//                            "لا يوجد اتصال بالإنترنت",
+//                            Snackbar.LENGTH_SHORT
+//                        )
+//                        snackbar.show()
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     private fun setUpRv() {
         if (isAdded) {
             imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
-                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
                 imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
                 if (imgs.isEmpty()) {
@@ -203,12 +244,24 @@ class ThirdFragment : Fragment() {
                     imgsViewModel.getAllImgsViewModel(ID_Type_id)
                 } else {
                     // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-                    imgAdapter.img_list = imgs
-                    if (binding.rvImgCont.adapter == null) {
-                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
-                        binding.rvImgCont.adapter = imgAdapter
-                    } else {
-                        imgAdapter.notifyDataSetChanged()
+
+                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
+                    favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { favoriteImages ->
+                        val allImages: List<ImgsModel> = imgs
+
+                        for (image in allImages) {
+                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
+                        }
+
+                        imgAdapter.img_list = allImages
+
+                        if (binding.rvImgCont.adapter == null) {
+                            binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
+                            binding.rvImgCont.adapter = imgAdapter
+                        } else {
+                            imgAdapter.notifyDataSetChanged()
+                        }
                     }
                 }
 
@@ -228,6 +281,7 @@ class ThirdFragment : Fragment() {
             }
         }
     }
+
 
 
     private fun adapterOnClick() {

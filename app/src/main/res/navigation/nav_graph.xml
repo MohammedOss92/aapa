@@ -53,6 +53,8 @@
             app:argType="integer" />
 
 
+
+
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"

@@ -18,6 +18,7 @@ import com.sarrawi.img.model.ImgsModel
 
 class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>() {
     var onItemClick: ((Int, Int) -> Unit)? = null
+
     private var isInternetConnected: Boolean = true
 
     var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null

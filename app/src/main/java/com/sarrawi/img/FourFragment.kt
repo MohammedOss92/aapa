@@ -51,7 +51,10 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
 
 
-
+    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
+    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
+        ViewModelFactory2(favoriteImageRepository)
+    }
 
 
     private val viewPagerAdapter by lazy {
@@ -129,10 +132,34 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
         }
 
+//    private fun setUpRv() {
+//        if (isAdded) {
+//            imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
+//                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
+//                viewPagerAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+//
+//                if (imgs.isEmpty()) {
+//                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+//                    imgsViewmodel.getAllImgsViewModel(ID_Type_id)
+//                } else {
+//                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+//                    viewPagerAdapter.img_list = imgs
+//                    if (binding.rvImgCont.adapter == null) {
+//                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
+//                        binding.rvImgCont.adapter = viewPagerAdapter
+//                    } else {
+//                        viewPagerAdapter.notifyDataSetChanged()
+//                    }
+//                }
+//
+//
+//            }
+//        }
+//    }
+
     private fun setUpRv() {
         if (isAdded) {
             imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
-                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
                 viewPagerAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
                 if (imgs.isEmpty()) {
@@ -140,12 +167,24 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                     imgsViewmodel.getAllImgsViewModel(ID_Type_id)
                 } else {
                     // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-                    viewPagerAdapter.img_list = imgs
-                    if (binding.rvImgCont.adapter == null) {
-                        binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
-                        binding.rvImgCont.adapter = viewPagerAdapter
-                    } else {
-                        viewPagerAdapter.notifyDataSetChanged()
+
+                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
+                    favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { favoriteImages ->
+                        val allImages: List<ImgsModel> = imgs
+
+                        for (image in allImages) {
+                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
+                        }
+
+                        viewPagerAdapter.img_list = allImages
+
+                        if (binding.rvImgCont.adapter == null) {
+                            binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
+                            binding.rvImgCont.adapter = viewPagerAdapter
+                        } else {
+                            viewPagerAdapter.notifyDataSetChanged()
+                        }
                     }
                 }
 
@@ -153,7 +192,6 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
             }
         }
     }
-
 //    private fun setUpViewPager() =
 //        imgsViewmodel.viewModelScope.launch {
 //        imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(requireActivity()) { imgs ->
