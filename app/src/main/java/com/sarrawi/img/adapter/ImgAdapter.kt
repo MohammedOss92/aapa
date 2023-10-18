@@ -17,7 +17,7 @@ import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
 
 class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>() {
-    var onItemClick: ((Int, Int) -> Unit)? = null
+    var onItemClick: ((Int,ImgsModel, Int) -> Unit)? = null
 
     private var isInternetConnected: Boolean = true
 
@@ -29,7 +29,8 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
             if(isInternetConnected) {
                 binding.root.setOnClickListener {
                     //اذا كانت null سيتم استخدام 0؟
-                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
+//                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0,img_list[layoutPosition].image_url, layoutPosition ?: 0)
+                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0, img_list[layoutPosition], layoutPosition)
 
                 }
 

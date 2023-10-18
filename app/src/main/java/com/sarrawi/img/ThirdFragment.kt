@@ -40,7 +40,8 @@ class ThirdFragment : Fragment() {
         ViewModelFactory(requireContext(), mainRepository)
     }
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
-    private var ID_Type_id = -1
+    private var ID = -1
+    lateinit var image_url:String
     private var recyclerViewState: Parcelable? = null
 
     private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
@@ -63,7 +64,7 @@ class ThirdFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ID_Type_id = ThirdFragmentArgs.fromBundle(requireArguments()).id
+        ID = ThirdFragmentArgs.fromBundle(requireArguments()).id
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -115,12 +116,12 @@ class ThirdFragment : Fragment() {
 
     private fun setUpRv() {
         if (isAdded) {
-            imgsViewModel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
+            imgsViewModel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
                 imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
                 if (imgs.isEmpty()) {
                     // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-                    imgsViewModel.getAllImgsViewModel(ID_Type_id)
+                    imgsViewModel.getAllImgsViewModel(ID)
                 } else {
                     // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
 
@@ -144,9 +145,10 @@ class ThirdFragment : Fragment() {
                     }
                 }
 
-                imgAdapter.onItemClick = { _, currentItemId ->
+                imgAdapter.onItemClick = { _, imgModel: ImgsModel,currentItemId ->
                     if (imgsViewModel.isConnected.value == true) {
-                        val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+
+                        val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId,imgModel.image_url)
                         findNavController().navigate(directions)
 
 
@@ -167,9 +169,9 @@ class ThirdFragment : Fragment() {
 
     private fun adapterOnClick() {
 
-        imgAdapter.onItemClick = { _, currentItemId ->
+        imgAdapter.onItemClick = { _, imgModel: ImgsModel,currentItemId ->
             if (imgsViewModel.isConnected.value == true) {
-                val directions = ThirdFragmentDirections.actionToFourFragment(ID_Type_id, currentItemId)
+                val directions = ThirdFragmentDirections.actionToFourFragment(ID,currentItemId,imgModel.image_url)
                 findNavController().navigate(directions)
             } else {
                 val snackbar = Snackbar.make(

@@ -61,9 +61,13 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
     ViewPagerAdapter(requireActivity())
         }
 
+     var idd = -1
     private var ID_Type_id = -1
-    private  var currentItemId:Int=0
-
+    private var ID = -1
+    private var currentItemId = -1
+    private  var newimage:Int= -1
+    private lateinit var imageUrl : String
+    var imgsmodel: ImgsModel? = null // تهيئة المتغير كاختياري مع قيمة ابتدائية
 
 
         override fun onCreateView(
@@ -79,8 +83,17 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
         override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-            ID_Type_id = FourFragmentArgs.fromBundle(requireArguments()).id
+
+
+            ID = FourFragmentArgs.fromBundle(requireArguments()).id
             currentItemId = FourFragmentArgs.fromBundle(requireArguments()).currentItemId
+
+            imgsmodel?.image_url = FourFragmentArgs.fromBundle(requireArguments()).imageUrl
+
+//            idd = FourFragmentArgs.fromBundle(requireArguments()).id
+//            ID_Type_id = FourFragmentArgs.fromBundle(requireArguments()).idtype
+//            newimage = FourFragmentArgs.fromBundle(requireArguments()).newImg
+//            imageUrl = FourFragmentArgs.fromBundle(requireArguments()).imageUrl
 
         }
 
@@ -118,12 +131,12 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
     private fun setUpRv() {
         if (isAdded) {
-            imgsViewmodel.getAllImgsViewModel(ID_Type_id).observe(viewLifecycleOwner) { imgs ->
+            imgsViewmodel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
                 viewPagerAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
                 if (imgs.isEmpty()) {
                     // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-                    imgsViewmodel.getAllImgsViewModel(ID_Type_id)
+                    imgsViewmodel.getAllImgsViewModel(ID)
                 } else {
                     // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
 
@@ -150,6 +163,9 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 //                            viewPagerAdapter.notifyDataSetChanged()}
                         else {
                             viewPagerAdapter.notifyDataSetChanged()
+                        }
+                        if (currentItemId != -1) {
+                            binding.rvImgCont.scrollToPosition(currentItemId)
                         }
                     }
                 }
