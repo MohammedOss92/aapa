@@ -85,7 +85,29 @@
     <fragment
         android:id="@+id/favoriteFragmentRecy"
         android:name="com.sarrawi.img.FavoriteFragmentRecy"
-        tools:layout="@layout/fragment_favorite_recy" />
+        tools:layout="@layout/fragment_favorite_recy" >
+        <action
+            android:id="@+id/action_favoriteFragmentRecy_to_favFragmentLinRecy"
+            app:destination="@id/favFragmentLinRecy" />
+    </fragment>
+    <fragment
+        android:id="@+id/favFragmentLinRecy"
+        android:name="com.sarrawi.img.FavFragmentLinRecy"
+        tools:layout="@layout/fragment_fav_lin_recy">
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+        <argument
+            android:name="currentItemId"
+            app:argType="integer" />
+
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+
+    </fragment>
 
 
 </navigation>

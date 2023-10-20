@@ -145,7 +145,8 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                         val allImages: List<ImgsModel> = imgs
 
                         for (image in allImages) {
-                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+                            val isFavorite =
+                                favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
                             image.is_fav = isFavorite // قم بتحديث حالة الصورة
                         }
 
@@ -154,7 +155,15 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                         if (binding.rvImgCont.adapter == null) {
                             binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
                             binding.rvImgCont.adapter = viewPagerAdapter
-                            viewPagerAdapter.notifyDataSetChanged()}
+                            viewPagerAdapter.notifyDataSetChanged()
+                            binding.rvImgCont.postDelayed({
+                                (binding.rvImgCont.layoutManager as LinearLayoutManager).scrollToPosition(
+                                    currentItemId
+                                )
+                            }, 200)
+                        }
+
+
 
 //                        if (imgs != null) {
 //                            viewPagerAdapter.img_list=imgs
@@ -167,6 +176,9 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                         if (currentItemId != -1) {
                             binding.rvImgCont.scrollToPosition(currentItemId)
                         }
+                        binding.rvImgCont.setItemViewCacheSize(20)
+                        binding.rvImgCont.setDrawingCacheEnabled(true)
+                        binding.rvImgCont.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH)
                     }
                 }
 
@@ -235,6 +247,10 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
                 viewPagerAdapter.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
+                currentItemId = i
+                if (currentItemId != -1) {
+                    binding.rvImgCont.scrollToPosition(currentItemId)
+                }
             }
 
             else{
@@ -248,6 +264,10 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
                 viewPagerAdapter.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
+                currentItemId = i
+                if (currentItemId != -1) {
+                    binding.rvImgCont.scrollToPosition(currentItemId)
+                }
             }
             // تحقق من قيمة it.is_fav
             println("it.is_fav: ${it.is_fav}")
@@ -255,6 +275,9 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 
             viewPagerAdapter.notifyDataSetChanged()
             println("it.is_fav: ${it.is_fav}")
+            if (currentItemId != -1) {
+                binding.rvImgCont.scrollToPosition(currentItemId)
+            }
         }
 
 

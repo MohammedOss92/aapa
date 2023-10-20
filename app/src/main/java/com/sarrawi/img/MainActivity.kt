@@ -40,13 +40,13 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration =
-            AppBarConfiguration(setOf(R.id.SecondFragment, R.id.favoriteFragmentRecy,R.id.thirdFragment,R.id.fourFragment,R.id.splashScreenFragment))
+            AppBarConfiguration(setOf(R.id.SecondFragment, R.id.favoriteFragmentRecy,R.id.thirdFragment,R.id.fourFragment,R.id.splashScreenFragment,R.id.favFragmentLinRecy))
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment || destination.id == R.id.fourFragment) {
+            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment || destination.id == R.id.fourFragment|| destination.id == R.id.favFragmentLinRecy) {
 
                 bottomNav.visibility = View.GONE
             } else {

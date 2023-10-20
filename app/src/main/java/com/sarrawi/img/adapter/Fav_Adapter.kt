@@ -17,8 +17,8 @@ import com.sarrawi.img.model.ImgsModel
 
 class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder>() {
 
-    private var isInternetConnected: Boolean = true
-    var onItemClick: ((Int, Int) -> Unit)? = null
+
+    var onItemClick: ((Int,FavoriteImage, Int) -> Unit)? = null
     var onbtnclick: ((item:FavoriteImage) -> Unit)? = null
 
 
@@ -27,7 +27,8 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
         init {
             binding.root.setOnClickListener {
                 //اذا كانت null سيتم استخدام 0؟
-                onItemClick?.invoke(fav_img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
+                onItemClick?.invoke(fav_img_list[layoutPosition].id ?: 0, fav_img_list[layoutPosition], layoutPosition)
+
             }
             binding.imgFave.setOnClickListener {
                 onbtnclick?.invoke(fav_img_list[adapterPosition])
@@ -35,25 +36,9 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
 
         }
 
-        fun bind(position: Int, isInternetConnected: Boolean) {
-            if (isInternetConnected) {
-//                val current_imgModel = img_list[position]
-//                val requestOptions = RequestOptions()
-//                    .placeholder(R.drawable.nonet) // الصورة المؤقتة لحالة التحميل
-//                    .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
-//                    .circleCrop() // تطبيق مؤثر القص للحصول على صورة دائرية
-//                Glide.with(con)
-//                    .load(current_imgModel.image_url)
-//                    .apply(requestOptions)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .circleCrop()
-//                    .into(binding.imgadapterImgViewContent)
-//                binding.lyNoInternet.visibility = View.GONE
-//            } else {
-//                // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
-//                binding.imgadapterImgViewContent.visibility = View.GONE
-//                binding.lyNoInternet.visibility = View.VISIBLE
-//            }
+        fun bind(position: Int) {
+
+
                 val current_imgModel = fav_img_list[position]
                 val requestOptions = RequestOptions()
                     .placeholder(R.drawable.ic_baseline_autorenew_24) // الصورة المؤقتة لحالة التحميل
@@ -63,15 +48,7 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
                     .apply(requestOptions)
                     .circleCrop()
                     .into(binding.imgadapterImgViewContent)
-                binding.lyNoInternet.visibility = View.GONE
-            } else {
-                // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
-                Glide.with(con)
-                    .load(R.drawable.nonet) // تحميل صورة nonet.jpg
-                    .into(binding.imgadapterImgViewContent)
-                binding.imgadapterImgViewContent.visibility = View.GONE
-                binding.lyNoInternet.visibility = View.VISIBLE
-            }
+
         }
 
     }
@@ -99,7 +76,7 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(position,isInternetConnected)
+        holder.bind(position)
     }
 
     override fun getItemCount(): Int {
@@ -107,7 +84,6 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
     }
 
     fun updateInternetStatus(isConnected: Boolean) {
-        isInternetConnected = isConnected
         notifyDataSetChanged()
     }
 
