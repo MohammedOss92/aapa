@@ -1,4 +1,4 @@
-package com.sarrawi.img
+package com.sarrawi.img.ui.frag
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,12 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.sarrawi.img.adapter.TypesAdapter
 import com.sarrawi.img.adapter.TypesAdapter_T
 import com.sarrawi.img.databinding.FragmentSecondBinding
 import com.sarrawi.img.db.viewModel.ImgTypes_ViewModel
-import com.sarrawi.img.model.Img_Types_model
 import kotlinx.coroutines.launch
 
 /**

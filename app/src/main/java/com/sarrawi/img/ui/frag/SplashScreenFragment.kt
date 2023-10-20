@@ -1,4 +1,4 @@
-package com.sarrawi.img
+package com.sarrawi.img.ui.frag
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,11 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.sarrawi.img.databinding.ContentMainBinding.inflate
+import com.sarrawi.img.R
 import com.sarrawi.img.databinding.FragmentSplashScreenBinding
 
 class SplashScreenFragment : Fragment() {
@@ -47,10 +45,12 @@ class SplashScreenFragment : Fragment() {
 //            findNavController().navigate(direction)
 
             findNavController()
-                .navigate(R.id.action_splashScreenFragment_to_SecondFragment,
+                .navigate(
+                    R.id.action_splashScreenFragment_to_SecondFragment,
                     null,
                     NavOptions.Builder()
-                        .setPopUpTo(R.id.splashScreenFragment,
+                        .setPopUpTo(
+                            R.id.splashScreenFragment,
                             true).build()
                 )
 

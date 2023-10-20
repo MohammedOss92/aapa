@@ -1,25 +1,19 @@
-package com.sarrawi.img
+package com.sarrawi.img.ui.frag
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.db.repository.ImgRepository
-import kotlinx.coroutines.launch
 import android.view.*
-import android.widget.Toast
 import androidx.core.view.*
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.sarrawi.img.R
 import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentFourBinding
-import com.sarrawi.img.db.Dao.Imgs_Dao
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.FavoriteImage

@@ -5,7 +5,7 @@
     android:id="@+id/cons"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FavoriteFragmentRecy" >
+    tools:context=".ui.fragFav.FavoriteFragmentRecy" >
 
 
     <androidx.recyclerview.widget.RecyclerView

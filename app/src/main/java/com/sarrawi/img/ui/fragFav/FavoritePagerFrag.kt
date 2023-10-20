@@ -1,4 +1,4 @@
-package com.sarrawi.img
+package com.sarrawi.img.ui.fragFav
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

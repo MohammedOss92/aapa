@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_first"/>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.sarrawi.img.SecondFragment"
+        android:name="com.sarrawi.img.ui.frag.SecondFragment"
         tools:layout="@layout/fragment_second">
         <action
             android:id="@+id/action_SecondFragment_to_thirdFragment"
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/thirdFragment"
-        android:name="com.sarrawi.img.ThirdFragment"
+        android:name="com.sarrawi.img.ui.frag.ThirdFragment"
         tools:layout="@layout/fragment_third">
 
 
@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/fourFragment"
-        android:name="com.sarrawi.img.FourFragment"
+        android:name="com.sarrawi.img.ui.frag.FourFragment"
         tools:layout="@layout/fragment_four">
 
         <argument
@@ -76,7 +76,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.sarrawi.img.SplashScreenFragment"
+        android:name="com.sarrawi.img.ui.frag.SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_SecondFragment"
@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoriteFragmentRecy"
-        android:name="com.sarrawi.img.FavoriteFragmentRecy"
+        android:name="com.sarrawi.img.ui.fragFav.FavoriteFragmentRecy"
         tools:layout="@layout/fragment_favorite_recy" >
         <action
             android:id="@+id/action_favoriteFragmentRecy_to_favFragmentLinRecy"
@@ -92,7 +92,7 @@
     </fragment>
     <fragment
         android:id="@+id/favFragmentLinRecy"
-        android:name="com.sarrawi.img.FavFragmentLinRecy"
+        android:name="com.sarrawi.img.ui.fragFav.FavFragmentLinRecy"
         tools:layout="@layout/fragment_fav_lin_recy">
 
         <argument

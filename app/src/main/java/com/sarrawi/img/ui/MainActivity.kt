@@ -1,7 +1,6 @@
-package com.sarrawi.img
+package com.sarrawi.img.ui
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ActivityMainBinding
 import com.sarrawi.img.db.viewModel.ImgTypes_ViewModel
 
@@ -40,13 +40,20 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration =
-            AppBarConfiguration(setOf(R.id.SecondFragment, R.id.favoriteFragmentRecy,R.id.thirdFragment,R.id.fourFragment,R.id.splashScreenFragment,R.id.favFragmentLinRecy))
+            AppBarConfiguration(setOf(
+                R.id.SecondFragment,
+                R.id.favoriteFragmentRecy,
+                R.id.thirdFragment,
+                R.id.fourFragment,
+                R.id.splashScreenFragment,
+                R.id.favFragmentLinRecy
+            ))
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment || destination.id == R.id.fourFragment|| destination.id == R.id.favFragmentLinRecy) {
+            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment || destination.id == R.id.fourFragment || destination.id == R.id.favFragmentLinRecy) {
 
                 bottomNav.visibility = View.GONE
             } else {
