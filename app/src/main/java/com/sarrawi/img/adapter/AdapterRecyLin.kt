@@ -14,8 +14,8 @@ import com.sarrawi.img.databinding.RowImagesBinding
 
 import com.sarrawi.img.model.ImgsModel
 
-class ViewPagerAdapter(val con: Context):
-    RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>() {
+class AdapterRecyLin(val con: Context):
+    RecyclerView.Adapter<AdapterRecyLin.ViewHolder>() {
 
     var onItemClick: ((Int) -> Unit)? = null
     var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null

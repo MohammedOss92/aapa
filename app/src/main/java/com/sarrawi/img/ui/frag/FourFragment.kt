@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.R
-import com.sarrawi.img.adapter.ViewPagerAdapter
+import com.sarrawi.img.adapter.AdapterRecyLin
 import com.sarrawi.img.databinding.FragmentFourBinding
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.viewModel.*
@@ -51,8 +51,8 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
     }
 
 
-    private val viewPagerAdapter by lazy {
-    ViewPagerAdapter(requireActivity())
+    private val adapterLinRecy by lazy {
+    AdapterRecyLin(requireActivity())
         }
 
      var idd = -1
@@ -126,7 +126,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
     private fun setUpRv() {
         if (isAdded) {
             imgsViewmodel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
-                viewPagerAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+                adapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
                 if (imgs.isEmpty()) {
                     // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
@@ -144,12 +144,12 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                             image.is_fav = isFavorite // قم بتحديث حالة الصورة
                         }
 
-                        viewPagerAdapter.img_list = allImages
+                        adapterLinRecy.img_list = allImages
 
                         if (binding.rvImgCont.adapter == null) {
                             binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
-                            binding.rvImgCont.adapter = viewPagerAdapter
-                            viewPagerAdapter.notifyDataSetChanged()
+                            binding.rvImgCont.adapter = adapterLinRecy
+                            adapterLinRecy.notifyDataSetChanged()
                             binding.rvImgCont.postDelayed({
                                 (binding.rvImgCont.layoutManager as LinearLayoutManager).scrollToPosition(
                                     currentItemId
@@ -165,7 +165,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
 //                            binding.viewpager.setCurrentItem(currentItemId,false) // set for selected item
 //                            viewPagerAdapter.notifyDataSetChanged()}
                         else {
-                            viewPagerAdapter.notifyDataSetChanged()
+                            adapterLinRecy.notifyDataSetChanged()
                         }
                         if (currentItemId != -1) {
                             binding.rvImgCont.scrollToPosition(currentItemId)
@@ -226,7 +226,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
     }
 
     fun adapterOnClick (){
-        viewPagerAdapter.onbtnClick = {it:ImgsModel,i:Int ->
+        adapterLinRecy.onbtnClick = {it:ImgsModel,i:Int ->
             val fav= FavoriteImage(it.id!!,it.ID_Type_id,it.new_img,it.image_url)
 
             println("it.is_fav: ${it.is_fav}")
@@ -239,7 +239,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                 snackbar.show()
 //                setUpViewPager()
 
-                viewPagerAdapter.notifyDataSetChanged()
+                adapterLinRecy.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
                 currentItemId = i
                 if (currentItemId != -1) {
@@ -256,7 +256,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
                 snackbar.show()
 //                setUpViewPager()
 
-                viewPagerAdapter.notifyDataSetChanged()
+                adapterLinRecy.notifyDataSetChanged()
                 println("it.is_fav: ${it.is_fav}")
                 currentItemId = i
                 if (currentItemId != -1) {
@@ -267,7 +267,7 @@ private val imgsViewmodel: Imgs_ViewModel by viewModels {
             println("it.is_fav: ${it.is_fav}")
 //            setUpViewPager()
 
-            viewPagerAdapter.notifyDataSetChanged()
+            adapterLinRecy.notifyDataSetChanged()
             println("it.is_fav: ${it.is_fav}")
             if (currentItemId != -1) {
                 binding.rvImgCont.scrollToPosition(currentItemId)

@@ -18,8 +18,8 @@ import com.sarrawi.img.model.FavoriteImage
 
 import com.sarrawi.img.model.ImgsModel
 
-class PagerFavAdapter(val con: Context):
-    RecyclerView.Adapter<PagerFavAdapter.ViewHolder>() {
+class FavAdapterLinRecy(val con: Context):
+    RecyclerView.Adapter<FavAdapterLinRecy.ViewHolder>() {
 
     var onItemClick: ((Int, Int) -> Unit)? = null
     var onbtnclick: ((item:FavoriteImage) -> Unit)? = null

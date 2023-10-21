@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
-import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentFavoritePagerBinding
 import com.sarrawi.img.databinding.FragmentFavoriteRecyBinding
 import com.sarrawi.img.databinding.FragmentFourBinding
@@ -27,9 +26,7 @@ class FavoritePagerFrag : Fragment() {
     }
 
 
-    private val viewPagerAdapter by lazy {
-        ViewPagerAdapter(requireActivity())
-    }
+
 
     private var ID_Type_id = -1
     private  var currentItemId:Int=0

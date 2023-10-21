@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.sarrawi.img.adapter.PagerFavAdapter
+import com.sarrawi.img.adapter.FavAdapterLinRecy
 import com.sarrawi.img.databinding.FragmentFavLinRecyBinding
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.viewModel.FavoriteImagesViewModel
@@ -28,7 +28,7 @@ class FavFragmentLinRecy : Fragment() {
     private val imgsffav: FavoriteImagesViewModel by viewModels {
         ViewModelFactory2(a)
     }
-    private val pagerfavAdapter by lazy { PagerFavAdapter(requireActivity()) }
+    private val favAdapterLinRecy by lazy { FavAdapterLinRecy(requireActivity()) }
 
     private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
     private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
@@ -71,16 +71,16 @@ class FavFragmentLinRecy : Fragment() {
         if (isAdded) {
             favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { imgs ->
                 // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
-                pagerfavAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+                favAdapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
-                pagerfavAdapter.fav_img_list = imgs
+                favAdapterLinRecy.fav_img_list = imgs
                 if(binding.recyclerFav.adapter == null){
 
                     binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext())
-                    binding.recyclerFav.adapter = pagerfavAdapter
-                    pagerfavAdapter.notifyDataSetChanged()
+                    binding.recyclerFav.adapter = favAdapterLinRecy
+                    favAdapterLinRecy.notifyDataSetChanged()
                 }else{
-                    pagerfavAdapter.notifyDataSetChanged()
+                    favAdapterLinRecy.notifyDataSetChanged()
                 }
                 if (currentItemId != -1) {
                     binding.recyclerFav.scrollToPosition(currentItemId)
@@ -89,7 +89,7 @@ class FavFragmentLinRecy : Fragment() {
 
             }
 
-            pagerfavAdapter.onbtnclick = {
+            favAdapterLinRecy.onbtnclick = {
                 it.is_fav = false
                 imgsffav.updateImages()
                 imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
@@ -102,7 +102,7 @@ class FavFragmentLinRecy : Fragment() {
 
     private fun adapterOnClick() {
 
-        pagerfavAdapter.onbtnclick = {
+        favAdapterLinRecy.onbtnclick = {
             it.is_fav = false
             imgsffav.updateImages()
             imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
