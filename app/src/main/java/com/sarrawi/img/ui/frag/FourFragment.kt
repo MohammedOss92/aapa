@@ -1,16 +1,20 @@
 package com.sarrawi.img.ui.frag
 
+import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.appsearch.SetSchemaRequest.READ_EXTERNAL_STORAGE
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.*
 import android.webkit.MimeTypeMap
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,7 +43,8 @@ class FourFragment : Fragment() {
     private lateinit var _binding: FragmentFourBinding
 
     private val binding get() = _binding
-
+    private val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // تعريف الثابت هنا
+    private val READ_EXTERNAL_STORAGE_REQUEST_CODE = 2 // تعريف الثابت هنا
 
     private val retrofitService = ApiService.provideRetrofitInstance()
 
@@ -132,7 +137,22 @@ class FourFragment : Fragment() {
         }
         imgsViewmodel.checkNetworkConnection(requireContext())
 
+        adapterLinRecy.onSaveImageClickListener = object : AdapterRecyLin.OnSaveImageClickListener {
+            override fun onSaveImageClick(position: Int) {
+                saveImageToExternalStorage(position)
+            }
+        }
 
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // إذا لم يكن لديك الإذن، قم بطلبه
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+        }
+
+// التحقق من إذن القراءة من التخزين الخارجي
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // إذا لم يكن لديك الإذن، قم بطلبه
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_REQUEST_CODE)
+        }
     }
 
 
@@ -286,69 +306,92 @@ class FourFragment : Fragment() {
             }
         }
 
-        adapterLinRecy.onSaveImageClickListener = object : AdapterRecyLin.OnSaveImageClickListener {
-            override fun onSaveImageClick(position: Int) {
-                val item = adapterLinRecy.img_list.getOrNull(position)
-                if (item != null) {
-                    val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
+    }
 
-                    Glide.with(requireContext()) // يُفضل استخدام requireContext() بدلاً من context!! للتحقق من عدم تكون قيمة null
-                        .asBitmap() // تحميل الصورة ك Bitmap
-                        .load(imageUri)
-                        .into(object : CustomTarget<Bitmap>() {
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                // عندما تكون الصورة جاهزة
-                                var outputStream: FileOutputStream? = null
-                                try {
-                                    val file = Environment.getExternalStorageDirectory()
-                                    val dir = File(file.absolutePath + "/MyPics")
-                                    dir.mkdirs()
+    fun saveImageToExternalStorage(position: Int) {
+        val item = adapterLinRecy.img_list.getOrNull(position)
+        if (item != null) {
+            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
 
-                                    val filename =
-                                        String.format("%d.png", System.currentTimeMillis())
-                                    val outFile = File(dir, filename)
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(imageUri)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        var outputStream: FileOutputStream? = null
+                        try {
+                            val file = Environment.getExternalStorageDirectory()
+                            val dir = File(file.absolutePath + "/MyPics")
+                            dir.mkdirs()
 
-                                    outputStream = FileOutputStream(outFile)
+                            val filename = String.format("%d.png", System.currentTimeMillis())
+                            val outFile = File(dir, filename)
 
-                                    resource.compress(
-                                        getCompressFormat(item.image_url),
-                                        100,
-                                        outputStream
-                                    )
+                            outputStream = FileOutputStream(outFile)
 
-                                    outputStream?.flush()
-                                    outputStream?.close()
+                            resource.compress(
+                                getCompressFormat(item.image_url),
+                                100,
+                                outputStream
+                            )
 
-                                    // يمكنك إظهار رسالة نجاح هنا
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    // يمكنك التعامل مع الأخطاء هنا وعرض رسائل الخطأ حسب الحاجة
-                                }
-                            }
+                            outputStream?.flush()
+                            outputStream?.close()
 
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                                // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
-                            }
-                        })
-                }
-            }
+                            showSaveSuccessMessage()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Log.e("MyApp", "An error occurred: ${e.message}")
+                            showSaveErrorMessage()
+                        }
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
+                    }
+                })
         }
     }
-        fun getCompressFormat(imageUrl: String): Bitmap.CompressFormat {
-            val extension = MimeTypeMap.getFileExtensionFromUrl(imageUrl)
-            return when (extension?.toLowerCase()) {
-                "jpg", "jpeg" -> Bitmap.CompressFormat.JPEG
-                "png" -> Bitmap.CompressFormat.PNG
-                // يمكنك إضافة المزيد من الامتدادات هنا
-                else -> Bitmap.CompressFormat.WEBP_LOSSY
+
+    private fun showSaveSuccessMessage() {
+        Snackbar.make(requireView(), "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showSaveErrorMessage() {
+        Snackbar.make(requireView(), "حدث خطأ أثناء الحفظ", Snackbar.LENGTH_SHORT).show()
+    }
+
+    fun getCompressFormat(imageUrl: String): Bitmap.CompressFormat {
+        val extension = MimeTypeMap.getFileExtensionFromUrl(imageUrl)
+        return when (extension?.toLowerCase()) {
+            "jpg", "jpeg" -> Bitmap.CompressFormat.JPEG
+            "png" -> Bitmap.CompressFormat.PNG
+            // يمكنك إضافة المزيد من الامتدادات هنا
+            else -> Bitmap.CompressFormat.WEBP_LOSSY
+        }
+    }
+
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // تم منح الإذن
+                val dir = File(Environment.getExternalStorageDirectory(), "MyPics")
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                }
+            } else {
+                // تم رفض الإذن، يمكنك اتخاذ إجراء مناسب هنا
             }
         }
 
-
-
+    }
 
 }
 

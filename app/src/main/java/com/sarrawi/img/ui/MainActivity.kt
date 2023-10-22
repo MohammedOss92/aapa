@@ -21,6 +21,10 @@ import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ActivityMainBinding
 import com.sarrawi.img.db.viewModel.ImgTypes_ViewModel
 import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Environment
+import androidx.core.content.ContextCompat
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private val imgtypesViewmodel:ImgTypes_ViewModel by lazy {
         ViewModelProvider(this,ImgTypes_ViewModel.ImgTypesViewModelFactory(this.application))[imgtypesViewmodel::class.java]
     }
+    private val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1 // تعريف الثابت هنا
+    private val READ_EXTERNAL_STORAGE_REQUEST_CODE = 2 // تعريف الثابت هنا
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,9 +74,19 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-        // قم بطلب إذن الوصول إلى القراءة من التخزين الخارجي
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        // التحقق من إذن الكتابة على التخزين الخارجي
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // إذا لم يكن لديك الإذن، قم بطلبه
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
+        }
+
+// التحقق من إذن القراءة من التخزين الخارجي
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // إذا لم يكن لديك الإذن، قم بطلبه
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_REQUEST_CODE)
+        }
+
+
 
 
 //s
@@ -100,4 +117,22 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // تم منح الإذن
+                val dir = File(Environment.getExternalStorageDirectory(), "MyPics")
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                }
+            } else {
+                // تم رفض الإذن، يمكنك اتخاذ إجراء مناسب هنا
+            }
+        }
+
+    }
+
 }

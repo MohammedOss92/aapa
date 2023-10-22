@@ -19,10 +19,10 @@ class AdapterRecyLin(val con: Context):
 
     var onItemClick: ((Int) -> Unit)? = null
     var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
+    var onSaveImageClickListener: OnSaveImageClickListener? = null
 
     private var isToolbarVisible = true
 
-    var onSaveImageClickListener: OnSaveImageClickListener? = null
 
     inner class ViewHolder(val binding:RowImagesBinding):RecyclerView.ViewHolder(binding.root) {
 
@@ -57,7 +57,6 @@ class AdapterRecyLin(val con: Context):
 
             binding.saveImg.setOnClickListener {
                 onSaveImageClickListener?.onSaveImageClick(adapterPosition)
-
             }
 
 
@@ -97,9 +96,11 @@ class AdapterRecyLin(val con: Context):
         return img_list.size
     }
 
+
+
     interface OnSaveImageClickListener {
         fun onSaveImageClick(position: Int)
     }
 
 
-}
+    }
