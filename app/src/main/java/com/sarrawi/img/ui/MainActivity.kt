@@ -1,5 +1,8 @@
 package com.sarrawi.img.ui
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.app.appsearch.SetSchemaRequest.READ_EXTERNAL_STORAGE
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupWithNavController
@@ -16,6 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ActivityMainBinding
 import com.sarrawi.img.db.viewModel.ImgTypes_ViewModel
+import android.Manifest
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,6 +67,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        // قم بطلب إذن الوصول إلى القراءة من التخزين الخارجي
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
 
 //s
