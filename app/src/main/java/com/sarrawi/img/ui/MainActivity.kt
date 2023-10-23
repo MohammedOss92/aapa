@@ -74,24 +74,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        // التحقق من إذن الكتابة على التخزين الخارجي
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // إذا لم يكن لديك الإذن، قم بطلبه
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_CODE)
-        }
-
-// التحقق من إذن القراءة من التخزين الخارجي
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // إذا لم يكن لديك الإذن، قم بطلبه
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_REQUEST_CODE)
-        }
 
 
 
 
-//s
 
-//        setupActionBarWithNavController(navController,appBarConfiguration)
 
 
 
@@ -118,21 +105,39 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//
+//        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+//            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                // تم منح الإذن
+//                val dir = File(Environment.getExternalStorageDirectory(), "MyPics")
+//                if (!dir.exists()) {
+//                    dir.mkdirs()
+//                }
+//            } else {
+//                // تم رفض الإذن، يمكنك اتخاذ إجراء مناسب هنا
+//            }
+//        }
+//
+//    }
 
-        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // تم منح الإذن
-                val dir = File(Environment.getExternalStorageDirectory(), "MyPics")
-                if (!dir.exists()) {
-                    dir.mkdirs()
+    private fun createDirectory() {
+        val dir = File(Environment.getExternalStorageDirectory(), "MyPics")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            WRITE_EXTERNAL_STORAGE_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // تم منح الإذن، قم بإنشاء المجلد
+                    createDirectory()
                 }
-            } else {
-                // تم رفض الإذن، يمكنك اتخاذ إجراء مناسب هنا
             }
         }
-
     }
 
 }
