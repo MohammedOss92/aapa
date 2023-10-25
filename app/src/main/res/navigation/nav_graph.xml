@@ -55,8 +55,11 @@
         <argument
             android:name="imageUrl"
             app:argType="string" />
+<!--        <action-->
+<!--            android:id="@+id/action_fourFragment_to_pagerFragmentImg"-->
+<!--            app:destination="@id/pagerFragmentImg" />-->
 
-<!--        <argument-->
+        <!--        <argument-->
 <!--            android:name="id"-->
 <!--            app:argType="integer" />-->
 
@@ -106,7 +109,44 @@
         <argument
             android:name="imageUrl"
             app:argType="string" />
+<!--        <action-->
+<!--            android:id="@+id/action_favFragmentLinRecy_to_favoritePagerFrag"-->
+<!--            app:destination="@id/favoritePagerFrag" />-->
 
+    </fragment>
+    <fragment
+        android:id="@+id/pagerFragmentImg"
+        android:name="com.sarrawi.img.ui.frag.PagerFragmentImg"
+        tools:layout="@layout/fragment_pager_img">
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+        <argument
+            android:name="currentItemId"
+            app:argType="integer" />
+
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/favoritePagerFrag"
+        android:name="com.sarrawi.img.ui.fragFav.FavoritePagerFrag"
+        tools:layout="@layout/fragment_favorite_pager">
+<!--        <argument-->
+<!--            android:name="id"-->
+<!--            app:argType="integer" />-->
+
+<!--        <argument-->
+<!--            android:name="currentItemId"-->
+<!--            app:argType="integer" />-->
+
+<!--        <argument-->
+<!--            android:name="imageUrl"-->
+<!--            app:argType="string" />-->
     </fragment>
 
 

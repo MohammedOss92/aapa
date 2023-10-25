@@ -21,19 +21,22 @@ import com.sarrawi.img.model.ImgsModel
 class FavAdapterLinRecy(val con: Context):
     RecyclerView.Adapter<FavAdapterLinRecy.ViewHolder>() {
 
-    var onItemClick: ((Int, Int) -> Unit)? = null
+//    var onItemClick: ((Int, Int) -> Unit)? = null
+    var onItemClick: ((Int,FavoriteImage, Int) -> Unit)? = null
     var onbtnclick: ((item:FavoriteImage) -> Unit)? = null
+    var onSaveImageClickListenerfav: OnSaveImageClickListenerfav? = null
 
 
     inner class ViewHolder(val binding: RowimagefavBinding):RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener {
-                //اذا كانت null سيتم استخدام 0؟
-//                onItemClick?.invoke(fav_img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
-                onItemClick?.invoke(fav_img_list.getOrNull(layoutPosition)?.id ?: 0, layoutPosition ?: 0)
-
-            }
+//            binding.root.setOnClickListener {
+//                //اذا كانت null سيتم استخدام 0؟
+////                onItemClick?.invoke(fav_img_list[layoutPosition].id ?: 0, layoutPosition ?: 0)
+////                onItemClick?.invoke(fav_img_list.getOrNull(layoutPosition)?.id ?: 0, layoutPosition ?: 0)
+//                onItemClick?.invoke(fav_img_list[layoutPosition].id ?: 0, fav_img_list[layoutPosition], layoutPosition)
+//
+//            }
             binding.imgFave.setOnClickListener {
 //                onbtnclick?.invoke(fav_img_list[adapterPosition])
                 onbtnclick?.invoke(fav_img_list[bindingAdapterPosition])
@@ -51,8 +54,11 @@ class FavAdapterLinRecy(val con: Context):
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
-                    .circleCrop()
                     .into(binding.imageView)
+
+            binding.saveImg.setOnClickListener {
+                onSaveImageClickListenerfav?.onSaveImageClick(adapterPosition)
+            }
 
         }
 
@@ -92,6 +98,8 @@ class FavAdapterLinRecy(val con: Context):
 
         notifyDataSetChanged()
     }
-
+    interface OnSaveImageClickListenerfav {
+        fun onSaveImageClick(position: Int)
+    }
 
 }
