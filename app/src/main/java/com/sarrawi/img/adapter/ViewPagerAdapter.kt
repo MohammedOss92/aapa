@@ -18,6 +18,8 @@ class ViewPagerAdapter (val con: Context):RecyclerView.Adapter<ViewPagerAdapter.
 
     private var isInternetConnected: Boolean = true
     var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
+    var onSaveImageClickListenerp: OnSaveImageClickListenerp? = null
+
 
     inner class ViewHolder(val binding:ImgPagerBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -56,6 +58,10 @@ class ViewPagerAdapter (val con: Context):RecyclerView.Adapter<ViewPagerAdapter.
             binding.imgFavepager.setOnClickListener {
                 onbtnClick?.invoke(img_list_Pager[position], position)
             }
+
+            binding.saveImgpager.setOnClickListener {
+                onSaveImageClickListenerp?.onSaveImageClickp(adapterPosition)
+            }
         }
 
     }
@@ -92,6 +98,8 @@ class ViewPagerAdapter (val con: Context):RecyclerView.Adapter<ViewPagerAdapter.
         return img_list_Pager.size
     }
 
-
+    interface OnSaveImageClickListenerp {
+        fun onSaveImageClickp(position: Int)
+    }
 
 }

@@ -46,6 +46,10 @@ class FavoritePagerFrag : Fragment() {
         ViewModelFactory2(favoriteImageRepository)
     }
 
+
+
+
+
     private val adapterpager by lazy {
         FavAdapterPager(requireActivity())
     }
@@ -76,6 +80,7 @@ class FavoritePagerFrag : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUpRv()
+        adapterOnClick()
         adapterpager.onSaveImageClickListenerfp = object : FavAdapterPager.OnSaveImageClickListenerfavp {
             override fun onSaveImageClickfp(position: Int) {
                 saveImageToExternalStorage(position)
@@ -177,6 +182,19 @@ class FavoritePagerFrag : Fragment() {
             // يمكنك إضافة المزيد من الامتدادات هنا
             else -> null // ارجع قيمة null لعدم تغيير الصيغة
         }
+    }
+
+    fun adapterOnClick(){
+
+        adapterpager.onbtnclick ={
+            it.is_fav = false
+            favoriteImagesViewModel.updateImages()
+            favoriteImagesViewModel.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+
+            val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+            snackbar.show()
+        }
+
     }
 
 
