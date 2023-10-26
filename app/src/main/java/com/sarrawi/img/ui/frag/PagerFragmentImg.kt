@@ -60,10 +60,10 @@ class PagerFragmentImg : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        ID = PagerFragmentImgArgs.fromBundle(requireArguments()).id
-//        currentItemId = PagerFragmentImgArgs.fromBundle(requireArguments()).currentItemId
-//
-//        imgsmodel?.image_url = PagerFragmentImgArgs.fromBundle(requireArguments()).imageUrl
+        ID = PagerFragmentImgArgs.fromBundle(requireArguments()).id
+        currentItemId = PagerFragmentImgArgs.fromBundle(requireArguments()).currentItemId
+
+        imgsmodel?.image_url = PagerFragmentImgArgs.fromBundle(requireArguments()).imageUrl
     }
 
     override fun onCreateView(
@@ -74,20 +74,20 @@ class PagerFragmentImg : Fragment() {
 
 
 
-        imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
-
-            if (isConnected) {
-//                  setUpViewPager()
-
-//                binding.lyNoInternet.visibility = View.GONE
-
-            } else {
-//                     binding.progressBar.visibility = View.GONE
-//                binding.lyNoInternet.visibility = View.VISIBLE
-
-            }
-        }
-        imgsViewmodel.checkNetworkConnection(requireContext())
+//        imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
+//
+//            if (isConnected) {
+////                  setUpViewPager()
+//
+////                binding.lyNoInternet.visibility = View.GONE
+//
+//            } else {
+////                     binding.progressBar.visibility = View.GONE
+////                binding.lyNoInternet.visibility = View.VISIBLE
+//
+//            }
+//        }
+//        imgsViewmodel.checkNetworkConnection(requireContext())
         setHasOptionsMenu(true)
 
         return binding.root

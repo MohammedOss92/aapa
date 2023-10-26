@@ -141,6 +141,8 @@ class ThirdFragment : Fragment() {
                         } else {
                             imgAdapter.notifyDataSetChanged()
                         }
+
+                        
                     }
                 }
 

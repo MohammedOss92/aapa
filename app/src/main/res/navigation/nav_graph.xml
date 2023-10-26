@@ -55,9 +55,10 @@
         <argument
             android:name="imageUrl"
             app:argType="string" />
-<!--        <action-->
-<!--            android:id="@+id/action_fourFragment_to_pagerFragmentImg"-->
-<!--            app:destination="@id/pagerFragmentImg" />-->
+
+        <action
+            android:id="@+id/action_fourFragment_to_pagerFragmentImg"
+            app:destination="@id/pagerFragmentImg" />
 
         <!--        <argument-->
 <!--            android:name="id"-->

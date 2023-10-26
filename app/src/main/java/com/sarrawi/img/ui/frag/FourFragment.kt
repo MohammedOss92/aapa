@@ -319,21 +319,21 @@ class FourFragment : Fragment() {
             }
         }
 
-//        adapterLinRecy.onItemClick = {_, imgModel: ImgsModel,currentItemId->
-//
-//            if (imgsViewmodel.isConnected.value == true) {
-//                val directions = FourFragmentDirections.actionFourFragmentToPagerFragmentImg(ID,currentItemId,imgModel.image_url)
-//                findNavController().navigate(directions)
-//            } else {
-//                val snackbar = Snackbar.make(
-//                    requireView(),
-//                    "لا يوجد اتصال بالإنترنت",
-//                    Snackbar.LENGTH_SHORT
-//                )
-//                snackbar.show()
-//            }
-//
-//        }
+        adapterLinRecy.onItemClick = {_, imgModel: ImgsModel,currentItemId->
+
+            if (imgsViewmodel.isConnected.value == true) {
+                val directions = FourFragmentDirections.actionFourFragmentToPagerFragmentImg(ID,currentItemId,imgModel.image_url)
+                findNavController().navigate(directions)
+            } else {
+                val snackbar = Snackbar.make(
+                    requireView(),
+                    "لا يوجد اتصال بالإنترنت",
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.show()
+            }
+
+        }
 
     }
 

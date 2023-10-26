@@ -58,14 +58,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.thirdFragment,
                 R.id.fourFragment,
                 R.id.splashScreenFragment,
-                R.id.favFragmentLinRecy
+                R.id.favFragmentLinRecy,
+                R.id.pagerFragmentImg
             ))
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment || destination.id == R.id.fourFragment || destination.id == R.id.favFragmentLinRecy) {
+            if (destination.id == R.id.splashScreenFragment || destination.id == R.id.thirdFragment ||
+                destination.id == R.id.fourFragment || destination.id == R.id.favFragmentLinRecy
+                || destination.id == R.id.pagerFragmentImg) {
 
                 bottomNav.visibility = View.GONE
             } else {

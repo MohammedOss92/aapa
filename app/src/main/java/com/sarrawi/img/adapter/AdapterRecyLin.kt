@@ -16,7 +16,7 @@ import com.sarrawi.img.model.ImgsModel
 
 class AdapterRecyLin(val con: Context):
     RecyclerView.Adapter<AdapterRecyLin.ViewHolder>() {
-//    var onItemClick: ((Int,ImgsModel, Int) -> Unit)? = null
+    var onItemClick: ((Int,ImgsModel, Int) -> Unit)? = null
     var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
     var onSaveImageClickListener: OnSaveImageClickListener? = null
 
@@ -26,9 +26,9 @@ class AdapterRecyLin(val con: Context):
     inner class ViewHolder(val binding:RowImagesBinding):RecyclerView.ViewHolder(binding.root) {
 
         init {
-//            binding.root.setOnClickListener {
-//                onItemClick?.invoke(img_list[layoutPosition].id ?: 0, img_list[layoutPosition], layoutPosition)
-//            }
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(img_list[layoutPosition].id ?: 0, img_list[layoutPosition], layoutPosition)
+            }
 
 
 
