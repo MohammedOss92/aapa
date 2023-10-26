@@ -1,16 +1,28 @@
 package com.sarrawi.img.ui.fragFav
 
+import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import androidx.core.app.Person.fromBundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
+import com.sarrawi.img.adapter.FavAdapterLinRecy
 import com.sarrawi.img.adapter.FavAdapterPager
 import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentFavoritePagerBinding
@@ -22,6 +34,7 @@ import com.sarrawi.img.db.viewModel.ViewModelFactory2
 import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 import kotlinx.coroutines.launch
+import java.io.File
 
 
 class FavoritePagerFrag : Fragment() {
@@ -44,10 +57,10 @@ class FavoritePagerFrag : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        ID = FavoritePagerFragArgs.fromBundle(requireArguments()).id
-//        currentItemId = FavoritePagerFragArgs.fromBundle(requireArguments()).currentItemId
-//
-//        imgsmodel?.image_url = FavoritePagerFragArgs.fromBundle(requireArguments()).imageUrl
+        ID = FavoritePagerFragArgs.fromBundle(requireArguments()).id
+        currentItemId = FavoritePagerFragArgs.fromBundle(requireArguments()).currentItemId
+
+        imgsmodel?.image_url = FavoritePagerFragArgs.fromBundle(requireArguments()).imageUrl
     }
 
     override fun onCreateView(
@@ -63,6 +76,11 @@ class FavoritePagerFrag : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUpRv()
+        adapterpager.onSaveImageClickListenerfp = object : FavAdapterPager.OnSaveImageClickListenerfavp {
+            override fun onSaveImageClickfp(position: Int) {
+                saveImageToExternalStorage(position)
+            }
+        }
 
     }
 
@@ -85,13 +103,83 @@ class FavoritePagerFrag : Fragment() {
 
             }}
 
-
-
-
-
-
-
         }
+
+    fun saveImageToExternalStorage(position: Int) {
+        val item = adapterpager.fav_img_list_pager.getOrNull(position)
+
+
+
+        if (item != null) {
+            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
+
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(imageUri)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        try {
+                            val folderName = "MyPics"
+                            val displayName = String.format("%d.png", System.currentTimeMillis())
+                            val mimeType = "image/png"
+
+                            // تمثيل المعلومات الخاصة بالصورة
+                            val imageDetails = ContentValues().apply {
+                                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+                                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+                                put(MediaStore.Images.Media.WIDTH, resource.width)
+                                put(MediaStore.Images.Media.HEIGHT, resource.height)
+                                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folderName)
+                            }
+
+                            // حفظ الصورة باستخدام MediaStore
+                            val contentResolver = requireContext().contentResolver
+                            val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
+
+                            if (imageUri != null) {
+                                val outputStream = contentResolver.openOutputStream(imageUri)
+                                resource.compress(getCompressFormat(item.image_url), 100, outputStream)
+                                outputStream?.close()
+                                showSaveSuccessMessage()
+                            } else {
+                                showSaveErrorMessage()
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Log.e("MyApp", "An error occurred: ${e.message}")
+                            showSaveErrorMessage()
+                        }
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
+                    }
+                })
+        }
+    }
+
+    private fun showSaveSuccessMessage() {
+        Snackbar.make(requireView(), "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showSaveErrorMessage() {
+        Snackbar.make(requireView(), "حدث خطأ أثناء الحفظ", Snackbar.LENGTH_SHORT).show()
+    }
+
+    fun getCompressFormat(imageUrl: String): Bitmap.CompressFormat? {
+        val extension = MimeTypeMap.getFileExtensionFromUrl(imageUrl)
+        return when (extension?.toLowerCase()) {
+            "jpg", "jpeg" -> Bitmap.CompressFormat.JPEG
+            "png" -> Bitmap.CompressFormat.PNG
+            // يمكنك إضافة المزيد من الامتدادات هنا
+            else -> null // ارجع قيمة null لعدم تغيير الصيغة
+        }
+    }
+
+
     }
 
 

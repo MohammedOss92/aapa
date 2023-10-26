@@ -31,7 +31,7 @@ class ViewPagerAdapter (val con: Context):RecyclerView.Adapter<ViewPagerAdapter.
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
-                    .circleCrop()
+
                     .into(binding.imageViewpager)
                // binding.lyNoInternet.visibility = View.GONE
 

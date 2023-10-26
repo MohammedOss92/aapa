@@ -50,6 +50,7 @@ class ThirdFragment : Fragment() {
         ViewModelFactory2(a)
     }
 
+    private var currentItemId = -1
     var clickCount = 0
     var mInterstitialAd: InterstitialAd?=null
 
@@ -141,7 +142,9 @@ class ThirdFragment : Fragment() {
                         } else {
                             imgAdapter.notifyDataSetChanged()
                         }
-
+                        if (currentItemId != -1) {
+                            binding.rvImgCont.scrollToPosition(currentItemId)
+                        }
                         
                     }
                 }

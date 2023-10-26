@@ -222,6 +222,7 @@ class FourFragment : Fragment() {
                             binding.rvImgCont.setDrawingCacheEnabled(true)
                             binding.rvImgCont.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH)
                         }
+
                 }
 
 

@@ -110,9 +110,9 @@
         <argument
             android:name="imageUrl"
             app:argType="string" />
-<!--        <action-->
-<!--            android:id="@+id/action_favFragmentLinRecy_to_favoritePagerFrag"-->
-<!--            app:destination="@id/favoritePagerFrag" />-->
+        <action
+            android:id="@+id/action_favFragmentLinRecy_to_favoritePagerFrag"
+            app:destination="@id/favoritePagerFrag" />
 
     </fragment>
     <fragment
@@ -137,17 +137,17 @@
         android:id="@+id/favoritePagerFrag"
         android:name="com.sarrawi.img.ui.fragFav.FavoritePagerFrag"
         tools:layout="@layout/fragment_favorite_pager">
-<!--        <argument-->
-<!--            android:name="id"-->
-<!--            app:argType="integer" />-->
+        <argument
+            android:name="id"
+            app:argType="integer" />
 
-<!--        <argument-->
-<!--            android:name="currentItemId"-->
-<!--            app:argType="integer" />-->
+        <argument
+            android:name="currentItemId"
+            app:argType="integer" />
 
-<!--        <argument-->
-<!--            android:name="imageUrl"-->
-<!--            app:argType="string" />-->
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
     </fragment>
 
 

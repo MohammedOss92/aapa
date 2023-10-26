@@ -135,10 +135,10 @@ class FavFragmentLinRecy : Fragment() {
             snackbar.show()
         }
 
-//        favAdapterLinRecy.onItemClick={_, favimage: FavoriteImage, currentItemId ->
-//            val directions = FavFragmentLinRecyDirections.actionFavFragmentLinRecyToFavoritePagerFrag(ID, currentItemId,favimage.image_url)
-//            findNavController().navigate(directions)
-//        }
+        favAdapterLinRecy.onItemClick={_, favimage: FavoriteImage, currentItemId ->
+            val directions = FavFragmentLinRecyDirections.actionFavFragmentLinRecyToFavoritePagerFrag(ID, currentItemId,favimage.image_url)
+            findNavController().navigate(directions)
+        }
 
     }
 
