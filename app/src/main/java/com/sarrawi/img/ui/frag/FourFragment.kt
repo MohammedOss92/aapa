@@ -121,20 +121,24 @@ class FourFragment : Fragment() {
         //
         setHasOptionsMenu(true)
         menu_item()
-        setUpRv()
-        adapterOnClick()
+//        setUpRv()
+//        adapterOnClick()
         imgsffav.updateImages()
         // Live Connected
         imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
 
             if (isConnected) {
 //                  setUpViewPager()
+
+                setUpRv()
                 adapterOnClick()
+                adapterLinRecy.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
 
             } else {
 //                     binding.progressBar.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
+                adapterLinRecy.updateInternetStatus(isConnected)
 
             }
         }

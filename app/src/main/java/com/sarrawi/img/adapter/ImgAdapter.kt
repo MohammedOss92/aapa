@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
@@ -34,6 +35,10 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
 
                 }
 
+                binding.imgFave.setOnClickListener {
+                    onbtnClick?.invoke(img_list[position], position)
+                }
+
             }
             else{
                     binding.root.setOnClickListener{
@@ -41,6 +46,11 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                         val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
                         snackbar.show()
                     }
+
+                    binding.imgFave.setOnClickListener {
+                        val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
+                        snackbar.show()
+                 }
 
                 }
             }
@@ -54,10 +64,12 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 val requestOptions = RequestOptions()
                     .placeholder(R.drawable.ic_baseline_autorenew_24) // الصورة المؤقتة لحالة التحميل
                     .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
+                    .skipMemoryCache(false)
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
                     .circleCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.imgadapterImgViewContent)
                 binding.lyNoInternet.visibility = View.GONE
 
@@ -79,9 +91,7 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
             }
 
 
-            binding.imgFave.setOnClickListener {
-                onbtnClick?.invoke(img_list[position], position)
-            }
+
         }
 
 

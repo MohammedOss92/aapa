@@ -90,20 +90,7 @@ class PagerFragmentImg : Fragment() {
 
 
 
-//        imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
-//
-//            if (isConnected) {
-////                  setUpViewPager()
-//
-////                binding.lyNoInternet.visibility = View.GONE
-//
-//            } else {
-////                     binding.progressBar.visibility = View.GONE
-////                binding.lyNoInternet.visibility = View.VISIBLE
-//
-//            }
-//        }
-//        imgsViewmodel.checkNetworkConnection(requireContext())
+
         setHasOptionsMenu(true)
 
         return binding.root
@@ -111,8 +98,25 @@ class PagerFragmentImg : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setUpPager()
-        setUpViewPager()
+
+        imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
+
+            if (isConnected) {
+//                  setUpViewPager()
+
+//                binding.lyNoInternet.visibility = View.GONE
+                setUpPager()
+                adapterpager.updateInternetStatus(isConnected)
+            } else {
+//                     binding.progressBar.visibility = View.GONE
+//                binding.lyNoInternet.visibility = View.VISIBLE
+                adapterpager.updateInternetStatus(isConnected)
+
+            }
+        }
+        imgsViewmodel.checkNetworkConnection(requireContext())
+
+//        setUpViewPager()
         adapterOnClick()
         adapterpager.onSaveImageClickListenerp = object : ViewPagerAdapter.OnSaveImageClickListenerp {
             override fun onSaveImageClickp(position: Int) {
@@ -165,10 +169,10 @@ class PagerFragmentImg : Fragment() {
                             adapterpager.img_list_Pager = allImages
 
                             if (imgs != null) {
-                                adapterpager.img_list_Pager=imgs
+//                                adapterpager.img_list_Pager=imgs
                                 binding.pagerimg.adapter =adapterpager
                                 binding.pagerimg.setCurrentItem(currentItemId,false) // set for selected item
-                                binding.pagerimg.orientation=ViewPager2.ORIENTATION_VERTICAL
+                                binding.pagerimg.orientation=ViewPager2.ORIENTATION_HORIZONTAL
                                 adapterpager.notifyDataSetChanged()
 
                             }
