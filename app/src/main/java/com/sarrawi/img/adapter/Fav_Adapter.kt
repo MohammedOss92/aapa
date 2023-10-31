@@ -47,6 +47,7 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
                     .circleCrop()
+                    .centerCrop()
                     .into(binding.imgadapterImgViewContent)
 
         }

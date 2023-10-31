@@ -38,6 +38,7 @@ class FavAdapterPager(val con: Context): RecyclerView.Adapter<FavAdapterPager.Vi
             Glide.with(con)
                 .load(current_imgModel.image_url)
                 .apply(requestOptions)
+                .centerCrop()
                 .into(binding.imageViewpager)
 
             binding.saveImgpager.setOnClickListener {

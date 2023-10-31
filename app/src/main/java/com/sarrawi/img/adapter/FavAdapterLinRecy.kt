@@ -54,6 +54,7 @@ class FavAdapterLinRecy(val con: Context):
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
+                    .centerCrop()
                     .into(binding.imageView)
 
             binding.saveImg.setOnClickListener {

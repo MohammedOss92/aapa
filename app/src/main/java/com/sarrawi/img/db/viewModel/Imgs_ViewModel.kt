@@ -19,7 +19,14 @@ class Imgs_ViewModel(private val context: Context,  private val imgsRepo:ImgRepo
     private val _responseWithTitle= MutableLiveData<List<ImgsModel>>()
     private val _isLoading = MutableLiveData<Boolean>()
 
+////
+    private val _images = MutableLiveData<List<ImgsModel>>()
 
+
+
+    val images: LiveData<List<ImgsModel>>
+        get() = _images
+    ///////
 
 
     val isLoading: LiveData<Boolean>
@@ -43,47 +50,35 @@ private val _isConnected = MutableLiveData<Boolean>()
 
 
 
-    suspend fun getAllImgs_ViewModel(ID_Type_id:Int) :MutableLiveData<List<ImgsModel>> {
+    fun loadImages(ID_Type_id: Int, startIndex: Int, itemsPerPage: Int): LiveData<List<ImgsModel>> {
+        val _images = MutableLiveData<List<ImgsModel>>() // تعريف _images كمتغير LiveData
+        _isLoading.postValue(true)
 
-            imgsRepo.getImgs_Repo(ID_Type_id).let { response ->
+        viewModelScope.launch {
+            try {
+                val response = imgsRepo.getImgs_Repoa(ID_Type_id, startIndex, itemsPerPage)
 
                 if (response.isSuccessful) {
-                    _response.postValue(response.body()?.results)
-                    Log.i("TestRoom", "getAllImgs: posts ${response.body()?.results}")
+                    val results = response.body()?.results
+                    if (results != null) {
+                        _images.postValue(results)
+                    }
                 } else {
-                    Log.i("TestRoom", "getAllImgs: data corrupted")
-                    Log.d("tag", "getAll Error: ${response.code()}")
-                    Log.d("tag", "getAll: ${response.body()}")
+                    Log.i("TestRoom", "loadImages: data corrupted")
+                    Log.d("tag", "loadImages Error: ${response.code()}")
+                    Log.d("tag", "loadImages: ${response.body()}")
                 }
+            } catch (e: Exception) {
+                Log.e("TestRoom", "loadImages: Error: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
             }
-
-            return _response
-
+        }
+        return _images
     }
 
 
-//    fun getAllImgsViewModel(ID_Type_id: Int): LiveData<List<ImgsModel>> {
-//        val _response = MutableLiveData<List<ImgsModel>>()
-//
-//        viewModelScope.launch {
-//            try {
-//                val response = imgsRepo.getImgs_Repo(ID_Type_id)
-//
-//                if (response.isSuccessful) {
-//                    _response.postValue(response.body()?.results)
-//                    Log.i("TestRoom", "getAllImgs: posts ${response.body()?.results}")
-//                } else {
-//                    Log.i("TestRoom", "getAllImgs: data corrupted")
-//                    Log.d("tag", "getAll Error: ${response.code()}")
-//                    Log.d("tag", "getAll: ${response.body()}")
-//                }
-//            } catch (e: Exception) {
-//                Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
-//            }
-//        }
-//
-//        return _response
-//    }
+
 
     fun getAllImgsViewModel(ID_Type_id: Int): LiveData<List<ImgsModel>> {
         _isLoading.postValue(true) // عرض ProgressBar قبل بدء التحميل
@@ -113,43 +108,28 @@ private val _isConnected = MutableLiveData<Boolean>()
 
         return _response
     }
-//
-//    fun getAllImgsViewModel(ID_Type_id: Int): LiveData<List<ImgsModel>> {
-//        _isLoading.postValue(true) // عرض ProgressBar قبل بدء التحميل
-//
-//        val _response = MutableLiveData<List<ImgsModel>>()
-//
-//        viewModelScope.launch {
-//            try {
-//                val response = imgsRepo.getImgs_Repo(ID_Type_id)
-//
-//                if (response.isSuccessful) {
-//                    _response.postValue(response.body()?.results)
-//                    Log.i("TestRoom", "getAllImgs: posts ${response.body()?.results}")
-//
-//                } else
-//                {
-//                    Log.i("TestRoom", "getAllImgs: data corrupted")
-//                    Log.d("tag", "getAll Error: ${response.code()}")
-//                    Log.d("tag", "getAll: ${response.body()}")
-//                }
-//            } catch (e: Exception) {
-//                Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
-//            } finally {
-//                _isLoading.postValue(false) // إخفاء ProgressBar بعد انتهاء التحميل
-//            }
-//        }
-//
-//        return _response
-//    }
 
-
-
-
-//    // update msg_table items favorite state
-//    fun update_fav(id: Int,state:Boolean) = viewModelScope.launch {
-//        imgsRepo.update_fav(id,state)
-//    }
+    fun getImgsData(ID_Type_id: Int, page: Int): LiveData<List<ImgsModel>> {
+        val _response = MutableLiveData<List<ImgsModel>>()
+        viewModelScope.launch {
+            try {
+                val response = imgsRepo.getImgsData(ID_Type_id, page)
+                if (response.isSuccessful) {
+                    val results = response.body()?.results
+                    _response.postValue(results)
+                    Log.i("TestRoom", "getAllImgs: posts $results")
+//                    imgsRepo.insert_imgs_repo(response.body()?.results)
+                } else {
+                    Log.i("TestRoom", "getAllImgs: data corrupted")
+                    Log.d("tag", "getAll Error: ${response.code()}")
+                    Log.d("tag", "getAll: ${response.body()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
+            }
+        }
+        return _response
+    }
 
 
 

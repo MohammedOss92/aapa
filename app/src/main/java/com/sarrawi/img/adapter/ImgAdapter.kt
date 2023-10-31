@@ -64,14 +64,18 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
                 val requestOptions = RequestOptions()
                     .placeholder(R.drawable.ic_baseline_autorenew_24) // الصورة المؤقتة لحالة التحميل
                     .error(R.drawable.error_a) // الصورة المعروضة في حالة حدوث خطأ أثناء التحميل
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(false)
+
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
                     .circleCrop()
+                    .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.imgadapterImgViewContent)
                 binding.lyNoInternet.visibility = View.GONE
+
 
                 binding.apply {
                     if(current_imgModel.is_fav){
