@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdRequest
@@ -25,6 +26,7 @@ import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
+import com.sarrawi.img.paging.PagingAdapterImage
 
 class ThirdFragment : Fragment() {
 
@@ -36,8 +38,9 @@ class ThirdFragment : Fragment() {
         ViewModelFactory(requireContext(), mainRepository)
     }
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
+    private val imgAdaptert by lazy { PagingAdapterImage(requireActivity()) }
     private var ID = -1
-    private var startIndex = 0
+    private var startIndex = 10
     private val itemsPerPage = 10
     private var isFetching = false
     private var totalItemsLoaded = 0
@@ -82,8 +85,8 @@ class ThirdFragment : Fragment() {
 
         imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
             if (isConnected) {
+//                setUpRvth()
                 setUpRv()
-//                setUpRvT()
                 adapterOnClick()
                 imgAdapter.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
@@ -130,6 +133,17 @@ class ThirdFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
+    }
+
+    private fun setUpRvth(){
+        if (isAdded) {
+            imgsViewModel.getImgsData(ID, startIndex).observe(viewLifecycleOwner) {
+                imgAdaptert.submitData(viewLifecycleOwner.lifecycle, PagingData.from(it))
+                imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+                binding.rvImgCont.adapter = imgAdaptert
+//                imgAdapter.img_list = it
+            }
+        }
     }
 
     private fun setUpRv() {
@@ -196,59 +210,7 @@ class ThirdFragment : Fragment() {
         }
     }
 
-    fun setUpRvT() {
-        if (isFetching) {
-            // لا تقم بتحميل المزيد من الصور إذا كنت قد بدأت بالفعل في عملية تحميل
-            return
-        }
-        isFetching = true
 
-        if (isAdded) {
-            imgsViewModel.loadImages(ID, startIndex, itemsPerPage)
-                .observe(viewLifecycleOwner) { imgs ->
-                    startIndex += itemsPerPage
-                    totalItemsLoaded += imgs.size
-//                    startIndex += itemsPerPage
-//                    isFetching = false // عندما تنتهي عملية التحميل، قم بتعيين هذه القيمة إلى false
-
-                    if (isAdded) {
-                        imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-
-                        if (imgs.isEmpty()) {
-                            // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-                            imgsViewModel.getAllImgsViewModel(ID)
-                        } else {
-                            // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-
-                            // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
-                            favoriteImagesViewModel.getAllFav()
-                                .observe(viewLifecycleOwner) { favoriteImages ->
-                                    val allImages: List<ImgsModel> = imgs
-
-                                    for (image in allImages) {
-                                        val isFavorite =
-                                            favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
-                                        image.is_fav = isFavorite // قم بتحديث حالة الصورة
-                                    }
-
-                                    imgAdapter.img_list = allImages
-
-                                    if (binding.rvImgCont.adapter == null) {
-                                        binding.rvImgCont.layoutManager =
-                                            GridLayoutManager(requireContext(), 2)
-                                        binding.rvImgCont.adapter = imgAdapter
-                                    } else {
-                                        imgAdapter.notifyDataSetChanged()
-                                    }
-                                    if (currentItemId != -1) {
-                                        binding.rvImgCont.scrollToPosition(currentItemId)
-                                    }
-                                }
-                        }
-                    }
-                }
-        }
-    }
 
     fun adapterOnClick() {
         imgAdapter.onItemClick = { _, imgModel: ImgsModel, currentItemId ->

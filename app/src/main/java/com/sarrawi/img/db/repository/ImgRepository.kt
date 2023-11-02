@@ -14,6 +14,7 @@ class ImgRepository(val apiService: ApiService,app:Application) {
 
 
     suspend fun getImgs_Repo(ID_Type_id: Int) = apiService.getImgs_Ser(ID_Type_id)
+
     suspend fun getImgs_Repoa(ID_Type_id: Int, startIndex: Int, itemsPerPage: Int) = apiService.getImgs_Sera(ID_Type_id, startIndex, itemsPerPage)
 
 
