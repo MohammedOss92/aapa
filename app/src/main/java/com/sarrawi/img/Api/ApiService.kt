@@ -11,6 +11,8 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+
+
     @GET("imgsapi/{ID_Type_id}")
     suspend fun getImgs_Ser
                 (@Path("ID_Type_id") ID_Type_id:Int

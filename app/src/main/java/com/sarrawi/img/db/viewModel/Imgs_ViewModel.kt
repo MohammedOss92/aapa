@@ -3,6 +3,7 @@ package com.sarrawi.img.db.viewModel
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.paging.PagingData
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.model.ImgsModel
@@ -109,24 +110,30 @@ private val _isConnected = MutableLiveData<Boolean>()
         return _response
     }
 
-    fun getImgsData(ID_Type_id: Int, page: Int): LiveData<List<ImgsModel>> {
-        val _response = MutableLiveData<List<ImgsModel>>()
+//    fun getImgsData(ID_Type_id: Int, page: Int): LiveData<List<ImgsModel>> {
+    fun getImgsData(ID_Type_id: Int): LiveData<PagingData<ImgsModel>> {
+        //val _response = MutableLiveData<List<ImgsModel>>()
+        var _response = MutableLiveData<PagingData<ImgsModel>>()
 
         // قم بإجراء الاستدعاء إلى Retrofit باستخدام viewModelScope.launch
         viewModelScope.launch {
             try {
-                val response = imgsRepo.getImgsData(ID_Type_id, page)
-                if (response.isSuccessful) {
-                    val results = response.body()?.results
-                    _response.postValue(results)
-                    Log.i("TestRoom", "getAllImgs: posts $results")
-                    //                    imgsRepo.insert_imgs_repo(response.body()?.results)
+                val response = imgsRepo.getImgsData(ID_Type_id)
 
-                } else {
-                    Log.i("TestRoom", "getAllImgs: data corrupted")
-                    Log.d("tag", "getAll Error: ${response.code()}")
-                    Log.d("tag", "getAll: ${response.body()}")
-                }
+//                if (response.isSuccessful) {
+//                    val results = response.body()?.results
+//                    _response.postValue(results)
+//                    Log.i("TestRoom", "getAllImgs: posts $results")
+//                    //                    imgsRepo.insert_imgs_repo(response.body()?.results)
+//
+//                } else {
+//                    Log.i("TestRoom", "getAllImgs: data corrupted")
+//                    Log.d("tag", "getAll Error: ${response.code()}")
+//                    Log.d("tag", "getAll: ${response.body()}")
+//                }
+
+                //_response.postValue(response.value)
+                _response = response as MutableLiveData<PagingData<ImgsModel>>
             } catch (e: Exception) {
                 Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
             }

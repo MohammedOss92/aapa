@@ -40,7 +40,7 @@ class ThirdFragment : Fragment() {
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
     private val imgAdaptert by lazy { PagingAdapterImage(requireActivity()) }
     private var ID = -1
-    private var startIndex = 9
+    private var startIndex = -1
     private val itemsPerPage = 10
     private var isFetching = false
     private var totalItemsLoaded = 0
@@ -131,10 +131,12 @@ class ThirdFragment : Fragment() {
             binding.rvImgCont.adapter = imgAdaptert
 
             // بعد ذلك، قم بتعيين البيانات باستخدام ViewModel و LiveData
-            imgsViewModel.getImgsData(ID, startIndex).observe(viewLifecycleOwner) {
-                imgAdaptert.submitData(viewLifecycleOwner.lifecycle, PagingData.from(it))
-            }
+//
+//            imgsViewModel.getImgsData(ID, startIndex).observe(viewLifecycleOwner) {
+            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
 
+                imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)
+            }
             // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
             imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
         }
