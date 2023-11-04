@@ -111,6 +111,8 @@ private val _isConnected = MutableLiveData<Boolean>()
 
     fun getImgsData(ID_Type_id: Int, page: Int): LiveData<List<ImgsModel>> {
         val _response = MutableLiveData<List<ImgsModel>>()
+
+        // قم بإجراء الاستدعاء إلى Retrofit باستخدام viewModelScope.launch
         viewModelScope.launch {
             try {
                 val response = imgsRepo.getImgsData(ID_Type_id, page)
@@ -118,7 +120,8 @@ private val _isConnected = MutableLiveData<Boolean>()
                     val results = response.body()?.results
                     _response.postValue(results)
                     Log.i("TestRoom", "getAllImgs: posts $results")
-//                    imgsRepo.insert_imgs_repo(response.body()?.results)
+                    //                    imgsRepo.insert_imgs_repo(response.body()?.results)
+
                 } else {
                     Log.i("TestRoom", "getAllImgs: data corrupted")
                     Log.d("tag", "getAll Error: ${response.code()}")
@@ -128,8 +131,32 @@ private val _isConnected = MutableLiveData<Boolean>()
                 Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
             }
         }
+
         return _response
     }
+
+
+//    fun getImgsData(ID_Type_id: Int, page: Int): LiveData<List<ImgsModel>> {
+//        val _response = MutableLiveData<List<ImgsModel>>()
+//        viewModelScope.launch {
+//            try {
+//                val response = imgsRepo.getImgsData(ID_Type_id, page)
+//                if (response.isSuccessful) {
+//                    val results = response.body()?.results
+//                    _response.postValue(results)
+//                    Log.i("TestRoom", "getAllImgs: posts $results")
+////                    imgsRepo.insert_imgs_repo(response.body()?.results)
+//                } else {
+//                    Log.i("TestRoom", "getAllImgs: data corrupted")
+//                    Log.d("tag", "getAll Error: ${response.code()}")
+//                    Log.d("tag", "getAll: ${response.body()}")
+//                }
+//            } catch (e: Exception) {
+//                Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
+//            }
+//        }
+//        return _response
+//    }
 
 
 

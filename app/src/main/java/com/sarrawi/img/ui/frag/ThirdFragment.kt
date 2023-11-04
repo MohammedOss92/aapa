@@ -40,7 +40,7 @@ class ThirdFragment : Fragment() {
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
     private val imgAdaptert by lazy { PagingAdapterImage(requireActivity()) }
     private var ID = -1
-    private var startIndex = 10
+    private var startIndex = 9
     private val itemsPerPage = 10
     private var isFetching = false
     private var totalItemsLoaded = 0
@@ -83,19 +83,20 @@ class ThirdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
-            if (isConnected) {
+//        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
+//            if (isConnected) {
+////                setUpRvth()
 //                setUpRvth()
-                setUpRv()
-                adapterOnClick()
-                imgAdapter.updateInternetStatus(isConnected)
-                binding.lyNoInternet.visibility = View.GONE
-            } else {
-                binding.progressBar.visibility = View.GONE
-                binding.lyNoInternet.visibility = View.VISIBLE
-                imgAdapter.updateInternetStatus(isConnected)
-            }
-        }
+//                adapterOnClick()
+//                imgAdapter.updateInternetStatus(isConnected)
+//                binding.lyNoInternet.visibility = View.GONE
+//            } else {
+//                binding.progressBar.visibility = View.GONE
+//                binding.lyNoInternet.visibility = View.VISIBLE
+//                imgAdapter.updateInternetStatus(isConnected)
+//            }
+//        }
+        setUpRvth()
 
         imgsViewModel.checkNetworkConnection(requireContext())
 
@@ -109,21 +110,7 @@ class ThirdFragment : Fragment() {
 
 
 
-        val recyclerView = binding.rvImgCont
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
 
-                val visibleItemCount = recyclerView.layoutManager?.childCount ?: 0
-                val firstVisibleItem = (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-
-                if (visibleItemCount + firstVisibleItem >= totalItemsLoaded) {
-                    startIndex = totalItemsLoaded // تحديث startIndex بالعدد الإجمالي للعناصر المحملة
-//                    setUpRvT() // قم بتحميل المزيد من الصور
-//                    setUpRv()
-                }
-            }
-        })
     }
 
     override fun onDestroyView() {
@@ -135,16 +122,25 @@ class ThirdFragment : Fragment() {
 
     }
 
-    private fun setUpRvth(){
+    private fun setUpRvth() {
         if (isAdded) {
+            // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
+            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
+
+            // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
+            binding.rvImgCont.adapter = imgAdaptert
+
+            // بعد ذلك، قم بتعيين البيانات باستخدام ViewModel و LiveData
             imgsViewModel.getImgsData(ID, startIndex).observe(viewLifecycleOwner) {
                 imgAdaptert.submitData(viewLifecycleOwner.lifecycle, PagingData.from(it))
-                imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-                binding.rvImgCont.adapter = imgAdaptert
-//                imgAdapter.img_list = it
             }
+
+            // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
+            imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
         }
     }
+
+
 
     private fun setUpRv() {
         if (isAdded) {
