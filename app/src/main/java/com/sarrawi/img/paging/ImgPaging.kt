@@ -34,6 +34,7 @@ class ImgPaging(private val apiService: ApiService,var ID_Type_id: Int) : Paging
 
                 Log.d(TAG, "load: nextKey is $nextKey and prevKeyis $prevKey anf page = $page id = $ID_Type_id")
                 // إعادة البيانات ومفاتيح الصفحات
+                Log.d(TAG,"${response.body()?.results?.size}")
                 return LoadResult.Page(data = data, prevKey = prevKey, nextKey = nextKey)
             } else {
                 // إذا كان هناك خطأ في الاستدعاء

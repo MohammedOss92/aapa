@@ -37,12 +37,10 @@ class SplashScreenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-//        var rotate_z = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_z)
-//        binding.imageView2.startAnimation(rotate_z)
+
 
         Handler(Looper.myLooper()!!).postDelayed({
-//            val direction = SplashFragmentDirections.actionSplashFragmentToFirsFragment()
-//            findNavController().navigate(direction)
+
 
             findNavController()
                 .navigate(

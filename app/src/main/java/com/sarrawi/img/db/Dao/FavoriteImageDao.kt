@@ -1,6 +1,7 @@
 package com.sarrawi.img.db.Dao
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.sarrawi.img.model.FavoriteImage
 
@@ -20,7 +21,8 @@ interface FavoriteImageDao {
     suspend fun update_fav(ID:Int,state:Boolean)
 
     @Query("SELECT * FROM favorite_images order by id desc ")
-    fun getAllFavorite(): LiveData<List<FavoriteImage>>
+//    fun getAllFavorite(): LiveData<List<FavoriteImage>>
+    fun getAllFavorite(): PagingSource<Int,FavoriteImage>
 
     @Query("SELECT * FROM favorite_images where id =:ID order by id desc ")
     fun getFavByID(ID:Int): LiveData<List<FavoriteImage>>

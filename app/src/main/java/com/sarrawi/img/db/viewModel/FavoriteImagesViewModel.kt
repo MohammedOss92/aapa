@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.model.FavoriteImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) : ViewModel() {
@@ -65,11 +67,23 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
         }
     }
 
-    fun getAllFav(): LiveData<List<FavoriteImage>> {
+//    fun getAllFav(): LiveData<List<FavoriteImage>> {
+//
+//
+//
+//        return repository.getAllFavorite()
+//    }
+
+    fun getAllFav(): Flow<PagingData<FavoriteImage>> {
+        return Pager(PagingConfig(pageSize = 10)) {
+            repository.getAllFavorite()
+        }.flow.cachedIn(viewModelScope)
+    }
 
 
+    fun getAllFava(): LiveData<PagingData<FavoriteImage>> {
 
-        return repository.getAllFavorite()
+        return repository.getAllFavoritea()
     }
 
     fun getFavByIDModels(id:Int): LiveData<List<FavoriteImage>> {

@@ -79,7 +79,7 @@ class FavoritePagerFrag : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpRv()
+//        setUpRv()
         adapterOnClick()
         adapterpager.onSaveImageClickListenerfp = object : FavAdapterPager.OnSaveImageClickListenerfavp {
             override fun onSaveImageClickfp(position: Int) {
@@ -89,26 +89,26 @@ class FavoritePagerFrag : Fragment() {
 
     }
 
-    private fun setUpRv() {
-        if (isAdded) {
-            favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { imgs ->
-                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
-
-                if (imgs != null) {
-                    adapterpager.fav_img_list_pager=imgs
-                    binding.pagerFav.adapter =adapterpager
-                    binding.pagerFav.setCurrentItem(currentItemId,false) // set for selected item
-                    adapterpager.notifyDataSetChanged()
-
-                }
-
-                else {
-                    // No data
-                }
-
-            }}
-
-        }
+//    private fun setUpRv() {
+//        if (isAdded) {
+//            favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { imgs ->
+//                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
+//
+//                if (imgs != null) {
+//                    adapterpager.fav_img_list_pager=imgs
+//                    binding.pagerFav.adapter =adapterpager
+//                    binding.pagerFav.setCurrentItem(currentItemId,false) // set for selected item
+//                    adapterpager.notifyDataSetChanged()
+//
+//                }
+//
+//                else {
+//                    // No data
+//                }
+//
+//            }}
+//
+//        }
 
     fun saveImageToExternalStorage(position: Int) {
         val item = adapterpager.fav_img_list_pager.getOrNull(position)

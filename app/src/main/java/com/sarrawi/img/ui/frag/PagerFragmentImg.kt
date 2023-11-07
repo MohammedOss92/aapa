@@ -105,7 +105,7 @@ class PagerFragmentImg : Fragment() {
 //                  setUpViewPager()
 
 //                binding.lyNoInternet.visibility = View.GONE
-                setUpPager()
+//                setUpPager()
                 adapterpager.updateInternetStatus(isConnected)
             } else {
 //                     binding.progressBar.visibility = View.GONE
@@ -144,56 +144,56 @@ class PagerFragmentImg : Fragment() {
             }}
 
 
-    private fun setUpPager() {
-        if (isAdded) {
-            imgsViewmodel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
-
-
-                if (imgs.isEmpty()) {
-                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-                    imgsViewmodel.getAllImgsViewModel(ID)
-                } else {
-                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-
-                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
-                    favoriteImagesViewModel.getAllFav()
-                        .observe(viewLifecycleOwner) { favoriteImages ->
-                            val allImages: List<ImgsModel> = imgs
-
-                            for (image in allImages) {
-                                val isFavorite =
-                                    favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
-                                image.is_fav = isFavorite // قم بتحديث حالة الصورة
-                            }
-
-                            adapterpager.img_list_Pager = allImages
-
-                            if (imgs != null) {
-//                                adapterpager.img_list_Pager=imgs
-                                binding.pagerimg.adapter =adapterpager
-                                binding.pagerimg.setCurrentItem(currentItemId,false) // set for selected item
-                                binding.pagerimg.orientation=ViewPager2.ORIENTATION_HORIZONTAL
-                                adapterpager.notifyDataSetChanged()
-
-                            }
-
-                            else {
-                                // No data
-                                adapterpager.notifyDataSetChanged()
-                            }
-
-
-//                            if (currentItemId != -1) {
-//                                binding.pagerimg.scrollToPosition(currentItemId)
+//    private fun setUpPager() {
+//        if (isAdded) {
+//            imgsViewmodel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
+//
+//
+//                if (imgs.isEmpty()) {
+//                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+//                    imgsViewmodel.getAllImgsViewModel(ID)
+//                } else {
+//                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+//
+//                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
+//                    favoriteImagesViewModel.getAllFav()
+//                        .observe(viewLifecycleOwner) { favoriteImages ->
+//                            val allImages: List<ImgsModel> = imgs
+//
+//                            for (image in allImages) {
+//                                val isFavorite =
+//                                    favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+//                                image.is_fav = isFavorite // قم بتحديث حالة الصورة
 //                            }
-
-                        }
-                }
-
-
-            }
-        }
-    }
+//
+//                            adapterpager.img_list_Pager = allImages
+//
+//                            if (imgs != null) {
+////                                adapterpager.img_list_Pager=imgs
+//                                binding.pagerimg.adapter =adapterpager
+//                                binding.pagerimg.setCurrentItem(currentItemId,false) // set for selected item
+//                                binding.pagerimg.orientation=ViewPager2.ORIENTATION_HORIZONTAL
+//                                adapterpager.notifyDataSetChanged()
+//
+//                            }
+//
+//                            else {
+//                                // No data
+//                                adapterpager.notifyDataSetChanged()
+//                            }
+//
+//
+////                            if (currentItemId != -1) {
+////                                binding.pagerimg.scrollToPosition(currentItemId)
+////                            }
+//
+//                        }
+//                }
+//
+//
+//            }
+//        }
+//    }
 
     fun adapterOnClick() {
         adapterpager.onbtnClick = { it: ImgsModel, i: Int ->

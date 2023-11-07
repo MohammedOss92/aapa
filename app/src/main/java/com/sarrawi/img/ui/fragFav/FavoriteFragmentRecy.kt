@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,10 @@ import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.viewModel.FavoriteImagesViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory2
 import com.sarrawi.img.model.FavoriteImage
+import com.sarrawi.img.paging.Paging_Fav_Adapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class FavoriteFragmentRecy : Fragment() {
@@ -30,6 +35,7 @@ class FavoriteFragmentRecy : Fragment() {
         ViewModelFactory2(a)
     }
     private val favAdapter by lazy { Fav_Adapter(requireActivity()) }
+    private val pagingfavAdapter by lazy { Paging_Fav_Adapter(requireActivity()) }
 
     private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
     private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
@@ -60,24 +66,23 @@ class FavoriteFragmentRecy : Fragment() {
         adapterOnClick()
     }
 
-    private fun setUpRv() {
+    private fun setUpRvtwo(){
         if (isAdded) {
-            favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { imgs ->
-                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
-                favAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+            // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
+            binding.recyclerFav.layoutManager = GridLayoutManager(requireContext(), 2)
 
-                favAdapter.fav_img_list = imgs
-                if(binding.recyclerFav.adapter == null){
+            // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
+            binding.recyclerFav.adapter = pagingfavAdapter
 
-                    binding.recyclerFav.layoutManager = GridLayoutManager(requireContext(), 2)
-                    binding.recyclerFav.adapter = favAdapter
-                    favAdapter.notifyDataSetChanged()
-                }else{
-                    favAdapter.notifyDataSetChanged()
+            lifecycleScope.launch(Dispatchers.IO){
+                favoriteImagesViewModel.getAllFav().collect{ imgs ->
+                    // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
+                    favAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+
+
+
+
                 }
-
-
-            }
 
 //                imgAdapter.onItemClick = { _, currentItemId ->
 //                    if (imgsViewModel.isConnected.value == true) {
@@ -93,16 +98,41 @@ class FavoriteFragmentRecy : Fragment() {
 //                    }
 //                }
             }
+
+            // بعد ذلك، قم بتعيين البيانات باستخدام ViewModel و LiveData
+//
+//            imgsViewModel.getImgsData(ID, startIndex).observe(viewLifecycleOwner) {
+//            favoriteImagesViewModel.getAllFava().observe(viewLifecycleOwner) {
+//
+//                pagingfavAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+//            }
+            // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
+            pagingfavAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
         }
+    }
+
+    private fun setUpRv() {
+        if (isAdded) {
+            lifecycleScope.launch(Dispatchers.Main) { // استخدام Dispatchers.Main لتحديث UI
+                binding.recyclerFav.layoutManager = GridLayoutManager(requireContext(), 2)
+                binding.recyclerFav.adapter = pagingfavAdapter
+                favoriteImagesViewModel.getAllFav().collect {
+                    // تم استدعاء الدالة على الخيط الرئيسي
+                    pagingfavAdapter.submitData(it)
+                }
+                pagingfavAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+            }
+        }
+    }
 
     private fun adapterOnClick() {
-        favAdapter.onItemClick = { _, favimage: FavoriteImage, currentItemId ->
+        pagingfavAdapter.onItemClick = { _, favimage: FavoriteImage, currentItemId ->
 
                 val directions = FavoriteFragmentRecyDirections.actionFavoriteFragmentRecyToFavFragmentLinRecy(ID, currentItemId,favimage.image_url)
                 findNavController().navigate(directions)
 
         }
-        favAdapter.onbtnclick = {
+        pagingfavAdapter.onbtnclick = {
             it.is_fav = false
             imgsffav.updateImages()
             imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
