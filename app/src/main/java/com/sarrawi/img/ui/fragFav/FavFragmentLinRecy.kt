@@ -108,44 +108,19 @@ class FavFragmentLinRecy : Fragment() {
                 favoriteImagesViewModel.getAllFav().collect {
                     // تم استدعاء الدالة على الخيط الرئيسي
                     favPagingAdapterImageLinear.submitData(it)
+                    if (currentItemId != -1) {
+                        binding.recyclerFav.scrollToPosition(currentItemId)
+                    }
                 }
                 favPagingAdapterImageLinear.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+                if (currentItemId != -1) {
+                    binding.recyclerFav.scrollToPosition(currentItemId)
+                }
             }
         }
     }
 
-//    private fun setUpRv() {
-//        if (isAdded) {
-//            favoriteImagesViewModel.getAllFav().observe(viewLifecycleOwner) { imgs ->
-//                // تم استدعاء الدالة فقط إذا كان ال Fragment متصلاً بنشاط
-//                favAdapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-//
-//                favAdapterLinRecy.fav_img_list = imgs
-//                if(binding.recyclerFav.adapter == null){
-//
-//                    binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext())
-//                    binding.recyclerFav.adapter = favAdapterLinRecy
-//                    favAdapterLinRecy.notifyDataSetChanged()
-//                }else{
-//                    favAdapterLinRecy.notifyDataSetChanged()
-//                }
-//                if (currentItemId != -1) {
-//                    binding.recyclerFav.scrollToPosition(currentItemId)
-//                }
-//
-//
-//            }
-//
-//            favAdapterLinRecy.onbtnclick = {
-//                it.is_fav = false
-//                imgsffav.updateImages()
-//                imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
-//
-//                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
-//                snackbar.show()
-//            }
-//        }
-//    }
+
 
     private fun adapterOnClick() {
 
@@ -223,61 +198,6 @@ class FavFragmentLinRecy : Fragment() {
         }
     }
 
-//    fun saveImageToExternalStorage(position: Int) {
-//        val item = favAdapterLinRecy.fav_img_list.getOrNull(position)
-//
-//
-//
-//        if (item != null) {
-//            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
-//
-//            Glide.with(requireContext())
-//                .asBitmap()
-//                .load(imageUri)
-//                .into(object : CustomTarget<Bitmap>() {
-//                    override fun onResourceReady(
-//                        resource: Bitmap,
-//                        transition: Transition<in Bitmap>?
-//                    ) {
-//                        try {
-//                            val folderName = "MyPics"
-//                            val displayName = String.format("%d.png", System.currentTimeMillis())
-//                            val mimeType = "image/png"
-//
-//                            // تمثيل المعلومات الخاصة بالصورة
-//                            val imageDetails = ContentValues().apply {
-//                                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
-//                                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-//                                put(MediaStore.Images.Media.WIDTH, resource.width)
-//                                put(MediaStore.Images.Media.HEIGHT, resource.height)
-//                                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folderName)
-//                            }
-//
-//                            // حفظ الصورة باستخدام MediaStore
-//                            val contentResolver = requireContext().contentResolver
-//                            val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
-//
-//                            if (imageUri != null) {
-//                                val outputStream = contentResolver.openOutputStream(imageUri)
-//                                resource.compress(getCompressFormat(item.image_url), 100, outputStream)
-//                                outputStream?.close()
-//                                showSaveSuccessMessage()
-//                            } else {
-//                                showSaveErrorMessage()
-//                            }
-//                        } catch (e: Exception) {
-//                            e.printStackTrace()
-//                            Log.e("MyApp", "An error occurred: ${e.message}")
-//                            showSaveErrorMessage()
-//                        }
-//                    }
-//
-//                    override fun onLoadCleared(placeholder: Drawable?) {
-//                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
-//                    }
-//                })
-//        }
-//    }
 
     private fun showSaveSuccessMessage() {
         Snackbar.make(requireView(), "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show()
@@ -287,15 +207,7 @@ class FavFragmentLinRecy : Fragment() {
         Snackbar.make(requireView(), "حدث خطأ أثناء الحفظ", Snackbar.LENGTH_SHORT).show()
     }
 
-//    fun getCompressFormat(imageUrl: String): Bitmap.CompressFormat {
-//        val extension = MimeTypeMap.getFileExtensionFromUrl(imageUrl)
-//        return when (extension?.toLowerCase()) {
-//            "jpg", "jpeg" -> Bitmap.CompressFormat.JPEG
-//            "png" -> Bitmap.CompressFormat.PNG
-//            // يمكنك إضافة المزيد من الامتدادات هنا
-//            else -> Bitmap.CompressFormat.WEBP_LOSSY
-//        }
-//    }
+
 
     fun getCompressFormat(imageUrl: String): Bitmap.CompressFormat? {
         val extension = MimeTypeMap.getFileExtensionFromUrl(imageUrl)

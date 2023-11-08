@@ -119,8 +119,10 @@ class FavoriteFragmentRecy : Fragment() {
                 favoriteImagesViewModel.getAllFav().collect {
                     // تم استدعاء الدالة على الخيط الرئيسي
                     pagingfavAdapter.submitData(it)
+
                 }
                 pagingfavAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+
             }
         }
     }
