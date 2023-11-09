@@ -21,7 +21,9 @@ interface FavoriteImageDao {
     suspend fun update_fav(ID:Int,state:Boolean)
 
     @Query("SELECT * FROM favorite_images order by id desc ")
-//    fun getAllFavorite(): LiveData<List<FavoriteImage>>
+    fun getAllFavoritea(): LiveData<List<FavoriteImage>>
+
+    @Query("SELECT * FROM favorite_images order by id desc ")
     fun getAllFavorite(): PagingSource<Int,FavoriteImage>
 
     @Query("SELECT * FROM favorite_images where id =:ID order by id desc ")

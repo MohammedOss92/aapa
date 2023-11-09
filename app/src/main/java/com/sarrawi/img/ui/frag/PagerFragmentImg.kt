@@ -116,7 +116,7 @@ class PagerFragmentImg : Fragment() {
         }
         imgsViewmodel.checkNetworkConnection(requireContext())
 
-//        setUpViewPager()
+        setUpViewPager()
         adapterOnClick()
         adapterpager.onSaveImageClickListenerp = object : ViewPagerAdapter.OnSaveImageClickListenerp {
             override fun onSaveImageClickp(position: Int) {

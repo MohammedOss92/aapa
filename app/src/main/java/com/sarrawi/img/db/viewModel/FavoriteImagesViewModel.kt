@@ -81,9 +81,9 @@ class FavoriteImagesViewModel(private val repository: FavoriteImageRepository) :
     }
 
 
-    fun getAllFava(): LiveData<PagingData<FavoriteImage>> {
+    fun getAllFava(): LiveData<List<FavoriteImage>> {
 
-        return repository.getAllFavoritea()
+        return repository.getAllFav()
     }
 
     fun getFavByIDModels(id:Int): LiveData<List<FavoriteImage>> {

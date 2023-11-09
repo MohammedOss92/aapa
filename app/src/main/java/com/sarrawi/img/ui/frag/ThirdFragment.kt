@@ -20,7 +20,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.Api.ApiService
-import com.sarrawi.img.Parcelable.SelectedItemState
 import com.sarrawi.img.adapter.ImgAdapter
 import com.sarrawi.img.databinding.FragmentThirdBinding
 import com.sarrawi.img.db.repository.FavoriteImageRepository
@@ -75,33 +74,31 @@ class ThirdFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ID = ThirdFragmentArgs.fromBundle(requireArguments()).id
-        currentItemId = savedInstanceState?.getParcelable<SelectedItemState>("selectedItemState")?.itemId ?: -1
 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable("selectedItemState", SelectedItemState(currentItemId))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
-//            if (isConnected) {
-////                setUpRvth()
+        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
+            if (isConnected) {
 //                setUpRvth()
-//                adapterOnClick()
-//                imgAdapter.updateInternetStatus(isConnected)
-//                binding.lyNoInternet.visibility = View.GONE
-//            } else {
+                setUpRv()
+                adapterOnClick()
+                imgAdapter.updateInternetStatus(isConnected)
+                binding.lyNoInternet.visibility = View.GONE
+            } else {
 //                binding.progressBar.visibility = View.GONE
-//                binding.lyNoInternet.visibility = View.VISIBLE
-//                imgAdapter.updateInternetStatus(isConnected)
-//            }
-//        }
+                binding.lyNoInternet.visibility = View.VISIBLE
+                imgAdapter.updateInternetStatus(isConnected)
+            }
+        }
         InterstitialAd_fun()
-        setUpRvth()
+        setUpRv()
         adapterOnClick()
 
         imgsViewModel.checkNetworkConnection(requireContext())
@@ -128,42 +125,70 @@ class ThirdFragment : Fragment() {
 
     }
 
-    private fun setUpRvth() {
+    private fun setUpRv() {
         if (isAdded) {
-            // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
-            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
+            imgsViewModel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
+                imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
-            // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
-            binding.rvImgCont.adapter = imgAdaptert
+                if (imgs.isEmpty()) {
+                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+                    imgsViewModel.getAllImgsViewModel(ID)
+                } else {
+                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
 
-            // بعد ذلك، قم بتعيين البيانات باستخدام ViewModel و LiveData
-//
-//            imgsViewModel.getImgsData(ID, startIndex).observe(viewLifecycleOwner) {
-            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
+                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
+                    favoriteImagesViewModel.getAllFava().observe(viewLifecycleOwner) { favoriteImages ->
+                        val allImages: List<ImgsModel> = imgs
 
-                imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)
-                val item = imgAdaptert.snapshot().items.getOrNull(currentItemId)
+                        for (image in allImages) {
+                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
+                        }
 
-                if (item != null) {
-                    val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
+                        imgAdapter.img_list = allImages
+
+                        if (binding.rvImgCont.adapter == null) {
+                            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(),2)
+                            binding.rvImgCont.adapter = imgAdapter
+                        } else {
+                            imgAdapter.notifyDataSetChanged()
+                        }
+                        if (currentItemId != -1) {
+                            binding.rvImgCont.scrollToPosition(currentItemId)
+                        }
+
+                    }
                 }
 
-                if (currentItemId != -1) {
-                    binding.rvImgCont.scrollToPosition(currentItemId)
-                }
+                imgAdapter.onItemClick = { _, imgModel: ImgsModel,currentItemId ->
+                    if (imgsViewModel.isConnected.value == true) {
 
-//                favoriteImagesViewModel.getAllFav()
-//                    .observe(viewLifecycleOwner) { favoriteImages ->
-//                        val allImages: List<ImgsModel> = newImgs
-//                        for (image in allImages) {
-//                            val isFavorite =
-//                                favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
-//                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
-//                        }
+                        clickCount++
+                        if (clickCount >= 2) {
+// بمجرد أن يصل clickCount إلى 2، اعرض الإعلان
+                            if (mInterstitialAd != null) {
+                                mInterstitialAd?.show(requireActivity())
+                            } else {
+                                Log.d("TAG", "The interstitial ad wasn't ready yet.")
+                            }
+                            clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
+
+                        }
+
+                        val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId,imgModel.image_url)
+                        findNavController().navigate(directions)
+
+
+                    } else {
+                        val snackbar = Snackbar.make(
+                            requireView(),
+                            "لا يوجد اتصال بالإنترنت",
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackbar.show()
+                    }
+                }
             }
-            // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
-            imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-
         }
     }
 
@@ -172,8 +197,10 @@ class ThirdFragment : Fragment() {
 
 
 
+
+
     fun adapterOnClick() {
-        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
+        imgAdapter.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
 //            if (imgsViewModel.isConnected.value == true) {
 
                 clickCount++
@@ -187,6 +214,8 @@ class ThirdFragment : Fragment() {
                     clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
 
                 }
+
+
                 val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId, imgModel.image_url)
                 findNavController().navigate(directions)
             }
@@ -200,7 +229,7 @@ class ThirdFragment : Fragment() {
 //            }
 
 
-        imgAdaptert.onbtnClick = { it: ImgsModel, i: Int ->
+        imgAdapter.onbtnClick = { it: ImgsModel, i: Int ->
             if (it.is_fav) {
                 // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
                 it.is_fav = false

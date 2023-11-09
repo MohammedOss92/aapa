@@ -90,8 +90,8 @@ class FavFragmentLinRecy : Fragment() {
         setUpRv()
         adapterOnClick()
 
-        favPagingAdapterImageLinear.onSaveImageClickListenerfav = object :
-            FavPagingAdapterImageLinear.OnSaveImageClickListenerfav{
+        favAdapterLinRecy.onSaveImageClickListenerfav = object :
+            FavAdapterLinRecy.OnSaveImageClickListenerfav{
             override fun onSaveImageClick(position: Int) {
                 saveImageToExternalStorage(position)
             }
@@ -100,31 +100,34 @@ class FavFragmentLinRecy : Fragment() {
 
     }
 
-    private fun setUpRv() {
-        if (isAdded) {
-            lifecycleScope.launch(Dispatchers.Main) { // استخدام Dispatchers.Main لتحديث UI
+    private  fun setUpRv()  {
+
+
+
+
+        favoriteImagesViewModel.getAllFava().observe(viewLifecycleOwner) { listShows ->
+            //  msgsAdapter.stateRestorationPolicy=RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+            favAdapterLinRecy.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+//            msgsAdapter.msgsModel = listShows
+//            binding.rcMsgs.adapter = msgsAdapter
+            favAdapterLinRecy.fav_img_list = listShows
+            if(binding.recyclerFav.adapter == null){
                 binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext())
-                binding.recyclerFav.adapter = favPagingAdapterImageLinear
-                favoriteImagesViewModel.getAllFav().collect {
-                    // تم استدعاء الدالة على الخيط الرئيسي
-                    favPagingAdapterImageLinear.submitData(it)
-                    if (currentItemId != -1) {
-                        binding.recyclerFav.scrollToPosition(currentItemId)
-                    }
-                }
-                favPagingAdapterImageLinear.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-                if (currentItemId != -1) {
-                    binding.recyclerFav.scrollToPosition(currentItemId)
-                }
+                binding.recyclerFav.adapter = favAdapterLinRecy
+            }else{
+                favAdapterLinRecy.notifyDataSetChanged()
             }
+            Log.e("tessst","enter111")
+
         }
     }
 
 
 
+
     private fun adapterOnClick() {
 
-        favPagingAdapterImageLinear.onbtnclick = {
+        favAdapterLinRecy.onbtnclick = {
             it.is_fav = false
             imgsffav.updateImages()
             imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
@@ -133,7 +136,7 @@ class FavFragmentLinRecy : Fragment() {
             snackbar.show()
         }
 
-        favPagingAdapterImageLinear.onItemClick={_, favimage: FavoriteImage, currentItemId ->
+        favAdapterLinRecy.onItemClick={_, favimage: FavoriteImage, currentItemId ->
             val directions = FavFragmentLinRecyDirections.actionFavFragmentLinRecyToFavoritePagerFrag(ID, currentItemId,favimage.image_url)
             findNavController().navigate(directions)
         }
@@ -141,7 +144,7 @@ class FavFragmentLinRecy : Fragment() {
     }
 
     fun saveImageToExternalStorage(position: Int) {
-        val item = favPagingAdapterImageLinear.snapshot().items.getOrNull(position)
+        val item = favAdapterLinRecy.fav_img_list.getOrNull(position)
 
         if (item != null) {
             val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL

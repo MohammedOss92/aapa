@@ -21,15 +21,14 @@ class ImgRepository(val apiService: ApiService,app:Application) {
 
     suspend fun getImgs_Repo(ID_Type_id: Int) = apiService.getImgs_Ser(ID_Type_id)
 
-    suspend fun getImgs_Repoa(ID_Type_id: Int, startIndex: Int, itemsPerPage: Int) =
-        apiService.getImgs_Sera(ID_Type_id, startIndex, itemsPerPage)
+
 
 
 //    suspend fun getImgsData(ID_Type_id: Int, page: Int) = apiService.getImgsData(ID_Type_id, page)
     suspend fun getImgsData(ID_Type_id: Int): LiveData<PagingData<ImgsModel>> {
    val response =  Pager(
         config = PagingConfig(
-            pageSize = 20,
+            pageSize = 10,
             enablePlaceholders = false,
         ),
         pagingSourceFactory = {

@@ -51,32 +51,6 @@ private val _isConnected = MutableLiveData<Boolean>()
 
 
 
-    fun loadImages(ID_Type_id: Int, startIndex: Int, itemsPerPage: Int): LiveData<List<ImgsModel>> {
-        val _images = MutableLiveData<List<ImgsModel>>() // تعريف _images كمتغير LiveData
-        _isLoading.postValue(true)
-
-        viewModelScope.launch {
-            try {
-                val response = imgsRepo.getImgs_Repoa(ID_Type_id, startIndex, itemsPerPage)
-
-                if (response.isSuccessful) {
-                    val results = response.body()?.results
-                    if (results != null) {
-                        _images.postValue(results)
-                    }
-                } else {
-                    Log.i("TestRoom", "loadImages: data corrupted")
-                    Log.d("tag", "loadImages Error: ${response.code()}")
-                    Log.d("tag", "loadImages: ${response.body()}")
-                }
-            } catch (e: Exception) {
-                Log.e("TestRoom", "loadImages: Error: ${e.message}")
-            } finally {
-                _isLoading.postValue(false)
-            }
-        }
-        return _images
-    }
 
 
 
