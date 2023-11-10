@@ -42,7 +42,7 @@ class FavoriteFragmentRecy : Fragment() {
     private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
         ViewModelFactory2(favoriteImageRepository)
     }
-
+    private var currentItemId = -1
     private var ID = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +85,10 @@ class FavoriteFragmentRecy : Fragment() {
                 favAdapter.notifyDataSetChanged()
             }
             Log.e("tessst","enter111")
+
+            if (currentItemId != -1) {
+                binding.recyclerFav.scrollToPosition(currentItemId)
+            }
 
         }
     }

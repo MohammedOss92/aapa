@@ -119,6 +119,10 @@ class FavFragmentLinRecy : Fragment() {
             }
             Log.e("tessst","enter111")
 
+            if (currentItemId != -1) {
+                binding.recyclerFav.scrollToPosition(currentItemId)
+            }
+
         }
     }
 
