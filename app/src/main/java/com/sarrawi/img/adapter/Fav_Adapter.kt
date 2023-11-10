@@ -20,6 +20,13 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
 
     var onItemClick: ((Int,FavoriteImage, Int) -> Unit)? = null
     var onbtnclick: ((item:FavoriteImage) -> Unit)? = null
+    val displayMetrics = con.resources.displayMetrics
+    val screenWidth = displayMetrics.widthPixels
+    val screenHeight = displayMetrics.heightPixels
+
+    // قم بتحديد القيم المطلوبة للصورة
+    val targetWidth = screenWidth / 2 // على سبيل المثال، يمكنك تحديد العرض إلى نصف عرض الشاشة
+    val targetHeight = screenHeight / 2 // على سبيل المثال، يمكنك تحديد الارتفاع إلى نصف ارتفاع الشاشة
 
 
     inner class ViewHolder(val binding: ImgDesignfavBinding):RecyclerView.ViewHolder(binding.root) {
@@ -46,6 +53,9 @@ class Fav_Adapter(val con: Context): RecyclerView.Adapter<Fav_Adapter.ViewHolder
                 Glide.with(con)
                     .load(current_imgModel.image_url)
                     .apply(requestOptions)
+                    .override(targetWidth, targetHeight)
+//                    .quality(80) // تحديد جودة الصورة (0-100)
+//                    .thumbnail(0.5f) // تحديد حجم المصغرة كنسبة من حجم الصورة الأصلية
                     .circleCrop()
                     .centerCrop()
                     .into(binding.imgadapterImgViewContent)

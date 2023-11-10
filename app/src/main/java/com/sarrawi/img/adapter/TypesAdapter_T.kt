@@ -15,6 +15,13 @@ import com.sarrawi.img.model.Img_Types_model
 class TypesAdapter_T (val con: Context): RecyclerView.Adapter<TypesAdapter_T.ViewHolder>() {
 
     var onItemClick: ((Int) -> Unit)? = null
+    val displayMetrics = con.resources.displayMetrics
+    val screenWidth = displayMetrics.widthPixels
+    val screenHeight = displayMetrics.heightPixels
+
+    // قم بتحديد القيم المطلوبة للصورة
+    val targetWidth = screenWidth / 2 // على سبيل المثال، يمكنك تحديد العرض إلى نصف عرض الشاشة
+    val targetHeight = screenHeight / 2 // على سبيل المثال، يمكنك تحديد الارتفاع إلى نصف ارتفاع الشاشة
 
     inner class ViewHolder(val binding: TypesDesign2Binding):RecyclerView.ViewHolder(binding.root) {
 
