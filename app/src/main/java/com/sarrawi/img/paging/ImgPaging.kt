@@ -42,8 +42,9 @@ class ImgPaging(private val apiService: ApiService, var ID_Type_id: Int) : Pagin
 
             return LoadResult.Page(
                 data = responseData,
-                prevKey = if (currentPage == 1) null else currentPage - 1,
-                nextKey = nextKey
+                prevKey = if (currentPage == 1) null else currentPage.minus(1),
+//                prevKey = if (currentPage == 1) null else currentPage - 1,
+                nextKey = if (responseData.isEmpty()) null else currentPage.plus(1)
             )
         } catch (e: Exception) {
             return LoadResult.Error(e)

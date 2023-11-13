@@ -32,6 +32,7 @@ class ImgRepository(val apiService: ApiService,app:Application) {
             config = PagingConfig(
             pageSize = 10,
             enablePlaceholders = false,
+
         ),
             pagingSourceFactory = {
                 ImgPaging(
