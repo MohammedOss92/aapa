@@ -74,7 +74,6 @@ class ThirdFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ID = ThirdFragmentArgs.fromBundle(requireArguments()).id
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -84,24 +83,24 @@ class ThirdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
-            if (isConnected) {
+//        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
+//            if (isConnected) {
+////                setUpRvth()
 //                setUpRvth()
-                setUpRv()
-                adapterOnClick()
-                imgAdapter.updateInternetStatus(isConnected)
-                binding.lyNoInternet.visibility = View.GONE
-            } else {
-//                binding.progressBar.visibility = View.GONE
-                binding.lyNoInternet.visibility = View.VISIBLE
-                imgAdapter.updateInternetStatus(isConnected)
-            }
-        }
-        InterstitialAd_fun()
-        setUpRv()
+//                adapterOnClick()
+//                imgAdapter.updateInternetStatus(isConnected)
+//                binding.lyNoInternet.visibility = View.GONE
+//            } else {
+////                binding.progressBar.visibility = View.GONE
+//                binding.lyNoInternet.visibility = View.VISIBLE
+//                imgAdapter.updateInternetStatus(isConnected)
+//            }
+//        }
+//        InterstitialAd_fun()
+        setUpRvth()
         adapterOnClick()
 
-        imgsViewModel.checkNetworkConnection(requireContext())
+//        imgsViewModel.checkNetworkConnection(requireContext())
 
 //        imgsViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
 //            if (isLoading) {
@@ -192,7 +191,36 @@ class ThirdFragment : Fragment() {
         }
     }
 
+    private fun setUpRvth() {
+        if (isAdded) {
+        // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
+            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
 
+        // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
+            binding.rvImgCont.adapter = imgAdaptert
+
+
+            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
+
+              imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)
+              imgAdaptert.notifyDataSetChanged()
+
+//                favoriteImagesViewModel.getAllFav()
+//                    .observe(viewLifecycleOwner) { favoriteImages ->
+//                        val allImages: List<ImgsModel> = newImgs
+//                        for (image in allImages) {
+//                            val isFavorite =
+//                                favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+//                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
+//                        }
+         }
+        // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
+            imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+// بعد تحديث البيانات
+            binding.rvImgCont.scrollToPosition(0)
+
+    }
+}
 
 
 

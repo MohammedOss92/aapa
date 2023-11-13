@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
+import com.sarrawi.img.model.results
 
 class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, PagingAdapterImage.ViewHolder>(COMPARATOR) {
 

@@ -1,6 +1,7 @@
 package com.sarrawi.img.Api
 
 import com.sarrawi.img.model.ImgsRespone
+import com.sarrawi.img.model.MyImgsRespone
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.Response
@@ -22,6 +23,18 @@ interface ApiService {
     suspend fun getImgsData(
         @Path("ID_Type_id") id: Int,
         @Query("page") page: Int): Response<ImgsRespone>
+
+//    @GET("snippets/{ID_Type_id}/")
+//    fun getsnippets(
+//        @Path("ID_Type_id") id: Int,
+//        @Query("page") page: Int): Response<MyImgsRespone>
+
+    @GET("snippets/{ID_Type_id}/")
+    fun getsnippets(
+        @Path("ID_Type_id") id: Int,
+
+        @Query("page") page: Int
+    ): Response<MyImgsRespone>
 
 
     @GET("imgsapia/{ID_Type_id}")

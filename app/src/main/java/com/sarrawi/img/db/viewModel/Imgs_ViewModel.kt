@@ -4,9 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.model.ImgsModel
+import com.sarrawi.img.model.results
 import com.sarrawi.img.utils.NetworkConnection
 import kotlinx.coroutines.launch
 
@@ -22,7 +24,7 @@ class Imgs_ViewModel(private val context: Context,  private val imgsRepo:ImgRepo
 
 ////
     private val _images = MutableLiveData<List<ImgsModel>>()
-
+    var ID_Type_id: Int=-1
 
 
     val images: LiveData<List<ImgsModel>>
@@ -47,7 +49,6 @@ private val _isConnected = MutableLiveData<Boolean>()
             _isConnected.value = isConnected
         }
     }
-
 
 
 
@@ -114,6 +115,42 @@ private val _isConnected = MutableLiveData<Boolean>()
         }
 
         return _response
+    }
+
+    fun getsnippets(ID_Type_id: Int): LiveData<PagingData<results>> {
+        //val _response = MutableLiveData<List<ImgsModel>>()
+        var _response = MutableLiveData<PagingData<results>>()
+
+        // قم بإجراء الاستدعاء إلى Retrofit باستخدام viewModelScope.launch
+        viewModelScope.launch {
+            try {
+                val response = imgsRepo.getsnippets(ID_Type_id)
+
+
+//                if (response.isSuccessful) {
+//                    val results = response.body()?.results
+//                    _response.postValue(results)
+//                    Log.i("TestRoom", "getAllImgs: posts $results")
+//                    //                    imgsRepo.insert_imgs_repo(response.body()?.results)
+//
+//                } else {
+//                    Log.i("TestRoom", "getAllImgs: data corrupted")
+//                    Log.d("tag", "getAll Error: ${response.code()}")
+//                    Log.d("tag", "getAll: ${response.body()}")
+//                }
+
+                //_response.postValue(response.value)
+                _response = response as MutableLiveData<PagingData<results>>
+                Log.e("Test", "getAll")
+            } catch (e: Exception) {
+                Log.e("TestRoom", "getAllImgs: Error: ${e.message}")
+            }
+        }
+
+        return _response
+    }
+    fun getsnippetss(ID_Type_id: Int): LiveData<PagingData<results>> {
+        return imgsRepo.getsnippetss(ID_Type_id)
     }
 
 
