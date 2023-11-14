@@ -1,6 +1,7 @@
 package com.sarrawi.img.db.repository
 
 import android.app.Application
+import android.media.Image
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
@@ -13,6 +14,8 @@ import com.sarrawi.img.model.ImgsRespone
 import com.sarrawi.img.model.results
 import com.sarrawi.img.paging.ImgPaging
 import com.sarrawi.img.paging.ImgPaging2
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
 
@@ -69,6 +72,30 @@ class ImgRepository(val apiService: ApiService,app:Application) {
                 ImgPaging2(apiService, ID_Type_id)
             }
         ).liveData
+    }
+
+
+    fun fetchImagesPaged(id: Int, startPage: Int): Flow<List<ImgsModel>> = flow {
+        var currentPage = startPage
+
+        while (true) {
+            val response = apiService.getImgs_Serr(id, currentPage)
+
+            if (response.isSuccessful) {
+                val images = response.body()?.results ?: emptyList()
+                emit(images)
+
+                if (images.size < currentPage) {
+                    // لا توجد المزيد من الصور، يمكنك إيقاف الحلقة هنا
+                    break
+                }
+
+                currentPage++
+            } else {
+                // معالجة الخطأ هنا
+                break
+            }
+        }
     }
 
 

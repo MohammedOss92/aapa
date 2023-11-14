@@ -24,10 +24,13 @@ interface ApiService {
         @Path("ID_Type_id") id: Int,
         @Query("page") page: Int): Response<ImgsRespone>
 
-//    @GET("snippets/{ID_Type_id}/")
-//    fun getsnippets(
-//        @Path("ID_Type_id") id: Int,
-//        @Query("page") page: Int): Response<MyImgsRespone>
+
+    @GET("imgsapi/{ID_Type_id}")
+    fun getImgs_Serr(
+        @Path("ID_Type_id") ID_Type_id: Int,
+        @Query("page") page: Int
+    ): Response<ImgsRespone>
+
 
     @GET("snippets/{ID_Type_id}/")
     fun getsnippets(
@@ -37,12 +40,7 @@ interface ApiService {
     ): Response<MyImgsRespone>
 
 
-    @GET("imgsapia/{ID_Type_id}")
-    suspend fun getImgs_Sera(
-        @Path("ID_Type_id") ID_Type_id: Int,
-        @Query("startIndex") startIndex: Int,
-        @Query("itemsPerPage") itemsPerPage: Int
-    ): Response<ImgsRespone>
+
 
 
     @GET("/imgtypes_api/")

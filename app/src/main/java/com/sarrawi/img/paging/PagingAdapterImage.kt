@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.sarrawi.img.R
+import com.sarrawi.img.databinding.ImagedeaBinding
 import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.model.results
@@ -24,7 +25,7 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
     var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
     var onbtnClick: ((ImgsModel, Int) -> Unit)? = null
 
-    inner class ViewHolder(private val binding: ImgDesignBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ImagedeaBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
@@ -72,7 +73,7 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ImgDesignBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ImagedeaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

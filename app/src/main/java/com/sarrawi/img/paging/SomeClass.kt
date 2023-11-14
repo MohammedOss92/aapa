@@ -13,6 +13,6 @@ class SomeClass(private val apiService: ApiService) {
     fun changeID_TypeId(newID: Int) {
         ID_Type_id = newID
         // يمكنك أيضًا تحديث مثيل ImgPaging بالقيمة الجديدة إذا كنت بحاجة إلى ذلك
-        imgPaging.updateID_TypeId(newID)
+//        imgPaging.updateID_TypeId(newID)
     }
 }

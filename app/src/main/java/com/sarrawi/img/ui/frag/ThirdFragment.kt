@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -28,6 +30,7 @@ import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.PagingAdapterImage
+import kotlinx.coroutines.launch
 
 class ThirdFragment : Fragment() {
 
@@ -45,6 +48,7 @@ class ThirdFragment : Fragment() {
     private val itemsPerPage = 10
     private var isFetching = false
     private var totalItemsLoaded = 0
+    private val startPage = 1
 
     lateinit var image_url:String
     private var recyclerViewState: Parcelable? = null
@@ -86,7 +90,7 @@ class ThirdFragment : Fragment() {
 //        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
 //            if (isConnected) {
 ////                setUpRvth()
-//                setUpRvth()
+//                setUpRv()
 //                adapterOnClick()
 //                imgAdapter.updateInternetStatus(isConnected)
 //                binding.lyNoInternet.visibility = View.GONE
@@ -100,7 +104,7 @@ class ThirdFragment : Fragment() {
         setUpRvth()
         adapterOnClick()
 
-//        imgsViewModel.checkNetworkConnection(requireContext())
+        imgsViewModel.checkNetworkConnection(requireContext())
 
 //        imgsViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
 //            if (isLoading) {
@@ -123,6 +127,29 @@ class ThirdFragment : Fragment() {
         super.onPause()
 
     }
+
+    private fun setUpRva() {
+        if (isAdded) {
+            // تهيئة RecyclerView
+            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
+            binding.rvImgCont.adapter = imgAdapter
+
+            lifecycleScope.launch {
+                // استماع إلى تحديثات الصور من ViewModel
+                imgsViewModel.imagesFlow.collect { images ->
+                    // تحديث Adapter مع البيانات الجديدة
+                    imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+
+                    imgAdapter.updateData(images)
+                }
+            }
+        }
+
+            // استدعاء دالة fetchImages لاسترجاع الصور الأولى
+            imgsViewModel.fetchImages(id, startPage)
+        }
+
+
 
     private fun setUpRv() {
         if (isAdded) {
@@ -191,6 +218,7 @@ class ThirdFragment : Fragment() {
         }
     }
 
+
     private fun setUpRvth() {
         if (isAdded) {
         // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
@@ -200,6 +228,7 @@ class ThirdFragment : Fragment() {
             binding.rvImgCont.adapter = imgAdaptert
 
 
+//            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
             imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
 
               imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)

@@ -10,6 +10,8 @@ import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.model.results
 import com.sarrawi.img.utils.NetworkConnection
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
@@ -52,6 +54,24 @@ private val _isConnected = MutableLiveData<Boolean>()
 
 
 
+    private val _imagesFlow = MutableStateFlow<List<ImgsModel>>(emptyList())
+    val imagesFlow: StateFlow<List<ImgsModel>> get() = _imagesFlow
+
+
+
+    fun fetchImages(id: Int, startPage: Int) {
+        viewModelScope.launch {
+            try {
+                imgsRepo.fetchImagesPaged(id, startPage)
+                    .collect { images ->
+                        _imagesFlow.value = images
+                    }
+            } catch (e: Exception) {
+                // طباعة تفاصيل الخطأ
+                e.printStackTrace()
+            }
+        }
+    }
 
 
 
