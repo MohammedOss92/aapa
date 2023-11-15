@@ -1,24 +1,26 @@
 package com.sarrawi.img.adapter
 
+
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
 
-class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>() {
+class ImageAdapterTwo(val con:Context) : ListAdapter<ImgsModel, ImageAdapterTwo.ItemViewHolder>(DiffCallback()) {
+
     var onItemClick: ((Int,ImgsModel, Int) -> Unit)? = null
 
     private var isInternetConnected: Boolean = true
@@ -32,43 +34,45 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
     val targetWidth = screenWidth / 2 // على سبيل المثال، يمكنك تحديد العرض إلى نصف عرض الشاشة
     val targetHeight = screenHeight / 2 // على سبيل المثال، يمكنك تحديد الارتفاع إلى نصف ارتفاع الشاشة
 
-    inner class ViewHolder(val binding:ImgDesignBinding):RecyclerView.ViewHolder(binding.root) {
+
+    inner class ItemViewHolder(private val binding: ImgDesignBinding) : RecyclerView.ViewHolder(binding.root) {
+        // You can use binding to access views and bind data
 
         init {
             if(isInternetConnected) {
                 binding.root.setOnClickListener {
                     //اذا كانت null سيتم استخدام 0؟
 //                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0,img_list[layoutPosition].image_url, layoutPosition ?: 0)
-                    onItemClick?.invoke(img_list[layoutPosition].id ?: 0, img_list[layoutPosition], layoutPosition)
+                    onItemClick?.invoke(imgList[layoutPosition].id ?: 0, imgList[layoutPosition], layoutPosition)
 
                 }
 
                 binding.imgFave.setOnClickListener {
-                    onbtnClick?.invoke(img_list[position], position)
+                    onbtnClick?.invoke(imgList[position], position)
                 }
 
             }
             else{
-                    binding.root.setOnClickListener{
+                binding.root.setOnClickListener{
 //                        Toast.makeText(con,"ghghg",Toast.LENGTH_SHORT).show()
-                        val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
-                        snackbar.show()
-                    }
-
-                    binding.imgFave.setOnClickListener {
-                        val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
-                        snackbar.show()
-                 }
-
+                    val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
+                    snackbar.show()
                 }
+
+                binding.imgFave.setOnClickListener {
+                    val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
+                    snackbar.show()
+                }
+
             }
+        }
 
 
 
         fun bind(position: Int, isInternetConnected: Boolean) {
             if (isInternetConnected) {
 
-                val current_imgModel = img_list[position]
+                val current_imgModel = imgList[position]
                 val requestOptions = RequestOptions()
                     .placeholder(R.drawable.ic_baseline_autorenew_24)
                     .error(R.drawable.error_a)
@@ -109,48 +113,37 @@ class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>(
 
         }
 
-
-
+        fun bind(imgsModel: ImgsModel) {
+            // Example: binding.textView.text = imgsModel.someText
+        }
     }
 
-    private val diffCallback = object : DiffUtil.ItemCallback<ImgsModel>(){
-        override fun areItemsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
-            return oldItem.id == newItem.id
-        }
+    private val differ = AsyncListDiffer(this, DiffCallback())
 
-        override fun areContentsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
-            return newItem == oldItem
-        }
-
-    }
-
-    val differ = AsyncListDiffer(this, diffCallback)
-    var img_list: List<ImgsModel>
+    var imgList: List<ImgsModel>
         get() = differ.currentList
         set(value) {
             differ.submitList(value)
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return  ViewHolder(ImgDesignBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+        val binding = ImgDesignBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ItemViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        val currentItem = getItem(position)
+        holder.bind(currentItem)
+    }
+}
 
-        holder.bind(position,isInternetConnected)
+class DiffCallback : DiffUtil.ItemCallback<ImgsModel>() {
+    override fun areItemsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun getItemCount(): Int {
-        return img_list.size
-    }
-//a
-    fun updateInternetStatus(isConnected: Boolean) {
-        isInternetConnected = isConnected
-        notifyDataSetChanged()
-    }
-    fun updateData(newData: List<ImgsModel>) {
-        img_list = newData
-        notifyDataSetChanged()
+    override fun areContentsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
+        return oldItem == newItem
     }
 
 }

@@ -8,10 +8,13 @@ import androidx.paging.cachedIn
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.model.ImgsModel
+import com.sarrawi.img.model.ImgsRespone
 import com.sarrawi.img.model.results
+import com.sarrawi.img.utils.DataStatus
 import com.sarrawi.img.utils.NetworkConnection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -54,24 +57,7 @@ private val _isConnected = MutableLiveData<Boolean>()
 
 
 
-    private val _imagesFlow = MutableStateFlow<List<ImgsModel>>(emptyList())
-    val imagesFlow: StateFlow<List<ImgsModel>> get() = _imagesFlow
 
-
-
-    fun fetchImages(id: Int, startPage: Int) {
-        viewModelScope.launch {
-            try {
-                imgsRepo.fetchImagesPaged(id, startPage)
-                    .collect { images ->
-                        _imagesFlow.value = images
-                    }
-            } catch (e: Exception) {
-                // طباعة تفاصيل الخطأ
-                e.printStackTrace()
-            }
-        }
-    }
 
 
 
@@ -197,6 +183,14 @@ private val _isConnected = MutableLiveData<Boolean>()
 //    }
 
 
+    private val _imgList = MutableLiveData<DataStatus<List<ImgsModel>>>()
+    val imgList : LiveData<DataStatus<List<ImgsModel>>>
+    get() = _imgList
 
+    fun getImgs_viewmodel(ID_Type_id: Int) = viewModelScope.launch {
+        imgsRepo.getImgs_Repo2(ID_Type_id).collect{
+            _imgList.value=it
+        }
+    }
 
 }

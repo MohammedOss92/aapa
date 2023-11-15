@@ -30,6 +30,8 @@ import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.PagingAdapterImage
+import com.sarrawi.img.utils.DataStatus
+import com.sarrawi.img.utils.isVisible
 import kotlinx.coroutines.launch
 
 class ThirdFragment : Fragment() {
@@ -87,21 +89,22 @@ class ThirdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
-//            if (isConnected) {
-////                setUpRvth()
-//                setUpRv()
-//                adapterOnClick()
-//                imgAdapter.updateInternetStatus(isConnected)
-//                binding.lyNoInternet.visibility = View.GONE
-//            } else {
-////                binding.progressBar.visibility = View.GONE
-//                binding.lyNoInternet.visibility = View.VISIBLE
-//                imgAdapter.updateInternetStatus(isConnected)
-//            }
-//        }
+        imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
+            if (isConnected) {
+//                setUpRvth()
+                setUpRv()
+                adapterOnClick()
+                imgAdapter.updateInternetStatus(isConnected)
+                binding.lyNoInternet.visibility = View.GONE
+            } else {
+//                binding.progressBar.visibility = View.GONE
+                binding.lyNoInternet.visibility = View.VISIBLE
+                imgAdapter.updateInternetStatus(isConnected)
+            }
+        }
 //        InterstitialAd_fun()
-        setUpRvth()
+//        setUpRvth()
+        setUpRv()
         adapterOnClick()
 
         imgsViewModel.checkNetworkConnection(requireContext())
@@ -128,26 +131,7 @@ class ThirdFragment : Fragment() {
 
     }
 
-    private fun setUpRva() {
-        if (isAdded) {
-            // تهيئة RecyclerView
-            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
-            binding.rvImgCont.adapter = imgAdapter
 
-            lifecycleScope.launch {
-                // استماع إلى تحديثات الصور من ViewModel
-                imgsViewModel.imagesFlow.collect { images ->
-                    // تحديث Adapter مع البيانات الجديدة
-                    imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-
-                    imgAdapter.updateData(images)
-                }
-            }
-        }
-
-            // استدعاء دالة fetchImages لاسترجاع الصور الأولى
-            imgsViewModel.fetchImages(id, startPage)
-        }
 
 
 
@@ -252,7 +236,39 @@ class ThirdFragment : Fragment() {
 }
 
 
+    private fun setUpRvtwo() {
+        if (isAdded) {
+            // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
+            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
 
+            // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
+            binding.rvImgCont.adapter = imgAdapter
+            lifecycleScope.launch {
+                binding.apply {
+                    imgsViewModel.getImgs_viewmodel(ID)
+                    imgsViewModel.imgList.observe(viewLifecycleOwner){
+
+                        imgAdapter.img_list
+
+                        when(it.status){
+                            DataStatus.Status.LOADING->{
+//                                binding.progressBar.isVisible(true,rvImgCont)
+                            }
+                            DataStatus.Status.SUCCESS->{
+                                imgAdapter.differ.submitList(it.data)
+                            }
+                            DataStatus.Status.ERROR->{}
+
+                        }
+                    }
+                }
+            }
+
+
+            binding.rvImgCont.scrollToPosition(0)
+
+        }
+    }
 
 
 

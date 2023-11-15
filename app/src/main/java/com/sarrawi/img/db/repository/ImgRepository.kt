@@ -14,8 +14,12 @@ import com.sarrawi.img.model.ImgsRespone
 import com.sarrawi.img.model.results
 import com.sarrawi.img.paging.ImgPaging
 import com.sarrawi.img.paging.ImgPaging2
+import com.sarrawi.img.utils.DataStatus
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 
 
@@ -26,6 +30,36 @@ class ImgRepository(val apiService: ApiService,app:Application) {
 
     suspend fun getImgs_Repo(ID_Type_id: Int) = apiService.getImgs_Ser(ID_Type_id)
 
+//    suspend fun getImgs_Repo2(ID_Type_id: Int) = flow{
+//
+//        emit(DataStatus.loading())
+//        val result = apiService.getImgs_Ser(ID_Type_id)
+//        when(result.code()){
+////            200 ->{emit(DataStatus.success(result.body()))}
+////            400 ->{emit(DataStatus.error(result.message()))}
+////            500 ->{emit(DataStatus.error(result.message()))}
+//            10 -> emit(DataStatus.success(result.body()))
+//            else -> emit(DataStatus.error(result.message()))
+//        }
+//    }.catch {
+//        emit(DataStatus.error(it.message.toString()))
+//    }.flowOn(Dispatchers.IO)
+
+    suspend fun getImgs_Repo2(ID_Type_id: Int) = flow {
+
+        emit(DataStatus.loading())
+        val result = apiService.getImgs_Ser(ID_Type_id)
+        when(result.code()) {
+            10 -> {
+                // Assuming ImgsRespone has a property 'imgs' of type List<ImgsModel>
+                val imgsList = result.body()?.results ?: emptyList()
+                emit(DataStatus.success(imgsList))
+            }
+            else -> emit(DataStatus.error(result.message()))
+        }
+    }.catch {
+        emit(DataStatus.error(it.message.toString()))
+    }.flowOn(Dispatchers.IO)
 
 
 
