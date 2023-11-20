@@ -27,7 +27,6 @@ import com.sarrawi.img.databinding.FragmentThirdBinding
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.*
-import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.PagingAdapterImage
 import com.sarrawi.img.utils.DataStatus
@@ -91,8 +90,8 @@ class ThirdFragment : Fragment() {
 
         imgsViewModel.isConnected.observe(requireActivity()) { isConnected ->
             if (isConnected) {
-//                setUpRvth()
-                setUpRv()
+                setUpRvth()
+//                setUpRvsnip()
                 adapterOnClick()
                 imgAdapter.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
@@ -103,8 +102,8 @@ class ThirdFragment : Fragment() {
             }
         }
 //        InterstitialAd_fun()
-//        setUpRvth()
-        setUpRv()
+        setUpRvth()
+//        setUpRvsnip()
         adapterOnClick()
 
         imgsViewModel.checkNetworkConnection(requireContext())
@@ -135,72 +134,72 @@ class ThirdFragment : Fragment() {
 
 
 
-    private fun setUpRv() {
-        if (isAdded) {
-            imgsViewModel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
-                imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-
-                if (imgs.isEmpty()) {
-                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-                    imgsViewModel.getAllImgsViewModel(ID)
-                } else {
-                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-
-                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
-                    favoriteImagesViewModel.getAllFava().observe(viewLifecycleOwner) { favoriteImages ->
-                        val allImages: List<ImgsModel> = imgs
-
-                        for (image in allImages) {
-                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
-                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
-                        }
-
-                        imgAdapter.img_list = allImages
-
-                        if (binding.rvImgCont.adapter == null) {
-                            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(),2)
-                            binding.rvImgCont.adapter = imgAdapter
-                        } else {
-                            imgAdapter.notifyDataSetChanged()
-                        }
-                        if (currentItemId != -1) {
-                            binding.rvImgCont.scrollToPosition(currentItemId)
-                        }
-
-                    }
-                }
-
-                imgAdapter.onItemClick = { _, imgModel: ImgsModel,currentItemId ->
-                    if (imgsViewModel.isConnected.value == true) {
-
-                        clickCount++
-                        if (clickCount >= 2) {
-// بمجرد أن يصل clickCount إلى 2، اعرض الإعلان
-                            if (mInterstitialAd != null) {
-                                mInterstitialAd?.show(requireActivity())
-                            } else {
-                                Log.d("TAG", "The interstitial ad wasn't ready yet.")
-                            }
-                            clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
-
-                        }
-
-                        val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId,imgModel.image_url)
-                        findNavController().navigate(directions)
-
-
-                    } else {
-                        val snackbar = Snackbar.make(
-                            requireView(),
-                            "لا يوجد اتصال بالإنترنت",
-                            Snackbar.LENGTH_SHORT
-                        )
-                        snackbar.show()
-                    }
-                }
-            }
-        }
-    }
+//    private fun setUpRv() {
+//        if (isAdded) {
+//            imgsViewModel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
+//                imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+//
+//                if (imgs.isEmpty()) {
+//                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
+//                    imgsViewModel.getAllImgsViewModel(ID)
+//                } else {
+//                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
+//
+//                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
+//                    favoriteImagesViewModel.getAllFava().observe(viewLifecycleOwner) { favoriteImages ->
+//                        val allImages: List<ImgsModel> = imgs
+//
+//                        for (image in allImages) {
+//                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+//                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
+//                        }
+//
+//                        imgAdapter.img_list = allImages
+//
+//                        if (binding.rvImgCont.adapter == null) {
+//                            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(),2)
+//                            binding.rvImgCont.adapter = imgAdapter
+//                        } else {
+//                            imgAdapter.notifyDataSetChanged()
+//                        }
+//                        if (currentItemId != -1) {
+//                            binding.rvImgCont.scrollToPosition(currentItemId)
+//                        }
+//
+//                    }
+//                }
+//
+//                imgAdapter.onItemClick = { _, imgModel: ImgsModel,currentItemId ->
+//                    if (imgsViewModel.isConnected.value == true) {
+//
+//                        clickCount++
+//                        if (clickCount >= 2) {
+//// بمجرد أن يصل clickCount إلى 2، اعرض الإعلان
+//                            if (mInterstitialAd != null) {
+//                                mInterstitialAd?.show(requireActivity())
+//                            } else {
+//                                Log.d("TAG", "The interstitial ad wasn't ready yet.")
+//                            }
+//                            clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
+//
+//                        }
+//
+//                        val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId,imgModel.image_url)
+//                        findNavController().navigate(directions)
+//
+//
+//                    } else {
+//                        val snackbar = Snackbar.make(
+//                            requireView(),
+//                            "لا يوجد اتصال بالإنترنت",
+//                            Snackbar.LENGTH_SHORT
+//                        )
+//                        snackbar.show()
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
     private fun setUpRvth() {
@@ -213,19 +212,12 @@ class ThirdFragment : Fragment() {
 
 
 //            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
-            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
+            imgsViewModel.getsnippetsid(ID).observe(viewLifecycleOwner) {
 
               imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)
               imgAdaptert.notifyDataSetChanged()
 
-//                favoriteImagesViewModel.getAllFav()
-//                    .observe(viewLifecycleOwner) { favoriteImages ->
-//                        val allImages: List<ImgsModel> = newImgs
-//                        for (image in allImages) {
-//                            val isFavorite =
-//                                favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
-//                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
-//                        }
+
          }
         // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
             imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
@@ -272,6 +264,8 @@ class ThirdFragment : Fragment() {
 
 
 
+
+
     fun adapterOnClick() {
         imgAdapter.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
 //            if (imgsViewModel.isConnected.value == true) {
@@ -302,29 +296,29 @@ class ThirdFragment : Fragment() {
 //            }
 
 
-        imgAdapter.onbtnClick = { it: ImgsModel, i: Int ->
-            if (it.is_fav) {
-                // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
-                it.is_fav = false
-                imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
-                imgsffav.updateImages()
-                imgsffav.getFavByIDModels(it.id!!)
-                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
-                snackbar.show()
-            } else {
-                // إذا لم تكن الصورة مفضلة، قم بإضافتها للمفضلة
-                it.is_fav = true
-                imgsffav.addFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
-                imgsffav.updateImages()
-                imgsffav.getFavByIDModels(it.id!!)
-                val snackbar = Snackbar.make(view!!, "تم الإضافة", Snackbar.LENGTH_SHORT)
-                snackbar.show()
-            }
-            // تحقق من قيمة it.is_fav
-            println("it.is_fav: ${it.is_fav}")
-            // تحديث RecyclerView Adapter
-            imgAdaptert.notifyDataSetChanged()
-        }
+//        imgAdapter.onbtnClick = { it: ImgsModel, i: Int ->
+//            if (it.is_fav) {
+//                // إذا كانت الصورة مفضلة، قم بإلغاء الإعجاب بها
+//                it.is_fav = false
+//                imgsffav.removeFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+//                imgsffav.updateImages()
+//                imgsffav.getFavByIDModels(it.id!!)
+//                val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+//            } else {
+//                // إذا لم تكن الصورة مفضلة، قم بإضافتها للمفضلة
+//                it.is_fav = true
+//                imgsffav.addFavoriteImage(FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url))
+//                imgsffav.updateImages()
+//                imgsffav.getFavByIDModels(it.id!!)
+//                val snackbar = Snackbar.make(view!!, "تم الإضافة", Snackbar.LENGTH_SHORT)
+//                snackbar.show()
+//            }
+//            // تحقق من قيمة it.is_fav
+//            println("it.is_fav: ${it.is_fav}")
+//            // تحديث RecyclerView Adapter
+//            imgAdaptert.notifyDataSetChanged()
+//        }
     }
 
     fun InterstitialAd_fun() {
@@ -352,5 +346,14 @@ class ThirdFragment : Fragment() {
             }
         )
     }
+
+    //                favoriteImagesViewModel.getAllFav()
+//                    .observe(viewLifecycleOwner) { favoriteImages ->
+//                        val allImages: List<ImgsModel> = newImgs
+//                        for (image in allImages) {
+//                            val isFavorite =
+//                                favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
+//                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
+//                        }
 }
 

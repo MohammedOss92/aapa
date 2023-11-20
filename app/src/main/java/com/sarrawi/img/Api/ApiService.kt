@@ -1,7 +1,9 @@
 package com.sarrawi.img.Api
 
 import com.sarrawi.img.model.ImgsRespone
-import com.sarrawi.img.model.MyImgsRespone
+import com.sarrawi.img.model.MyImgsRespone2
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.Response
@@ -24,20 +26,17 @@ interface ApiService {
         @Path("ID_Type_id") id: Int,
         @Query("page") page: Int): Response<ImgsRespone>
 
+    @GET("snippetsids/{ID_Type_id}") // تغيير نهاية الطريق الخاصة بك
+    suspend fun getsnippetsid(
+        @Path("ID_Type_id") ID_Type_id: Int,
+        @Query("page") page: Int
+    ): Response<MyImgsRespone2>
 
     @GET("imgsapi/{ID_Type_id}")
     fun getImgs_Serr(
         @Path("ID_Type_id") ID_Type_id: Int,
         @Query("page") page: Int
     ): Response<ImgsRespone>
-
-
-    @GET("snippets/{ID_Type_id}/")
-    fun getsnippets(
-        @Path("ID_Type_id") id: Int,
-
-        @Query("page") page: Int
-    ): Response<MyImgsRespone>
 
 
 
@@ -48,13 +47,23 @@ interface ApiService {
 
     companion object{
 
-        var retrofitService:ApiService?=null
+        var retrofitService: ApiService? = null
+
         fun provideRetrofitInstance(): ApiService {
             if (retrofitService == null) {
+                val loggingInterceptor = HttpLoggingInterceptor()
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+                val okHttpClient = OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .build()
+
                 val retrofit = Retrofit.Builder()
                     .baseUrl("http://www.sarrawi.bio/")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient) // قم بتعيين العميل الذي يحتوي على Interceptor
                     .build()
+
                 retrofitService = retrofit.create(ApiService::class.java)
             }
             return retrofitService!!

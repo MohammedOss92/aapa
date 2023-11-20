@@ -13,7 +13,6 @@ import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.model.ImgsRespone
 import com.sarrawi.img.model.results
 import com.sarrawi.img.paging.ImgPaging
-import com.sarrawi.img.paging.ImgPaging2
 import com.sarrawi.img.utils.DataStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -30,20 +29,7 @@ class ImgRepository(val apiService: ApiService,app:Application) {
 
     suspend fun getImgs_Repo(ID_Type_id: Int) = apiService.getImgs_Ser(ID_Type_id)
 
-//    suspend fun getImgs_Repo2(ID_Type_id: Int) = flow{
-//
-//        emit(DataStatus.loading())
-//        val result = apiService.getImgs_Ser(ID_Type_id)
-//        when(result.code()){
-////            200 ->{emit(DataStatus.success(result.body()))}
-////            400 ->{emit(DataStatus.error(result.message()))}
-////            500 ->{emit(DataStatus.error(result.message()))}
-//            10 -> emit(DataStatus.success(result.body()))
-//            else -> emit(DataStatus.error(result.message()))
-//        }
-//    }.catch {
-//        emit(DataStatus.error(it.message.toString()))
-//    }.flowOn(Dispatchers.IO)
+
 
     suspend fun getImgs_Repo2(ID_Type_id: Int) = flow {
 
@@ -61,9 +47,50 @@ class ImgRepository(val apiService: ApiService,app:Application) {
         emit(DataStatus.error(it.message.toString()))
     }.flowOn(Dispatchers.IO)
 
+//    suspend fun getSnippets(ID_Type_id: Int): ImgsRespone2? {
+//        return apiService.getSnipp(ID_Type_id)
+//    }
 
 
-//    suspend fun getImgsData(ID_Type_id: Int, page: Int) = apiService.getImgsData(ID_Type_id, page)
+//    suspend fun getSnippetsids(ID_Type_id: Int):LiveData<PagingData<ImgsModel>>{
+//        val response =  Pager(
+//            config = PagingConfig(
+//                pageSize = 12,
+//                enablePlaceholders = false,
+//
+//                ),
+//            pagingSourceFactory = {
+//                ImgPaging(
+//                    apiService, ID_Type_id
+//                )
+//            },
+//        ).liveData
+//        return response
+//    }
+
+    suspend fun getSnippetsidss(ID_Type_id: Int): LiveData<PagingData<ImgsModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 12,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ImgPaging(apiService, ID_Type_id) }
+        ).liveData
+    }
+
+    suspend fun getSnippetsids(ID_Type_id: Int): LiveData<PagingData<ImgsModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 12,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ImgPaging(apiService, ID_Type_id) }
+        ).liveData
+    }
+
+
+
+    //    suspend fun getImgsData(ID_Type_id: Int, page: Int) = apiService.getImgsData(ID_Type_id, page)
     suspend fun getImgsData(ID_Type_id: Int): LiveData<PagingData<ImgsModel>> {
         val response =  Pager(
             config = PagingConfig(
@@ -80,33 +107,6 @@ class ImgRepository(val apiService: ApiService,app:Application) {
     return response
 }
 
-    fun getsnippets(ID_Type_id: Int): LiveData<PagingData<results>>{
-        val response =  Pager(
-            config = PagingConfig(
-                pageSize = 10,
-                enablePlaceholders = false,
-            ),
-            pagingSourceFactory = {
-                ImgPaging2(
-                    apiService, ID_Type_id
-                )
-            },
-        ).liveData
-        Log.e("aa","aa")
-        return response
-    }
-
-    fun getsnippetss(ID_Type_id: Int): LiveData<PagingData<results>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = 10,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                ImgPaging2(apiService, ID_Type_id)
-            }
-        ).liveData
-    }
 
 
     fun fetchImagesPaged(id: Int, startPage: Int): Flow<List<ImgsModel>> = flow {

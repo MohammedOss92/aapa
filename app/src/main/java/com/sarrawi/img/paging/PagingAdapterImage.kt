@@ -79,6 +79,7 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
+
     }
 
 

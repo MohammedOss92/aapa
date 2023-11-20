@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.ui.frag.FourFragmentDirections
 

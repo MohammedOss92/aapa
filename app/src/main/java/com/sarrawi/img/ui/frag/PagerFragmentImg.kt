@@ -22,7 +22,6 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.Api.ApiService
-import com.sarrawi.img.adapter.FavAdapterPager
 import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentPagerImgBinding
 import com.sarrawi.img.db.repository.FavoriteImageRepository
@@ -31,7 +30,6 @@ import com.sarrawi.img.db.viewModel.FavoriteImagesViewModel
 import com.sarrawi.img.db.viewModel.Imgs_ViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory
 import com.sarrawi.img.db.viewModel.ViewModelFactory2
-import com.sarrawi.img.model.FavoriteImage
 import com.sarrawi.img.model.ImgsModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -197,14 +195,14 @@ class PagerFragmentImg : Fragment() {
 
     fun adapterOnClick() {
         adapterpager.onbtnClick = { it: ImgsModel, i: Int ->
-            val fav = FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url)
+//            val fav = FavoriteImage(it.id!!, it.ID_Type_id, it.new_img, it.image_url)
 
             println("it.is_fav: ${it.is_fav}")
             if (it.is_fav) {
                 it.is_fav = false
-                imgsffav.removeFavoriteImage(fav)
+//                imgsffav.removeFavoriteImage(fav)
 
-                imgsffav.updateImages()
+//                imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الحذف", Snackbar.LENGTH_SHORT)
                 snackbar.show()
 //                setUpViewPager()
@@ -217,9 +215,9 @@ class PagerFragmentImg : Fragment() {
 //                }
             } else {
                 it.is_fav = true
-                imgsffav.addFavoriteImage(fav)
+//                imgsffav.addFavoriteImage(fav)
 
-                imgsffav.updateImages()
+//                imgsffav.updateImages()
                 val snackbar = Snackbar.make(view!!, "تم الاضافة", Snackbar.LENGTH_SHORT)
                 snackbar.show()
 //                setUpViewPager()
