@@ -1,6 +1,5 @@
 package com.sarrawi.img.ui.frag
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -10,9 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdRequest
@@ -20,7 +17,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.adapter.ImgAdapter
 import com.sarrawi.img.databinding.FragmentThirdBinding
@@ -30,7 +26,6 @@ import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.PagingAdapterImage
 import com.sarrawi.img.utils.DataStatus
-import com.sarrawi.img.utils.isVisible
 import kotlinx.coroutines.launch
 
 class ThirdFragment : Fragment() {

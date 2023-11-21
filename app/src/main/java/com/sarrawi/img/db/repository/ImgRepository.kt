@@ -1,8 +1,6 @@
 package com.sarrawi.img.db.repository
 
 import android.app.Application
-import android.media.Image
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -10,8 +8,6 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.model.ImgsModel
-import com.sarrawi.img.model.ImgsRespone
-import com.sarrawi.img.model.results
 import com.sarrawi.img.paging.ImgPaging
 import com.sarrawi.img.utils.DataStatus
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.Response
 
 
 class ImgRepository(val apiService: ApiService,app:Application) {

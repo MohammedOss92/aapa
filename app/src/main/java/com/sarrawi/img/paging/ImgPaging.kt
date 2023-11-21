@@ -1,12 +1,10 @@
 package com.sarrawi.img.paging
 
 import android.util.Log
-import androidx.paging.LoadType
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.model.ImgsModel
-import com.sarrawi.img.model.ImgsRespone
 
 class ImgPaging(private val apiService: ApiService, private val ID_Type_id: Int) :
     PagingSource<Int, ImgsModel>() {
@@ -32,8 +30,9 @@ class ImgPaging(private val apiService: ApiService, private val ID_Type_id: Int)
             Log.d("ImgPaging", "Loading page $currentPage with pageSize $pageSize")
 
             val response = apiService.getsnippetsid(ID_Type_id, currentPage)
+            Log.i("hahahahahaha", "load: ${response.body()}")
             if (response.isSuccessful) {
-                val data = response.body()?.results ?: emptyList()
+                val data = response.body()?.results?.ImgsModel ?: emptyList()
 
                 Log.d("dImgPaging", "Loaded data: $data")
 

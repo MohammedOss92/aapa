@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.sarrawi.img.R
-import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.databinding.RowImagesBinding
 import com.sarrawi.img.model.ImgsModel
 

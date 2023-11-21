@@ -66,7 +66,7 @@ private val _isConnected = MutableLiveData<Boolean>()
                 val response = imgsRepo.getImgs_Repo(ID_Type_id)
 
                 if (response.isSuccessful) {
-                    val results = response.body()?.results
+                    val results = response.body()?.results ?: emptyList()
                     _response.postValue(results)
                     Log.i("TestRoom", "getAllImgs: posts $results")
 //                    imgsRepo.insert_imgs_repo(response.body()?.results)

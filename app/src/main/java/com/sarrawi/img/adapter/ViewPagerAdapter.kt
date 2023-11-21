@@ -14,13 +14,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImgPagerBinding
-import com.sarrawi.img.databinding.RowImagesBinding
 import com.sarrawi.img.model.ImgsModel
 
 class ViewPagerAdapter (val con: Context):RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>() {
 
     private var isInternetConnected: Boolean = true
-    var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
+    var onbtnClick: ((item: ImgsModel, position:Int) -> Unit)? = null
     var onSaveImageClickListenerp: OnSaveImageClickListenerp? = null
     val displayMetrics = con.resources.displayMetrics
     val screenWidth = displayMetrics.widthPixels

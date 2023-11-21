@@ -5,20 +5,15 @@ package com.sarrawi.img.paging
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImagedeaBinding
-import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
-import com.sarrawi.img.model.results
 
 class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, PagingAdapterImage.ViewHolder>(COMPARATOR) {
 

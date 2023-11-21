@@ -1,9 +1,6 @@
 package com.sarrawi.img.ui.frag
 
 import android.Manifest
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.app.appsearch.SetSchemaRequest.READ_EXTERNAL_STORAGE
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -22,9 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
@@ -35,10 +29,9 @@ import com.sarrawi.img.databinding.FragmentFourBinding
 import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.*
-import com.sarrawi.img.model.ImgsModel
 import java.io.File
-import java.io.FileOutputStream
 import com.bumptech.glide.request.transition.Transition
+import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.PagingAdapterImageLinear
 
 

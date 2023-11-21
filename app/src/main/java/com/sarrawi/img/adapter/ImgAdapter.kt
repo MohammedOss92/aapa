@@ -4,14 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.R
@@ -19,11 +17,11 @@ import com.sarrawi.img.databinding.ImgDesignBinding
 import com.sarrawi.img.model.ImgsModel
 
 class ImgAdapter(val con: Context): RecyclerView.Adapter<ImgAdapter.ViewHolder>() {
-    var onItemClick: ((Int,ImgsModel, Int) -> Unit)? = null
+    var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
 
     private var isInternetConnected: Boolean = true
 
-    var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
+    var onbtnClick: ((item: ImgsModel, position:Int) -> Unit)? = null
     val displayMetrics = con.resources.displayMetrics
     val screenWidth = displayMetrics.widthPixels
     val screenHeight = displayMetrics.heightPixels

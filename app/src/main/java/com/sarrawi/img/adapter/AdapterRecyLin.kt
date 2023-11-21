@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,13 +14,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.R
 import com.sarrawi.img.databinding.RowImagesBinding
-
 import com.sarrawi.img.model.ImgsModel
+
 
 class AdapterRecyLin(val con: Context):
     RecyclerView.Adapter<AdapterRecyLin.ViewHolder>() {
-    var onItemClick: ((Int,ImgsModel, Int) -> Unit)? = null
-    var onbtnClick: ((item:ImgsModel,position:Int) -> Unit)? = null
+    var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
+    var onbtnClick: ((item: ImgsModel, position:Int) -> Unit)? = null
     var onSaveImageClickListener: OnSaveImageClickListener? = null
     private var isInternetConnected: Boolean = true
 

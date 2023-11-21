@@ -11,7 +11,6 @@ import com.sarrawi.img.db.Dao.FavoriteImageDao
 import com.sarrawi.img.db.Dao.ImgType_Dao
 import com.sarrawi.img.db.Dao.Imgs_Dao
 import com.sarrawi.img.model.Img_Types_model
-import com.sarrawi.img.model.ImgsModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
