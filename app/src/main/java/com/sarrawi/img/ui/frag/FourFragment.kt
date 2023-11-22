@@ -19,6 +19,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
@@ -70,7 +73,7 @@ class FourFragment : Fragment() {
     }
 
 
-    private val adapterLinRecy by lazy { AdapterRecyLin(requireActivity()) }
+//    private val adapterLinRecy by lazy { AdapterRecyLin(requireActivity()) }
     private val pagingadapterLinRecy by lazy { PagingAdapterImageLinear(requireActivity()) }
 
     var idd = -1
@@ -112,6 +115,7 @@ class FourFragment : Fragment() {
         //
         setHasOptionsMenu(true)
         menu_item()
+        setUpRvth()
 //        setUpRv()
 //        adapterOnClick()
 //        imgsffav.updateImages()
@@ -120,22 +124,22 @@ class FourFragment : Fragment() {
 
             if (isConnected) {
 //                  setUpViewPager()
-
+                setUpRvth()
 //                setUpRv()
 //                adapterOnClick2()
-                adapterLinRecy.updateInternetStatus(isConnected)
+                pagingadapterLinRecy.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
 
             } else {
 //                     binding.progressBar.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
-                adapterLinRecy.updateInternetStatus(isConnected)
+                pagingadapterLinRecy.updateInternetStatus(isConnected)
 
             }
         }
         imgsViewmodel.checkNetworkConnection(requireContext())
 
-        adapterLinRecy.onSaveImageClickListener = object : AdapterRecyLin.OnSaveImageClickListener {
+        pagingadapterLinRecy.onSaveImageClickListener = object : PagingAdapterImageLinear.OnSaveImageClickListener {
             override fun onSaveImageClick(position: Int) {
                 saveImageToExternalStorage(position)
             }
@@ -152,6 +156,32 @@ class FourFragment : Fragment() {
             createDirectory()
         }
 
+    }
+
+
+    private fun setUpRvth() {
+        if (isAdded) {
+            // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
+            binding.rvImgCont.layoutManager = LinearLayoutManager(requireContext())
+
+            // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
+            binding.rvImgCont.adapter = pagingadapterLinRecy
+
+
+//            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
+            imgsViewmodel.getsnippetsid(ID).observe(viewLifecycleOwner) {
+
+                pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
+                pagingadapterLinRecy.notifyDataSetChanged()
+
+
+            }
+            // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
+            pagingadapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+// بعد تحديث البيانات
+            binding.rvImgCont.scrollToPosition(0)
+
+        }
     }
 
 
@@ -301,8 +331,8 @@ class FourFragment : Fragment() {
 //
 //    }
 
-    fun adapterOnClick() {
-        adapterLinRecy.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
+//    fun adapterOnClick() {
+//        adapterLinRecy.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
 //            if (imgsViewModel.isConnected.value == true) {
 
 //            clickCount++
@@ -318,9 +348,9 @@ class FourFragment : Fragment() {
 //            }
 
 
-            val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId, imgModel.image_url)
-            findNavController().navigate(directions)
-        }
+//            val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId, imgModel.image_url)
+//            findNavController().navigate(directions)
+//        }
 //        else {
 //                val snackbar = Snackbar.make(
 //                    requireView(),
@@ -354,7 +384,7 @@ class FourFragment : Fragment() {
 //            // تحديث RecyclerView Adapter
 //            adapterLinRecy.notifyDataSetChanged()
 //        }
-    }
+//    }
 
 
 
@@ -445,60 +475,10 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
     }
 }
 
-    fun saveImageToExternalStorage(position: Int) {
-        val item = adapterLinRecy.img_list.getOrNull(position)
-        if (item != null) {
-            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
-            Glide.with(requireContext())
-                .asBitmap()
-                .load(imageUri)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        try {
-                            val folderName = "MyPics"
-                            val displayName = String.format("%d.png", System.currentTimeMillis())
-                            val mimeType = "image/png"
-                            // تمثيل المعلومات الخاصة بالصورة
-                            val imageDetails = ContentValues().apply {
-                                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
-                                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-                                put(MediaStore.Images.Media.WIDTH, resource.width)
-                                put(MediaStore.Images.Media.HEIGHT, resource.height)
-                                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folderName)
-                            }
-                            // حفظ الصورة باستخدام MediaStore
-                            val contentResolver = requireContext().contentResolver
-                            val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
-                            if (imageUri != null) {
-                                val outputStream = contentResolver.openOutputStream(imageUri)
-                                resource.compress(getCompressFormat(item.image_url), 100, outputStream)
-                                outputStream?.close()
-                                showSaveSuccessMessage()
-                            } else {
-                                showSaveErrorMessage()
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            Log.e("MyApp", "An error occurred: ${e.message}")
-                            showSaveErrorMessage()
-                        }
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
-                    }
-                })
-        }
-    }
-
 //    fun saveImageToExternalStorage(position: Int) {
-//        val item = pagingadapterLinRecy.snapshot().items.getOrNull(position)
-//
+//        val item = adapterLinRecy.img_list.getOrNull(position)
 //        if (item != null) {
 //            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
-//
 //            Glide.with(requireContext())
 //                .asBitmap()
 //                .load(imageUri)
@@ -511,24 +491,17 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 //                            val folderName = "MyPics"
 //                            val displayName = String.format("%d.png", System.currentTimeMillis())
 //                            val mimeType = "image/png"
-//
 //                            // تمثيل المعلومات الخاصة بالصورة
 //                            val imageDetails = ContentValues().apply {
 //                                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
 //                                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
 //                                put(MediaStore.Images.Media.WIDTH, resource.width)
 //                                put(MediaStore.Images.Media.HEIGHT, resource.height)
-//                                put(
-//                                    MediaStore.Images.Media.RELATIVE_PATH,
-//                                    Environment.DIRECTORY_PICTURES + File.separator + folderName
-//                                )
+//                                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folderName)
 //                            }
-//
 //                            // حفظ الصورة باستخدام MediaStore
 //                            val contentResolver = requireContext().contentResolver
-//                            val imageUri =
-//                                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
-//
+//                            val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
 //                            if (imageUri != null) {
 //                                val outputStream = contentResolver.openOutputStream(imageUri)
 //                                resource.compress(getCompressFormat(item.image_url), 100, outputStream)
@@ -543,13 +516,70 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 //                            showSaveErrorMessage()
 //                        }
 //                    }
-//
 //                    override fun onLoadCleared(placeholder: Drawable?) {
 //                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
 //                    }
 //                })
 //        }
 //    }
+
+    fun saveImageToExternalStorage(position: Int) {
+        val item = pagingadapterLinRecy.snapshot().items.getOrNull(position)
+
+        if (item != null) {
+            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
+
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(imageUri)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        try {
+                            val folderName = "MyPics"
+                            val displayName = String.format("%d.png", System.currentTimeMillis())
+                            val mimeType = "image/png"
+
+                            // تمثيل المعلومات الخاصة بالصورة
+                            val imageDetails = ContentValues().apply {
+                                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+                                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+                                put(MediaStore.Images.Media.WIDTH, resource.width)
+                                put(MediaStore.Images.Media.HEIGHT, resource.height)
+                                put(
+                                    MediaStore.Images.Media.RELATIVE_PATH,
+                                    Environment.DIRECTORY_PICTURES + File.separator + folderName
+                                )
+                            }
+
+                            // حفظ الصورة باستخدام MediaStore
+                            val contentResolver = requireContext().contentResolver
+                            val imageUri =
+                                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
+
+                            if (imageUri != null) {
+                                val outputStream = contentResolver.openOutputStream(imageUri)
+                                resource.compress(getCompressFormat(item.image_url), 100, outputStream)
+                                outputStream?.close()
+                                showSaveSuccessMessage()
+                            } else {
+                                showSaveErrorMessage()
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Log.e("MyApp", "An error occurred: ${e.message}")
+                            showSaveErrorMessage()
+                        }
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
+                    }
+                })
+        }
+    }
 
 
 

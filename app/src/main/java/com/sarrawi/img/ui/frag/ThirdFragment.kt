@@ -17,6 +17,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.adapter.ImgAdapter
 import com.sarrawi.img.databinding.FragmentThirdBinding
@@ -40,14 +41,9 @@ class ThirdFragment : Fragment() {
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
     private val imgAdaptert by lazy { PagingAdapterImage(requireActivity()) }
     private var ID = -1
-    private var startIndex = -1
-    private val itemsPerPage = 10
-    private var isFetching = false
-    private var totalItemsLoaded = 0
-    private val startPage = 1
+
 
     lateinit var image_url:String
-    private var recyclerViewState: Parcelable? = null
 
     private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
     private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
@@ -76,10 +72,6 @@ class ThirdFragment : Fragment() {
         ID = ThirdFragmentArgs.fromBundle(requireArguments()).id
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -88,12 +80,12 @@ class ThirdFragment : Fragment() {
                 setUpRvth()
 //                setUpRvsnip()
                 adapterOnClick()
-                imgAdapter.updateInternetStatus(isConnected)
+                imgAdaptert.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
             } else {
 //                binding.progressBar.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
-                imgAdapter.updateInternetStatus(isConnected)
+                imgAdaptert.updateInternetStatus(isConnected)
             }
         }
 //        InterstitialAd_fun()
@@ -223,47 +215,13 @@ class ThirdFragment : Fragment() {
 }
 
 
-    private fun setUpRvtwo() {
-        if (isAdded) {
-            // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
-            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(), 2)
-
-            // تعيين المحمل للـ RecyclerView بعد تعيين المدير التخطيط
-            binding.rvImgCont.adapter = imgAdapter
-            lifecycleScope.launch {
-                binding.apply {
-                    imgsViewModel.getImgs_viewmodel(ID)
-                    imgsViewModel.imgList.observe(viewLifecycleOwner){
-
-                        imgAdapter.img_list
-
-                        when(it.status){
-                            DataStatus.Status.LOADING->{
-//                                binding.progressBar.isVisible(true,rvImgCont)
-                            }
-                            DataStatus.Status.SUCCESS->{
-                                imgAdapter.differ.submitList(it.data)
-                            }
-                            DataStatus.Status.ERROR->{}
-
-                        }
-                    }
-                }
-            }
-
-
-            binding.rvImgCont.scrollToPosition(0)
-
-        }
-    }
-
 
 
 
 
     fun adapterOnClick() {
-        imgAdapter.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
-//            if (imgsViewModel.isConnected.value == true) {
+        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
+            if (imgsViewModel.isConnected.value == true) {
 
                 clickCount++
                 if (clickCount >= 2) {
@@ -278,17 +236,21 @@ class ThirdFragment : Fragment() {
                 }
 
 
-                val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId, imgModel.image_url)
+                val directions = ThirdFragmentDirections.actionToFourFragment(
+                    ID,
+                    currentItemId,
+                    imgModel.image_url
+                )
                 findNavController().navigate(directions)
+            } else {
+                val snackbar = Snackbar.make(
+                    requireView(),
+                    "لا يوجد اتصال بالإنترنت",
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.show()
             }
-//        else {
-//                val snackbar = Snackbar.make(
-//                    requireView(),
-//                    "لا يوجد اتصال بالإنترنت",
-//                    Snackbar.LENGTH_SHORT
-//                )
-//                snackbar.show()
-//            }
+        }
 
 
 //        imgAdapter.onbtnClick = { it: ImgsModel, i: Int ->

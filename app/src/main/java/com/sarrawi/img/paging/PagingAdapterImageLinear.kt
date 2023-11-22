@@ -99,6 +99,11 @@ class PagingAdapterImageLinear(val con: Context) : PagingDataAdapter<ImgsModel, 
             fun onSaveImageClick(position: Int)
         }
 
+    fun updateInternetStatus(isConnected: Boolean) {
+        isInternetConnected = isConnected
+        notifyDataSetChanged()
+    }
+
         companion object {
             private val COMPARATOR = object : DiffUtil.ItemCallback<ImgsModel>() {
                 override fun areItemsTheSame(oldItem: ImgsModel, newItem: ImgsModel): Boolean {
