@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -219,6 +221,7 @@ class ThirdFragment : Fragment() {
 
 
 
+
     fun adapterOnClick() {
         imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
             if (imgsViewModel.isConnected.value == true) {
@@ -242,6 +245,9 @@ class ThirdFragment : Fragment() {
                     imgModel.image_url
                 )
                 findNavController().navigate(directions)
+                if (currentItemId != -1) {
+                    binding.rvImgCont.scrollToPosition(currentItemId)
+                }
             } else {
                 val snackbar = Snackbar.make(
                     requireView(),

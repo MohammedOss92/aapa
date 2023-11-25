@@ -10,6 +10,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
@@ -69,6 +70,7 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
                 val requestOptions = RequestOptions()
                     .placeholder(R.drawable.ic_baseline_autorenew_24)
                     .error(R.drawable.error_a)
+                    .format(DecodeFormat.PREFER_RGB_565)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(false)
 
@@ -85,6 +87,8 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
                 } else {
                     binding.imgFave.setImageResource(R.drawable.baseline_favorite_border_false)
                 }
+
+
             }
             else {
                 // عند عدم وجود اتصال بالإنترنت، قم بعرض الـ lyNoInternet بدلاً من الصورة
@@ -111,6 +115,8 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
         isInternetConnected = isConnected
         notifyDataSetChanged()
     }
+
+
 
 
     companion object {

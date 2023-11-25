@@ -75,7 +75,7 @@ class FourFragment : Fragment() {
 
 //    private val adapterLinRecy by lazy { AdapterRecyLin(requireActivity()) }
     private val pagingadapterLinRecy by lazy { PagingAdapterImageLinear(requireActivity()) }
-
+    private lateinit var imgsModel: ImgsModel
     var idd = -1
     private var ID_Type_id = -1
     private var ID = -1
@@ -173,7 +173,9 @@ class FourFragment : Fragment() {
 
                 pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
                 pagingadapterLinRecy.notifyDataSetChanged()
-
+                if (currentItemId != -1) {
+                    binding.rvImgCont.scrollToPosition(currentItemId)
+                }
 
             }
             // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
