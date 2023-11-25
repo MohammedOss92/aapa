@@ -44,17 +44,17 @@
         android:name="com.sarrawi.img.ui.frag.FourFragment"
         tools:layout="@layout/fragment_four">
 
-        <argument
-            android:name="id"
-            app:argType="integer" />
+<!--        <argument-->
+<!--            android:name="id"-->
+<!--            app:argType="integer" />-->
 
-        <argument
-            android:name="currentItemId"
-            app:argType="integer" />
+<!--        <argument-->
+<!--            android:name="currentItemId"-->
+<!--            app:argType="integer" />-->
 
-        <argument
-            android:name="imageUrl"
-            app:argType="string" />
+<!--        <argument-->
+<!--            android:name="imageUrl"-->
+<!--            app:argType="string" />-->
 
 <!--        <argument-->
 <!--            android:name="imageUrl"-->
@@ -63,7 +63,10 @@
         <action
             android:id="@+id/action_fourFragment_to_pagerFragmentImg"
             app:destination="@id/pagerFragmentImg" />
-<!--        <argument-->
+        <argument
+            android:name="imgsModel"
+            app:argType="com.sarrawi.img.model.ImgsModel" />
+        <!--        <argument-->
 <!--            android:name="ImgsModel"-->
 <!--            app:argType="com.sarrawi.img.model.ImgsModel" />-->
 

@@ -1,6 +1,7 @@
 package com.sarrawi.img.ui.frag
 
 import android.Manifest
+import android.app.Application
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -78,11 +79,14 @@ class FourFragment : Fragment() {
     private lateinit var imgsModel: ImgsModel
     var idd = -1
     private var ID_Type_id = -1
-    private var ID = -1
+//    private var ID = -1
+    private var ID: Int? = null
+
     private var currentItemId = -1
     private var newimage: Int = -1
     private lateinit var imageUrl: String
     var imgsmodel: ImgsModel? = null // تهيئة المتغير كاختياري مع قيمة ابتدائية
+    lateinit var imgsmodelArgs: ImgsModel
 
 
     override fun onCreateView(
@@ -97,15 +101,13 @@ class FourFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
-        ID = FourFragmentArgs.fromBundle(requireArguments()).id
-        currentItemId = FourFragmentArgs.fromBundle(requireArguments()).currentItemId
-
-        imgsmodel?.image_url = FourFragmentArgs.fromBundle(requireArguments()).imageUrl
-
-
+        val args = requireArguments()
+        val application: Application = requireActivity().application
+        imgsmodelArgs = FourFragmentArgs.fromBundle(args).imgsModel
+//        ID = FourFragmentArgs.fromBundle(requireArguments()).id
+//        currentItemId = FourFragmentArgs.fromBundle(requireArguments()).currentItemId
+//
+//        imgsmodel?.image_url = FourFragmentArgs.fromBundle(requireArguments()).imageUrl
     }
 
 
@@ -169,14 +171,18 @@ class FourFragment : Fragment() {
 
 
 //            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
-            imgsViewmodel.getsnippetsid(ID).observe(viewLifecycleOwner) {
+            val currentID = ID
 
-                pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
-                pagingadapterLinRecy.notifyDataSetChanged()
-                if (currentItemId != -1) {
-                    binding.rvImgCont.scrollToPosition(currentItemId)
+            if (currentID != null) {
+                imgsViewmodel.getsnippetsid(currentID).observe(viewLifecycleOwner) {
+
+                    pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
+                    pagingadapterLinRecy.notifyDataSetChanged()
+                    if (currentItemId != -1) {
+                        binding.rvImgCont.scrollToPosition(currentItemId)
+                    }
+
                 }
-
             }
             // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
             pagingadapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
