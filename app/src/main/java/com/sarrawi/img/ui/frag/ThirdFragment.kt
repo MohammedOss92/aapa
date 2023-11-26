@@ -179,9 +179,9 @@ class ThirdFragment : Fragment() {
                     imgModel.image_url
                 )
                 findNavController().navigate(directions)
-                if (currentItemId != -1) {
-                    binding.rvImgCont.scrollToPosition(currentItemId)
-                }
+
+                binding.rvImgCont.scrollToPosition(currentItemId)
+
             } else {
                 val snackbar = Snackbar.make(
                     requireView(),

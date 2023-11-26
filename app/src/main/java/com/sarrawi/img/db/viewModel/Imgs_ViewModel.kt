@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.model.ImgsModel
-import com.sarrawi.img.utils.DataStatus
 import com.sarrawi.img.utils.NetworkConnection
 import kotlinx.coroutines.launch
 
@@ -135,15 +134,7 @@ private val _isConnected = MutableLiveData<Boolean>()
 
 
 
-    private val _imgList = MutableLiveData<DataStatus<List<ImgsModel>>>()
-    val imgList : LiveData<DataStatus<List<ImgsModel>>>
-    get() = _imgList
 
-    fun getImgs_viewmodel(ID_Type_id: Int) = viewModelScope.launch {
-        imgsRepo.getImgs_Repo2(ID_Type_id).collect{
-            _imgList.value=it
-        }
-    }
 
 
 

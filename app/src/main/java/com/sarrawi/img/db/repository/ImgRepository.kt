@@ -9,7 +9,6 @@ import androidx.paging.liveData
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.ImgPaging
-import com.sarrawi.img.utils.DataStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -26,21 +25,7 @@ class ImgRepository(val apiService: ApiService,app:Application) {
 
 
 
-    suspend fun getImgs_Repo2(ID_Type_id: Int) = flow {
 
-        emit(DataStatus.loading())
-        val result = apiService.getImgs_Ser(ID_Type_id)
-        when(result.code()) {
-            10 -> {
-                // Assuming ImgsRespone has a property 'imgs' of type List<ImgsModel>
-                val imgsList = result.body()?.results ?: emptyList()
-                emit(DataStatus.success(imgsList))
-            }
-            else -> emit(DataStatus.error(result.message()))
-        }
-    }.catch {
-        emit(DataStatus.error(it.message.toString()))
-    }.flowOn(Dispatchers.IO)
 
 //    suspend fun getSnippets(ID_Type_id: Int): ImgsRespone2? {
 //        return apiService.getSnipp(ID_Type_id)

@@ -79,8 +79,8 @@ class FourFragment : Fragment() {
     private lateinit var imgsModel: ImgsModel
     var idd = -1
     private var ID_Type_id = -1
-//    private var ID = -1
-    private var ID: Int? = null
+    private var ID = -1
+//    private var ID: Int? = null
 
     private var currentItemId = -1
     private var newimage: Int = -1
@@ -170,10 +170,10 @@ class FourFragment : Fragment() {
 
 
 //            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
-            val currentID = ID
 
-            if (currentID != null) {
-                imgsViewmodel.getsnippetsid(currentID).observe(viewLifecycleOwner) {
+
+
+                imgsViewmodel.getsnippetsid(ID).observe(viewLifecycleOwner) {
 
                     pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
                     pagingadapterLinRecy.notifyDataSetChanged()
@@ -182,7 +182,7 @@ class FourFragment : Fragment() {
                     }
 
                 }
-            }
+
             // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
             pagingadapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 // بعد تحديث البيانات
