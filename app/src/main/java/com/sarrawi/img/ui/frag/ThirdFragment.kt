@@ -28,7 +28,6 @@ import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.*
 import com.sarrawi.img.model.ImgsModel
 import com.sarrawi.img.paging.PagingAdapterImage
-import com.sarrawi.img.utils.DataStatus
 import kotlinx.coroutines.launch
 
 class ThirdFragment : Fragment() {
@@ -41,9 +40,9 @@ class ThirdFragment : Fragment() {
         ViewModelFactory(requireContext(), mainRepository)
     }
     private val imgAdapter by lazy { ImgAdapter(requireActivity()) }
-    private val imgAdaptert by lazy { PagingAdapterImage(requireActivity(),sportsItemListener) }
-//    private var ID = -1
-    private var ID: Int? = null
+    private val imgAdaptert by lazy { PagingAdapterImage(requireActivity()) }
+    private var ID = -1
+//    private var ID: Int? = null
 
     lateinit var image_url:String
 
@@ -119,78 +118,6 @@ class ThirdFragment : Fragment() {
 
     }
 
-
-
-
-
-//    private fun setUpRv() {
-//        if (isAdded) {
-//            imgsViewModel.getAllImgsViewModel(ID).observe(viewLifecycleOwner) { imgs ->
-//                imgAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-//
-//                if (imgs.isEmpty()) {
-//                    // قم بتحميل البيانات من الخادم إذا كانت القائمة فارغة
-//                    imgsViewModel.getAllImgsViewModel(ID)
-//                } else {
-//                    // إذا كانت هناك بيانات، قم بتحديث القائمة في الـ RecyclerView
-//
-//                    // هنا قم بالحصول على البيانات المفضلة المحفوظة محليًا من ViewModel
-//                    favoriteImagesViewModel.getAllFava().observe(viewLifecycleOwner) { favoriteImages ->
-//                        val allImages: List<ImgsModel> = imgs
-//
-//                        for (image in allImages) {
-//                            val isFavorite = favoriteImages.any { it.id == image.id } // تحقق مما إذا كانت الصورة مفضلة
-//                            image.is_fav = isFavorite // قم بتحديث حالة الصورة
-//                        }
-//
-//                        imgAdapter.img_list = allImages
-//
-//                        if (binding.rvImgCont.adapter == null) {
-//                            binding.rvImgCont.layoutManager = GridLayoutManager(requireContext(),2)
-//                            binding.rvImgCont.adapter = imgAdapter
-//                        } else {
-//                            imgAdapter.notifyDataSetChanged()
-//                        }
-//                        if (currentItemId != -1) {
-//                            binding.rvImgCont.scrollToPosition(currentItemId)
-//                        }
-//
-//                    }
-//                }
-//
-//                imgAdapter.onItemClick = { _, imgModel: ImgsModel,currentItemId ->
-//                    if (imgsViewModel.isConnected.value == true) {
-//
-//                        clickCount++
-//                        if (clickCount >= 2) {
-//// بمجرد أن يصل clickCount إلى 2، اعرض الإعلان
-//                            if (mInterstitialAd != null) {
-//                                mInterstitialAd?.show(requireActivity())
-//                            } else {
-//                                Log.d("TAG", "The interstitial ad wasn't ready yet.")
-//                            }
-//                            clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
-//
-//                        }
-//
-//                        val directions = ThirdFragmentDirections.actionToFourFragment(ID, currentItemId,imgModel.image_url)
-//                        findNavController().navigate(directions)
-//
-//
-//                    } else {
-//                        val snackbar = Snackbar.make(
-//                            requireView(),
-//                            "لا يوجد اتصال بالإنترنت",
-//                            Snackbar.LENGTH_SHORT
-//                        )
-//                        snackbar.show()
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
     private fun setUpRvth() {
         if (isAdded) {
         // تعيين المدير التخطيط (GridLayout) لـ RecyclerView أولاً
@@ -201,17 +128,16 @@ class ThirdFragment : Fragment() {
 
 
 //            imgsViewModel.getImgsData(ID).observe(viewLifecycleOwner) {
-            val currentID = ID
 
-            if (currentID != null) {
-                imgsViewModel.getsnippetsid(currentID).observe(viewLifecycleOwner) {
+
+                imgsViewModel.getsnippetsid(ID).observe(viewLifecycleOwner) {
 
                     imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)
                     imgAdaptert.notifyDataSetChanged()
 
 
                 }
-            }
+
         // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
             imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 // بعد تحديث البيانات
@@ -222,49 +148,49 @@ class ThirdFragment : Fragment() {
 
 
 
-    private val sportsItemListener = PagingAdapterImage.OnClickListener { imgsModel ->
-        val direction: NavDirections =
-            ThirdFragmentDirections.actionToFourFragment(imgsModel)
-        Navigation.findNavController(requireView()).navigate(direction)
-    }
+//    private val sportsItemListener = PagingAdapterImage.OnClickListener { imgsModel ->
+//        val direction: NavDirections =
+//            ThirdFragmentDirections.actionToFourFragment(imgsModel)
+//        Navigation.findNavController(requireView()).navigate(direction)
+//    }
 
 
 
     fun adapterOnClick() {
-//        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
-//            if (imgsViewModel.isConnected.value == true) {
-//
-//                clickCount++
-//                if (clickCount >= 2) {
-//                    // بمجرد أن يصل clickCount إلى 2، اعرض الإعلان
-//                    if (mInterstitialAd != null) {
-//                        mInterstitialAd?.show(requireActivity())
-//                    } else {
-//                        Log.d("TAG", "The interstitial ad wasn't ready yet.")
-//                    }
-//                    clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
-//
-//                }
-//
-//
-//                val directions = ThirdFragmentDirections.actionToFourFragment(
-//                    ID,
-//                    currentItemId,
-//                    imgModel.image_url
-//                )
-//                findNavController().navigate(directions)
-//                if (currentItemId != -1) {
-//                    binding.rvImgCont.scrollToPosition(currentItemId)
-//                }
-//            } else {
-//                val snackbar = Snackbar.make(
-//                    requireView(),
-//                    "لا يوجد اتصال بالإنترنت",
-//                    Snackbar.LENGTH_SHORT
-//                )
-//                snackbar.show()
-//            }
-//        }
+        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
+            if (imgsViewModel.isConnected.value == true) {
+
+                clickCount++
+                if (clickCount >= 2) {
+                    // بمجرد أن يصل clickCount إلى 2، اعرض الإعلان
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd?.show(requireActivity())
+                    } else {
+                        Log.d("TAG", "The interstitial ad wasn't ready yet.")
+                    }
+                    clickCount = 0 // اعيد قيمة المتغير clickCount إلى الصفر بعد عرض الإعلان
+
+                }
+
+
+                val directions = ThirdFragmentDirections.actionToFourFragment(
+                    ID,
+                    currentItemId,
+                    imgModel.image_url
+                )
+                findNavController().navigate(directions)
+                if (currentItemId != -1) {
+                    binding.rvImgCont.scrollToPosition(currentItemId)
+                }
+            } else {
+                val snackbar = Snackbar.make(
+                    requireView(),
+                    "لا يوجد اتصال بالإنترنت",
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.show()
+            }
+        }
 
 
 //        imgAdapter.onbtnClick = { it: ImgsModel, i: Int ->

@@ -18,7 +18,7 @@ import com.sarrawi.img.R
 import com.sarrawi.img.databinding.ImagedeaBinding
 import com.sarrawi.img.model.ImgsModel
 
-class PagingAdapterImage(val con: Context, private val onClickListener: OnClickListener) : PagingDataAdapter<ImgsModel, PagingAdapterImage.ViewHolder>(COMPARATOR) {
+class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, PagingAdapterImage.ViewHolder>(COMPARATOR) {
 
     var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
     var onbtnClick: ((ImgsModel, Int) -> Unit)? = null
@@ -32,15 +32,15 @@ class PagingAdapterImage(val con: Context, private val onClickListener: OnClickL
             if(isInternetConnected) {
 
 
-//                binding.root.setOnClickListener {
-//                    val position = bindingAdapterPosition
-//                    if (position != RecyclerView.NO_POSITION) {
-//                        getItem(position)?.let { item ->
-//                            onItemClick?.invoke(item.id ?: 0, item, position)
-//
-//                        }
-//                    }
-//                }
+                binding.root.setOnClickListener {
+                    val position = bindingAdapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        getItem(position)?.let { item ->
+                            onItemClick?.invoke(item.id ?: 0, item, position)
+
+                        }
+                    }
+                }
 
                 binding.imgFave.setOnClickListener {
                     val position = bindingAdapterPosition
@@ -52,11 +52,11 @@ class PagingAdapterImage(val con: Context, private val onClickListener: OnClickL
                 }
             }
             else{
-//                binding.root.setOnClickListener{
-////                        Toast.makeText(con,"ghghg",Toast.LENGTH_SHORT).show()
-//                    val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
-//                    snackbar.show()
-//                }
+                binding.root.setOnClickListener{
+//                        Toast.makeText(con,"ghghg",Toast.LENGTH_SHORT).show()
+                    val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
+                    snackbar.show()
+                }
 
                 binding.imgFave.setOnClickListener {
                     val snackbar = Snackbar.make(it,"لا يوجد اتصال بالإنترنت", Snackbar.LENGTH_SHORT)
@@ -66,7 +66,7 @@ class PagingAdapterImage(val con: Context, private val onClickListener: OnClickL
             }
         }
 
-        fun bind(item: ImgsModel?,isInternetConnected: Boolean,onClickListener: OnClickListener) {
+        fun bind(item: ImgsModel?,isInternetConnected: Boolean) {
             item ?: return // Handle null item
             // Bind your data to the ViewBinding elements here
             if (isInternetConnected) {
@@ -101,9 +101,7 @@ class PagingAdapterImage(val con: Context, private val onClickListener: OnClickL
                 binding.imgadapterImgViewContent.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
             }
-            binding.root.setOnClickListener{
-                onClickListener.onClick(item)
-            }
+
         }
     }
 
@@ -113,11 +111,9 @@ class PagingAdapterImage(val con: Context, private val onClickListener: OnClickL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.bind(getItem(position),isInternetConnected,onClickListener)
-        val listener = onClickListener
-        if (listener != null) {
-            holder.bind(getItem(position), isInternetConnected, listener)
-        }
+
+        holder.bind(getItem(position), isInternetConnected)
+
 
     }
 
