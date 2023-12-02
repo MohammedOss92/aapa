@@ -20,7 +20,8 @@ import com.sarrawi.img.model.ImgsModel
 
 class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, PagingAdapterImage.ViewHolder>(COMPARATOR) {
 
-    var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
+//    var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
+    var onItemClick: ((Int) -> Unit)? = null
     var onbtnClick: ((ImgsModel, Int) -> Unit)? = null
     private var isInternetConnected: Boolean = true
 
@@ -31,16 +32,24 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
 
             if(isInternetConnected) {
 
-
                 binding.root.setOnClickListener {
-                    val position = bindingAdapterPosition
+                    val position = layoutPosition
                     if (position != RecyclerView.NO_POSITION) {
                         getItem(position)?.let { item ->
-                            onItemClick?.invoke(item.id ?: 0, item, position)
-
+                            onItemClick?.invoke(item.id ?: 0)
                         }
                     }
                 }
+
+//                binding.root.setOnClickListener {
+//                    val position = bindingAdapterPosition
+//                    if (position != RecyclerView.NO_POSITION) {
+//                        getItem(position)?.let { item ->
+//
+//                            onItemClick?.invoke(item.id?:0)
+//                        }
+//                    }
+//                }
 
                 binding.imgFave.setOnClickListener {
                     val position = bindingAdapterPosition

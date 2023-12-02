@@ -18,12 +18,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @DelicateCoroutinesApi
-@Database(entities = [Img_Types_model::class, FavoriteImage::class], version = 1, exportSchema = false)
+@Database(entities = [Img_Types_model::class/*, FavoriteImage::class*/], version = 1, exportSchema = false)
 abstract class Pic_Databases: RoomDatabase() {
 
     abstract fun getTypesDao():ImgType_Dao
     abstract fun getImgsDao():Imgs_Dao
-    abstract fun getFavoriteImageDao():FavoriteImageDao
+//    abstract fun getFavoriteImageDao():FavoriteImageDao
 
 
     companion object{

@@ -5,8 +5,8 @@
         android:title="الرئيسية"
         android:icon="@drawable/menu" />
 
-    <item
-        android:id="@+id/favoriteFragmentRecy"
-        android:icon="@drawable/ic_favorite"
-        android:title="المفصلة" />
+<!--    <item-->
+<!--        android:id="@+id/favoriteFragmentRecy"-->
+<!--        android:icon="@drawable/ic_favorite"-->
+<!--        android:title="المفصلة" />-->
 </menu>

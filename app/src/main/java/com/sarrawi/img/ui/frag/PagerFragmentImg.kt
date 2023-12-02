@@ -22,12 +22,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.adapter.ViewPagerAdapter
 import com.sarrawi.img.databinding.FragmentPagerImgBinding
-import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.repository.ImgRepository
-import com.sarrawi.img.db.viewModel.FavoriteImagesViewModel
 import com.sarrawi.img.db.viewModel.Imgs_ViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory
-import com.sarrawi.img.db.viewModel.ViewModelFactory2
 import com.sarrawi.img.model.ImgsModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -51,20 +48,20 @@ class PagerFragmentImg : Fragment() {
         ViewModelFactory(requireContext(), mainRepository)
     }
 
-    private val a by lazy { FavoriteImageRepository(requireActivity().application) }
-
-    private val imgsffav: FavoriteImagesViewModel by viewModels {
-        ViewModelFactory2(a)
-    }
+//    private val a by lazy { FavoriteImageRepository(requireActivity().application) }
+//
+//    private val imgsffav: FavoriteImagesViewModel by viewModels {
+//        ViewModelFactory2(a)
+//    }
 
     private val adapterpager by lazy {
         ViewPagerAdapter(requireActivity())
     }
 
-    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
-    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
-        ViewModelFactory2(favoriteImageRepository)
-    }
+//    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
+//    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
+//        ViewModelFactory2(favoriteImageRepository)
+//    }
 
     private var currentItemId = -1
     private var ID = -1

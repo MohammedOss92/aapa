@@ -28,9 +28,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.snackbar.Snackbar
 import com.sarrawi.img.Api.ApiService
 import com.sarrawi.img.R
-import com.sarrawi.img.adapter.AdapterRecyLin
 import com.sarrawi.img.databinding.FragmentFourBinding
-import com.sarrawi.img.db.repository.FavoriteImageRepository
 import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.*
 import java.io.File
@@ -55,7 +53,7 @@ class FourFragment : Fragment() {
             requireActivity().application
         )
     }
-    private val a by lazy { FavoriteImageRepository(requireActivity().application) }
+//    private val a by lazy { FavoriteImageRepository(requireActivity().application) }
 
 
     private val imgsViewmodel: Imgs_ViewModel by viewModels {
@@ -63,15 +61,15 @@ class FourFragment : Fragment() {
     }
 
 
-    private val imgsffav: FavoriteImagesViewModel by viewModels {
-        ViewModelFactory2(a)
-    }
+//    private val imgsffav: FavoriteImagesViewModel by viewModels {
+//        ViewModelFactory2(a)
+//    }
 
 
-    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
-    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
-        ViewModelFactory2(favoriteImageRepository)
-    }
+//    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
+//    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
+//        ViewModelFactory2(favoriteImageRepository)
+//    }
 
 
 //    private val adapterLinRecy by lazy { AdapterRecyLin(requireActivity()) }
@@ -104,9 +102,7 @@ class FourFragment : Fragment() {
         val args = requireArguments()
         val application: Application = requireActivity().application
         ID = FourFragmentArgs.fromBundle(requireArguments()).id
-        currentItemId = FourFragmentArgs.fromBundle(requireArguments()).currentItemId
 
-        imgsmodel?.image_url = FourFragmentArgs.fromBundle(requireArguments()).imageUrl
     }
 
 
@@ -117,22 +113,17 @@ class FourFragment : Fragment() {
         setHasOptionsMenu(true)
         menu_item()
         setUpRvth()
-//        setUpRv()
-//        adapterOnClick()
-//        imgsffav.updateImages()
+
         // Live Connected
         imgsViewmodel.isConnected.observe(requireActivity()) { isConnected ->
 
             if (isConnected) {
-//                  setUpViewPager()
                 setUpRvth()
-//                setUpRv()
-//                adapterOnClick2()
+
                 pagingadapterLinRecy.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
 
             } else {
-//                     binding.progressBar.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
                 pagingadapterLinRecy.updateInternetStatus(isConnected)
 
@@ -177,17 +168,13 @@ class FourFragment : Fragment() {
 
                     pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
                     pagingadapterLinRecy.notifyDataSetChanged()
-                    if (currentItemId != -1) {
-                        binding.rvImgCont.scrollToPosition(currentItemId)
-                    }
+
 
                 }
 
             // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
             pagingadapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 // بعد تحديث البيانات
-            binding.rvImgCont.scrollToPosition(0)
-
         }
     }
 
@@ -284,53 +271,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
     }
 }
 
-//    fun saveImageToExternalStorage(position: Int) {
-//        val item = adapterLinRecy.img_list.getOrNull(position)
-//        if (item != null) {
-//            val imageUri = Uri.parse(item.image_url) // تحديد URI للصورة من URL
-//            Glide.with(requireContext())
-//                .asBitmap()
-//                .load(imageUri)
-//                .into(object : CustomTarget<Bitmap>() {
-//                    override fun onResourceReady(
-//                        resource: Bitmap,
-//                        transition: Transition<in Bitmap>?
-//                    ) {
-//                        try {
-//                            val folderName = "MyPics"
-//                            val displayName = String.format("%d.png", System.currentTimeMillis())
-//                            val mimeType = "image/png"
-//                            // تمثيل المعلومات الخاصة بالصورة
-//                            val imageDetails = ContentValues().apply {
-//                                put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
-//                                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-//                                put(MediaStore.Images.Media.WIDTH, resource.width)
-//                                put(MediaStore.Images.Media.HEIGHT, resource.height)
-//                                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folderName)
-//                            }
-//                            // حفظ الصورة باستخدام MediaStore
-//                            val contentResolver = requireContext().contentResolver
-//                            val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageDetails)
-//                            if (imageUri != null) {
-//                                val outputStream = contentResolver.openOutputStream(imageUri)
-//                                resource.compress(getCompressFormat(item.image_url), 100, outputStream)
-//                                outputStream?.close()
-//                                showSaveSuccessMessage()
-//                            } else {
-//                                showSaveErrorMessage()
-//                            }
-//                        } catch (e: Exception) {
-//                            e.printStackTrace()
-//                            Log.e("MyApp", "An error occurred: ${e.message}")
-//                            showSaveErrorMessage()
-//                        }
-//                    }
-//                    override fun onLoadCleared(placeholder: Drawable?) {
-//                        // يمكنك التعامل مع هذا الحالة إذا كنت بحاجة إلى تنظيف أي موارد
-//                    }
-//                })
-//        }
-//    }
+
 
     fun saveImageToExternalStorage(position: Int) {
         val item = pagingadapterLinRecy.snapshot().items.getOrNull(position)
