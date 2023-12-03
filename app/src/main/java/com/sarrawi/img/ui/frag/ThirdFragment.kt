@@ -54,8 +54,8 @@ class ThirdFragment : Fragment() {
 //    private val imgsffav: FavoriteImagesViewModel by viewModels {
 //        ViewModelFactory2(a)
 //    }
-
     private var currentItemId = -1
+
     var clickCount = 0
     var mInterstitialAd: InterstitialAd?=null
 
@@ -155,8 +155,7 @@ class ThirdFragment : Fragment() {
 
 
     fun adapterOnClick() {
-//        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
-        imgAdaptert.onItemClick = { _ ->
+        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
             if (imgsViewModel.isConnected.value == true) {
 
                 clickCount++
@@ -173,14 +172,12 @@ class ThirdFragment : Fragment() {
 
 
                 val directions = ThirdFragmentDirections.actionToFourFragment(
-                    ID
+                    ID,
+                    currentItemId,
+                    imgModel.image_url
                 )
                 findNavController().navigate(directions)
-
-// الانتظار حتى يتم تحميل الشاشة الجديدة
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(100) // انتظر لبعض الوقت للتأكد من أن التحديثات قد تم تطبيقها
+                if (currentItemId != -1) {
                     binding.rvImgCont.scrollToPosition(currentItemId)
                 }
             } else {
@@ -192,7 +189,6 @@ class ThirdFragment : Fragment() {
                 snackbar.show()
             }
         }
-
     }
 
     fun InterstitialAd_fun() {

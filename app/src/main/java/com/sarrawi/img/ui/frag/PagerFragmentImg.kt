@@ -26,6 +26,7 @@ import com.sarrawi.img.db.repository.ImgRepository
 import com.sarrawi.img.db.viewModel.Imgs_ViewModel
 import com.sarrawi.img.db.viewModel.ViewModelFactory
 import com.sarrawi.img.model.ImgsModel
+import com.sarrawi.img.paging.PagingAdapterImageLinear
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -57,6 +58,8 @@ class PagerFragmentImg : Fragment() {
     private val adapterpager by lazy {
         ViewPagerAdapter(requireActivity())
     }
+    private val pagingadapterLinRecy by lazy { PagingAdapterImageLinear(requireActivity()) }
+
 
 //    private val favoriteImageRepository by lazy { FavoriteImageRepository(requireActivity().application) }
 //    private val favoriteImagesViewModel: FavoriteImagesViewModel by viewModels {
@@ -119,22 +122,21 @@ class PagerFragmentImg : Fragment() {
     }
 
     private fun setUpViewPager() =
-        imgsViewmodel.viewModelScope.launch {
-            imgsViewmodel.getAllImgsViewModel(ID).observe(requireActivity()) { imgs ->
-                // print data
-                if (imgs != null) {
-                    adapterpager.img_list_Pager=imgs
-                    binding.pagerimg.adapter =adapterpager
-                    binding.pagerimg.setCurrentItem(currentItemId,false) // set for selected item
-                    adapterpager.notifyDataSetChanged()
 
-                }
+        imgsViewmodel.getsnippetsid(ID).observe(viewLifecycleOwner) {
+            binding.pagerimg.adapter =pagingadapterLinRecy
+            binding.pagerimg.setCurrentItem(currentItemId,false) // set for selected item
+            pagingadapterLinRecy.notifyDataSetChanged()
+            pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
+            pagingadapterLinRecy.notifyDataSetChanged()
 
-                else {
-                    // No data
-                }
 
-            }}
+        }
+
+
+
+
+
 
 
 //    private fun setUpPager() {

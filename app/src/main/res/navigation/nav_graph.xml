@@ -41,43 +41,35 @@
         android:name="com.sarrawi.img.ui.frag.FourFragment"
         tools:layout="@layout/fragment_four">
 
-        <argument
-            android:name="id"
-            app:argType="integer" />
 
-<!--        <argument-->
-<!--            android:name="currentItemId"-->
-<!--            app:argType="integer" />-->
 
-<!--        <argument-->
-<!--            android:name="imageUrl"-->
-<!--            app:argType="string" />-->
+
 
 
 
         <action
             android:id="@+id/action_fourFragment_to_pagerFragmentImg"
             app:destination="@id/pagerFragmentImg" />
+<!--        <argument-->
+<!--            android:name="imgModel"-->
+<!--            app:argType="com.sarrawi.img.model.ImgsModel" />-->
+
 
         <!--        <argument-->
 <!--            android:name="ImgsModel"-->
 <!--            app:argType="com.sarrawi.img.model.ImgsModel" />-->
 
-<!--        <argument-->
-<!--            android:name="id"-->
-<!--            app:argType="integer" />-->
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="currentItemId"
+            app:argType="integer" />
 
-<!--        <argument-->
-<!--            android:name="idtype"-->
-<!--            app:argType="integer" />-->
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
 
-<!--        <argument-->
-<!--            android:name="new_img"-->
-<!--            app:argType="integer" />-->
-
-<!--        <argument-->
-<!--            android:name="imageUrl"-->
-<!--            app:argType="string" />-->
 
 
     </fragment>
@@ -89,35 +81,7 @@
             android:id="@+id/action_splashScreenFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/favoriteFragmentRecy"
-        android:name="com.sarrawi.img.ui.fragFav.FavoriteFragmentRecy"
-        tools:layout="@layout/fragment_favorite_recy" >
-        <action
-            android:id="@+id/action_favoriteFragmentRecy_to_favFragmentLinRecy"
-            app:destination="@id/favFragmentLinRecy" />
-    </fragment>
-    <fragment
-        android:id="@+id/favFragmentLinRecy"
-        android:name="com.sarrawi.img.ui.fragFav.FavFragmentLinRecy"
-        tools:layout="@layout/fragment_fav_lin_recy">
 
-        <argument
-            android:name="id"
-            app:argType="integer" />
-
-        <argument
-            android:name="currentItemId"
-            app:argType="integer" />
-
-        <argument
-            android:name="imageUrl"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_favFragmentLinRecy_to_favoritePagerFrag"
-            app:destination="@id/favoritePagerFrag" />
-
-    </fragment>
     <fragment
         android:id="@+id/pagerFragmentImg"
         android:name="com.sarrawi.img.ui.frag.PagerFragmentImg"
@@ -136,22 +100,7 @@
             app:argType="string" />
 
     </fragment>
-    <fragment
-        android:id="@+id/favoritePagerFrag"
-        android:name="com.sarrawi.img.ui.fragFav.FavoritePagerFrag"
-        tools:layout="@layout/fragment_favorite_pager">
-        <argument
-            android:name="id"
-            app:argType="integer" />
 
-        <argument
-            android:name="currentItemId"
-            app:argType="integer" />
-
-        <argument
-            android:name="imageUrl"
-            app:argType="string" />
-    </fragment>
 
 
 </navigation>

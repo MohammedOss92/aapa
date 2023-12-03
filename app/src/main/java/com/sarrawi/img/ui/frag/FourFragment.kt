@@ -99,9 +99,14 @@ class FourFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val args = requireArguments()
+//        val args = requireArguments()
         val application: Application = requireActivity().application
         ID = FourFragmentArgs.fromBundle(requireArguments()).id
+        currentItemId = FourFragmentArgs.fromBundle(requireArguments()).currentItemId
+
+        imgsmodel?.id = FourFragmentArgs.fromBundle(requireArguments()).id
+    //        val args = FourFragmentArgs.fromBundle(requireArguments())
+//        val imgModel: ImgsModel? = args.imgModel
 
     }
 
@@ -119,7 +124,7 @@ class FourFragment : Fragment() {
 
             if (isConnected) {
                 setUpRvth()
-
+                adapterOnClick()
                 pagingadapterLinRecy.updateInternetStatus(isConnected)
                 binding.lyNoInternet.visibility = View.GONE
 
@@ -178,7 +183,31 @@ class FourFragment : Fragment() {
         }
     }
 
+    fun adapterOnClick() {
+        pagingadapterLinRecy.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
+            if (imgsViewmodel.isConnected.value == true) {
 
+
+
+
+                val directions = FourFragmentDirections.actionFourFragmentToPagerFragmentImg(
+                    ID,
+                    currentItemId,
+                    imgModel.image_url
+                )
+                findNavController().navigate(directions)
+            } else {
+                val snackbar = Snackbar.make(
+                    requireView(),
+                    "لا يوجد اتصال بالإنترنت",
+                    Snackbar.LENGTH_SHORT
+                )
+                snackbar.show()
+            }
+
+
+        }
+    }
 
 
 
