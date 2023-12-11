@@ -130,16 +130,12 @@ class ThirdFragment : Fragment() {
 
 
                 imgsViewModel.getsnippetsid(ID).observe(viewLifecycleOwner) {
-
+                    imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
                     imgAdaptert.submitData(viewLifecycleOwner.lifecycle, it)
                     imgAdaptert.notifyDataSetChanged()
 
 
                 }
-
-        // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
-            imgAdaptert.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-// بعد تحديث البيانات
 
     }
 }
@@ -155,7 +151,7 @@ class ThirdFragment : Fragment() {
 
 
     fun adapterOnClick() {
-        imgAdaptert.onItemClick = { _, imgModel: ImgsModel, currentItemId ->
+        imgAdaptert.onItemClick = {id ->
             if (imgsViewModel.isConnected.value == true) {
 
                 clickCount++
@@ -172,14 +168,10 @@ class ThirdFragment : Fragment() {
 
 
                 val directions = ThirdFragmentDirections.actionToFourFragment(
-                    ID,
-                    currentItemId,
-                    imgModel.image_url
+                    ID
                 )
                 findNavController().navigate(directions)
-                if (currentItemId != -1) {
-                    binding.rvImgCont.scrollToPosition(currentItemId)
-                }
+
             } else {
                 val snackbar = Snackbar.make(
                     requireView(),

@@ -102,9 +102,7 @@ class FourFragment : Fragment() {
 //        val args = requireArguments()
         val application: Application = requireActivity().application
         ID = FourFragmentArgs.fromBundle(requireArguments()).id
-        currentItemId = FourFragmentArgs.fromBundle(requireArguments()).currentItemId
 
-        imgsmodel?.id = FourFragmentArgs.fromBundle(requireArguments()).id
     //        val args = FourFragmentArgs.fromBundle(requireArguments())
 //        val imgModel: ImgsModel? = args.imgModel
 
@@ -170,6 +168,7 @@ class FourFragment : Fragment() {
 
 
                 imgsViewmodel.getsnippetsid(ID).observe(viewLifecycleOwner) {
+                    pagingadapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
                     pagingadapterLinRecy.submitData(viewLifecycleOwner.lifecycle, it)
                     pagingadapterLinRecy.notifyDataSetChanged()
@@ -178,7 +177,6 @@ class FourFragment : Fragment() {
                 }
 
             // اختيار دالة التعيين وضبط السياسة لـ RecyclerView
-            pagingadapterLinRecy.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 // بعد تحديث البيانات
         }
     }

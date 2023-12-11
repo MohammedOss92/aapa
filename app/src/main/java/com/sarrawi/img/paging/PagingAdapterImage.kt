@@ -20,8 +20,8 @@ import com.sarrawi.img.model.ImgsModel
 
 class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, PagingAdapterImage.ViewHolder>(COMPARATOR) {
 
-    var onItemClick: ((Int, ImgsModel, Int) -> Unit)? = null
-//    var onItemClick: ((ImgsModel) -> Unit)? = null
+    var onItemClick: ((Int) -> Unit)? = null
+
     var onbtnClick: ((ImgsModel, Int) -> Unit)? = null
     private var isInternetConnected: Boolean = true
 
@@ -32,16 +32,6 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
 
             if(isInternetConnected) {
 
-                binding.root.setOnClickListener {
-                    val position = bindingAdapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        getItem(position)?.let { item ->
-
-                            onItemClick?.invoke(item.id?:0,item,position)
-                        }
-                    }
-                }
-
 //                binding.root.setOnClickListener {
 //                    val position = bindingAdapterPosition
 //                    if (position != RecyclerView.NO_POSITION) {
@@ -51,6 +41,11 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
 //                        }
 //                    }
 //                }
+
+
+
+
+
 
                 binding.imgFave.setOnClickListener {
                     val position = bindingAdapterPosition
@@ -111,9 +106,18 @@ class PagingAdapterImage(val con: Context) : PagingDataAdapter<ImgsModel, Paging
                 binding.imgadapterImgViewContent.visibility = View.GONE
                 binding.lyNoInternet.visibility = View.VISIBLE
             }
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    getItem(position)?.let { item ->
+                        onItemClick?.invoke(item.id?:0)
+                    }
+                }
+            }
 
         }
     }
+//    jj
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ImagedeaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
